@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import Link from "next/link";
 import React, { useEffect, useMemo, useRef, useState } from "react";
 import { useTranslations } from "next-intl";
 import gsap from "gsap";
@@ -172,9 +173,9 @@ export function MastihaOdisej() {
 
           <div className={styles.navRight}>
             <div className={styles.localeGroup} aria-label="Language">
-              <a className={styles.localeLink} href="/en">EN</a>
-              <a className={styles.localeLink} href="/el">EL</a>
-              <a className={styles.localeLink} href="/tr">TR</a>
+              <Link className={styles.localeLink} href="/en">EN</Link>
+              <Link className={styles.localeLink} href="/el">EL</Link>
+              <Link className={styles.localeLink} href="/tr">TR</Link>
             </div>
             <button className={styles.bookTop} onClick={() => openBooking("hero")}>Check availability ↗</button>
           </div>
@@ -289,7 +290,7 @@ export function MastihaOdisej() {
         <div className={styles.sectionTop}><span>03 · Details</span><span>What is included</span></div>
         <div className={styles.amenitiesGrid}>
           <div className={styles.amenitiesTitle}>
-            <h2 data-reveal>Everything you need.<br />Nothing you don't.</h2>
+            <h2 data-reveal>Everything you need.<br />Nothing you don&apos;t.</h2>
             <p>{amenities("subtitle")}</p>
           </div>
           <div className={styles.amenityList}>
