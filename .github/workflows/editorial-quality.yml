@@ -27,9 +27,8 @@ jobs:
       - run: npm run typecheck
       - run: npm run lint
       - run: npm run test:unit
-      - name: Record existing production dependency audit
-        continue-on-error: true
-        run: npm audit --omit=dev --json > dependency-audit.json
+      - name: Production dependency security gate
+        run: npm audit --omit=dev --audit-level=high --json > dependency-audit.json
       - run: npm run build
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:e2e
