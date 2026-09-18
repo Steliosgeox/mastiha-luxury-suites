@@ -40,7 +40,7 @@ for (const width of [320, 390, 768, 1440]) {
     await page.screenshot({ path: testInfo.outputPath(`page-${width}.png`) });
     await book.focus();
     await page.keyboard.press("Enter");
-    const modal = page.getByRole("dialog", { name: "Choose a booking platform" });
+    const modal = page.getByRole("dialog", { name: "Your stay starts here." });
     await expect(modal).toBeVisible();
     await expect(modal.locator('a[href="https://www.airbnb.com/rooms/1368953469779774276"]')).toBeVisible();
     await expect(modal.locator('a[href="https://www.booking.com/hotel/gr/mastiha-luxury-suites.html"]')).toBeVisible();

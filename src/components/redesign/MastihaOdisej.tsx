@@ -27,7 +27,7 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
     <main className={s.site}>
       <section id="home" className={s.hero} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="mastiha-title" data-testid="landing-hero">
         <div className={s.heroMedia} style={{ position: "absolute", inset: 0 }} data-media-frame>
-          <Image src={stayPhoto("terrace").src} alt={caption("terrace")} fill priority sizes="100vw" className={s.heroImage} data-testid="hero-image" />
+          <Image src={stayPhoto("terrace").src} alt={caption("terrace")} fill priority sizes="(max-aspect-ratio: 16/9) 178vh, 100vw" className={s.heroImage} data-testid="hero-image" />
         </div>
         <div className={s.heroScrim} aria-hidden="true" />
         <header className={s.masthead}>
@@ -64,7 +64,7 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
         </div>
       </section>
       <section className={s.terraceScene} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="terrace-title" data-testid="terrace-scene">
-        <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame><Image src={stayPhoto("terrace").src} alt={caption("terrace")} fill sizes="100vw" className={s.sceneImage} data-parallax /></div>
+        <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame><Image src={stayPhoto("terrace").src} alt={caption("terrace")} fill sizes="(max-width: 760px) 130vh, 100vw" className={s.sceneImage} data-parallax /></div>
         <div className={s.sceneScrim} aria-hidden="true" /><div className={s.sceneCopy} data-reveal><p className={s.eyebrow}>{c.outsideEyebrow}</p><h2 id="terrace-title" className={s.heading}>{c.outsideTitle}</h2><p>{c.outsideBody}</p><PhotoButton id="terrace" className={s.outlineButton}>{c.photoAction}<span aria-hidden="true">↗</span></PhotoButton></div>
       </section>
       <ImmersiveGallery locale={lang} />
@@ -85,7 +85,7 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
       </section>
       <section id="information" className={s.faq} aria-labelledby="faq-title"><div><p className={s.eyebrow}>{c.faqEyebrow}</p><h2 id="faq-title" className={s.heading}>{c.faqTitle}</h2></div><div>{c.faqs.map((item) => <details key={item.q}><summary>{item.q}<span aria-hidden="true">+</span></summary><p>{fillCopy(item.a, values)}</p></details>)}</div></section>
       <section id="book" className={s.closing} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="closing-title">
-        <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame><Image src={stayPhoto("master").src} alt={caption("master")} fill sizes="100vw" className={s.sceneImage} /></div><div className={s.sceneScrim} aria-hidden="true" />
+        <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame><Image src={stayPhoto("master").src} alt={caption("master")} fill sizes="(max-width: 760px) 130vh, 100vw" className={s.sceneImage} /></div><div className={s.sceneScrim} aria-hidden="true" />
         <div className={s.closingContent}><h2 id="closing-title" className={s.heading}>{c.closing}</h2><div><p>{c.closingBody}</p><BookButton source="closing" className={s.solidButton}>{c.bookShort}<span aria-hidden="true">↗</span></BookButton></div></div>
       </section>
       <footer className={s.footer}><div className={s.footerWordmark}>Mastiha<span>Luxury Suites</span></div><div className={s.footerMeta}><span>{c.place}</span><span>{c.registration} {property.licenseNumber}</span><Link href={`/${lang}/privacy`}>{c.privacy}</Link><a href="#home">{c.top} ↑</a></div></footer>

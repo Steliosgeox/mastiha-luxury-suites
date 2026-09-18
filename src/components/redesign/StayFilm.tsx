@@ -56,9 +56,9 @@ export function StayFilm({ locale }: { locale: StayLocale }) {
     };
     // No film-frame downloads while the first-screen photograph is being presented.
     const observer = new IntersectionObserver(([entry]) => {
-      visible = entry.isIntersecting;
+      visible = entry.isIntersecting && entry.intersectionRatio >= .001;
       if (visible) void start(); else { player?.dispose(); player = null; }
-    }, { rootMargin: "0px", threshold: 0 });
+    }, { rootMargin: "0px", threshold: [0, .001] });
     observer.observe(element);
     return () => { disposed = true; observer.disconnect(); request.abort(); trigger.kill(); player?.dispose(); };
   }, [settings, failed]);

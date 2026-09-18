@@ -1,7 +1,7 @@
 "use client";
 
 import dynamic from "next/dynamic";
-import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode, type MouseEvent } from "react";
+import { createContext, useCallback, useContext, useEffect, useRef, useState, type ReactNode, type MouseEvent, type KeyboardEvent } from "react";
 import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useSmoothScroll } from "@/components/layout/SmoothScrollProvider";
@@ -87,6 +87,15 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
     return () => { media.revert(); context.revert(); };
   }, []);
 
+  const trapBookingFocus = (event: KeyboardEvent<HTMLDialogElement>) => {
+    if (event.key !== "Tab") return;
+    const element = event.currentTarget;
+    const controls = [...element.querySelectorAll<HTMLElement>('button:not([disabled]), a[href], [tabindex="0"]')].filter(control => control.getClientRects().length > 0);
+    const first = controls[0], last = controls[controls.length - 1];
+    if (!first || !last) { event.preventDefault(); return; }
+    if (event.shiftKey && (document.activeElement === first || !element.contains(document.activeElement))) { event.preventDefault(); last.focus(); }
+    else if (!event.shiftKey && document.activeElement === last) { event.preventDefault(); first.focus(); }
+  };
   const navigate = (target: string) => scrollTo(target, { offset: 0 });
   const anchorClick = (event: MouseEvent<HTMLDivElement>) => {
     if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
@@ -100,7 +109,7 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
     <div ref={root} className={s.experience} onClick={anchorClick}>
       {children}
       <PremiumDock onNavigate={navigate} onBook={() => openBook("dock")} />
-      <dialog ref={dialog} className={s.dialog} aria-labelledby="booking-title" aria-describedby="booking-description" data-lenis-prevent onCancel={(event) => { event.preventDefault(); closeBooking(); }} onClick={(event) => { if (event.target === event.currentTarget) closeBooking(); }}>
+      <dialog ref={dialog} className={s.dialog} aria-labelledby="booking-title" aria-describedby="booking-description" onKeyDown={trapBookingFocus} data-lenis-prevent onCancel={(event) => { event.preventDefault(); closeBooking(); }} onClick={(event) => { if (event.target === event.currentTarget) closeBooking(); }}>
         <div className={s.dialogInner}><div className={s.dialogTop}><h2 id="booking-title">{c.bookingTitle}</h2><button type="button" className={s.closeButton} onClick={closeBooking} aria-label={c.close}>×</button></div><p id="booking-description">{c.bookingBody}</p>
           <a className={s.platformLink} href={propertyData.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("booking_outbound_click", { platform: "airbnb" })}>Airbnb<span aria-hidden="true">↗</span></a>
           <a className={s.platformLink} href={propertyData.bookingLinks.booking} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("booking_outbound_click", { platform: "booking" })}>Booking.com<span aria-hidden="true">↗</span></a>
