@@ -12,6 +12,7 @@ import { reviewStats } from "@/content/reviews";
 import { trackEvent } from "@/lib/analytics";
 import { useSmoothScroll } from "@/components/layout/SmoothScrollProvider";
 import styles from "./MastihaOdisej.module.css";
+import { ImmersiveGallery } from "./ImmersiveGallery";
 
 const spaces = [
   {
@@ -36,25 +37,17 @@ const spaces = [
   },
 ];
 
-const gallery = [
-  ["/photography/living-room.webp", "Living room"],
-  ["/photography/master-bedroom.webp", "Master bedroom"],
-  ["/photography/second-bedroom.webp", "Second bedroom"],
-  ["/photography/bathroom.webp", "Bathroom"],
-  ["/photography/hero.webp", "Terrace"],
-] as const;
-
-function Icon({ name }: { name: "home" | "suite" | "gallery" | "location" }) {
-  if (name === "home") {
-    return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 10.8 12 4l8 6.8v8.4H5.2v-7.4" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-  }
-  if (name === "suite") {
-    return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M4 15.5h16M6 15.5V9.2h5.3c2 0 3.2 1 3.2 3v3.3M4 18.8v-7M20 18.8v-7" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-  }
-  if (name === "gallery") {
-    return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><rect x="4" y="5" width="16" height="14" rx="1.4" stroke="currentColor" strokeWidth="1.35"/><path d="m6.8 16 4-4 3 2.8 2.1-2 2.4 3.2M15.8 9.2h.01" stroke="currentColor" strokeWidth="1.35" strokeLinecap="round" strokeLinejoin="round"/></svg>;
-  }
-  return <svg viewBox="0 0 24 24" fill="none" aria-hidden="true"><path d="M12 20s5.7-5.7 5.7-10A5.7 5.7 0 0 0 6.3 10C6.3 14.3 12 20 12 20Z" stroke="currentColor" strokeWidth="1.35"/><circle cx="12" cy="10" r="1.8" stroke="currentColor" strokeWidth="1.35"/></svg>;
+function DockIcon({ name }: { name: "home" | "suite" | "gallery" | "location" | "booking" }) {
+  return (
+    <Image
+      src={`/ui/dock/${name}.webp`}
+      alt=""
+      width={128}
+      height={128}
+      className={styles.dockIcon}
+      aria-hidden="true"
+    />
+  );
 }
 
 function CinematicSequence() {
@@ -269,22 +262,7 @@ export function MastihaOdisej() {
         </div>
       </section>
 
-      <section id="gallery" className={styles.gallery}>
-        <div className={styles.galleryHead}>
-          <h2 data-reveal>The suite</h2>
-          <p>Five real views of the property. No stock imagery, no invented rooms, no decorative filler.</p>
-        </div>
-        <div className={styles.galleryRail} aria-label="Property photographs">
-          {gallery.map(([src, label], index) => (
-            <figure className={styles.galleryFrame} key={src + index}>
-              <div className={styles.galleryPhoto}>
-                <Image src={src} alt={label} fill sizes="(max-width:700px) 88vw, 68vw" className={styles.editorialImage} />
-              </div>
-              <figcaption className={styles.galleryCaption}><span>0{index + 1}</span><span>{label}</span></figcaption>
-            </figure>
-          ))}
-        </div>
-      </section>
+      <ImmersiveGallery />
 
       <section id="amenities" className={styles.amenities}>
         <div className={styles.sectionTop}><span>03 · Details</span><span>What is included</span></div>
@@ -301,6 +279,22 @@ export function MastihaOdisej() {
               </div>
             ))}
           </div>
+        </div>
+      </section>
+
+      <section className={styles.interlude} aria-label="Mastiha apartment film still">
+        <Image
+          src="/sequence/poster.webp"
+          alt="Mastiha Luxury Suites apartment"
+          fill
+          sizes="100vw"
+          className={styles.interludeImage}
+        />
+        <div className={styles.interludeShade} />
+        <div className={styles.interludeCopy} data-reveal>
+          <span>Vrontados · Chios</span>
+          <h2>The apartment,<br />as it feels.</h2>
+          <p>Light, texture and the calm rhythm of a home by the Aegean.</p>
         </div>
       </section>
 
@@ -353,11 +347,11 @@ export function MastihaOdisej() {
       </footer>
 
       <nav className={styles.dock} aria-label="Quick navigation">
-        <button className={styles.dockButton} aria-label="Home" onClick={() => scroll("#home")}><Icon name="home" /></button>
-        <button className={styles.dockButton} aria-label="The suite" onClick={() => scroll("#suite")}><Icon name="suite" /></button>
-        <button className={styles.dockButton} aria-label="Gallery" onClick={() => scroll("#gallery")}><Icon name="gallery" /></button>
-        <button className={styles.dockButton} aria-label="Location" onClick={() => scroll("#location")}><Icon name="location" /></button>
-        <button className={`${styles.dockButton} ${styles.dockBook}`} onClick={() => openBooking("dock")}>Book ↗</button>
+        <button className={styles.dockButton} aria-label="Home" onClick={() => scroll("#home")}><DockIcon name="home" /></button>
+        <button className={styles.dockButton} aria-label="The suite" onClick={() => scroll("#suite")}><DockIcon name="suite" /></button>
+        <button className={styles.dockButton} aria-label="Gallery" onClick={() => scroll("#gallery")}><DockIcon name="gallery" /></button>
+        <button className={styles.dockButton} aria-label="Location" onClick={() => scroll("#location")}><DockIcon name="location" /></button>
+        <button className={`${styles.dockButton} ${styles.dockBook}`} onClick={() => openBooking("dock")}><DockIcon name="booking" /><span>Book</span><span aria-hidden="true">↗</span></button>
       </nav>
 
       {bookingOpen && (
