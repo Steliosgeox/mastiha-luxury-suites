@@ -1,18 +1,14 @@
 name: Editorial quality review
-
 on:
   push:
     branches: [design/editorial-mastiha]
   pull_request:
     branches: [main]
-
 permissions:
   contents: read
-
 concurrency:
   group: editorial-${{ github.ref }}
   cancel-in-progress: true
-
 jobs:
   review:
     runs-on: ubuntu-latest
@@ -26,14 +22,13 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - name: Property media for visual review
+      - name: Reproduce and repair incomplete baseline lockfile for review
+        run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Lockfile repair artifact
         uses: actions/upload-artifact@v4
         with:
-          name: property-media-review
-          path: |
-            public/photography/
-            public/sequence/poster.webp
-            public/sequence/sequence-manifest.json
+          name: lockfile-repair
+          path: package-lock.json
           retention-days: 3
       - run: npm ci
       - run: npm run typecheck
