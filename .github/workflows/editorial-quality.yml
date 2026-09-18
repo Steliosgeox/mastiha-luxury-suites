@@ -1,0 +1,54 @@
+name: Editorial quality review
+
+on:
+  push:
+    branches: [design/editorial-mastiha]
+  pull_request:
+    branches: [main]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: editorial-${{ github.ref }}
+  cancel-in-progress: true
+
+jobs:
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      ESLINT_USE_FLAT_CONFIG: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Property media for visual review
+        uses: actions/upload-artifact@v4
+        with:
+          name: property-media-review
+          path: |
+            public/photography/
+            public/sequence/poster.webp
+            public/sequence/sequence-manifest.json
+          retention-days: 3
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test:unit --if-present
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run test:e2e
+      - name: Browser review artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: editorial-browser-review
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
