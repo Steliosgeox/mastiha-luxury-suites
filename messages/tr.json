@@ -1,0 +1,145 @@
+{
+  "common": {
+    "brand": "Mastiha Luxury Suites",
+    "location": "Vrontados · Sakız Adası · Yunanistan",
+    "bookStay": "Rezervasyon Yap",
+    "exploreSuite": "Süiti Keşfedin",
+    "discover": "Keşfet",
+    "close": "Kapat",
+    "directBooking": "Rezervasyon",
+    "viewGallery": "Tüm Fotoğrafları Gör",
+    "getDirections": "Yol Tarifi Al",
+    "openGoogleMaps": "Google Haritalar'da Aç",
+    "ratingsVerified": "Puanlar Eylül 2026 itibarıyla doğrulanmıştır",
+    "licenseLabel": "Yunanistan Turizm Kayıt Numarası",
+    "privacyPolicy": "Gizlilik Politikası",
+    "terms": "Şartlar ve Koşullar"
+  },
+  "nav": {
+    "home": "Ana Sayfa",
+    "suite": "Süit",
+    "gallery": "Galeri",
+    "location": "Konum",
+    "book": "Rezervasyon"
+  },
+  "hero": {
+    "eyebrow": "Vrontados · Sakız Adası · Yunanistan",
+    "headline": "Sakız Adası'nın daha sakin bir yüzü.",
+    "subheadline": "Vrontados'ta 4 kişiye kadar 75 m² özel konut; Ege kıyısına 40 metre, Sakız şehir merkezine sadece birkaç dakika mesafede.",
+    "ctaExplore": "Mekanı Keşfedin",
+    "ctaBook": "Hemen Rezervasyon Yapın",
+    "scrollCue": "Keşfetmek için kaydırın"
+  },
+  "sequence": {
+    "step1": "Ege kıyısındaki sığınağınız",
+    "step2": "75 m² özel yaşam alanı",
+    "step3": "İki yatak odası · Dört kişilik konaklama",
+    "step4": "Huzurlu bir konaklama için özenle donatıldı",
+    "step5": "Denize sadece kırk metre",
+    "step6": "Mastiha'ya Hoş Geldiniz"
+  },
+  "intro": {
+    "statement": "Aheste sabahlar, deniz kokulu rüzgarlar ve plansız günler için tasarlandı.",
+    "narrative": "Vrontados'un sahil kasabasında yer alan Mastiha Luxury Suites, huzurlu bir dinlenme sığınağı olarak tasarlandı. Sakız damla sakızının berrak ışıltısı, Ege taşı, sabah deniz esintisi ve yalın Akdeniz mimarisiyle buluşuyor.",
+    "metricArea": "75 m²",
+    "metricAreaLabel": "Özel Yaşam Alanı",
+    "metricGuests": "4 Misafir",
+    "metricGuestsLabel": "Maksimum Kapasite",
+    "metricBedrooms": "2 Yatak Odası",
+    "metricBedroomsLabel": "King ve Tek Kişilik Yatak",
+    "metricDistance": "40 m",
+    "metricDistanceLabel": "Ege Kıyısına Mesafe"
+  },
+  "spaces": {
+    "title": "Yaşam Alanları",
+    "subtitle": "Doğal ışık, özenle seçilmiş dokular ve Sakız Adası'nın sakin mahremiyeti.",
+    "living": {
+      "title": "Aydınlık Salon",
+      "desc": "Konforlu çekyat kanepe, doğal gün ışığı, akıllı TV ve yemek alanına doğrudan geçiş."
+    },
+    "master": {
+      "title": "Ana Yatak Odası",
+      "desc": "Doğal keten tonlarında King boy yatak, okuma lambaları ve akustik ses yalıtımı."
+    },
+    "second": {
+      "title": "İkinci Yatak Odası",
+      "desc": "Yeşilliklere bakan konforlu tek kişilik yatak, geniş gardırop ve huzurlu ortam."
+    },
+    "bathroom": {
+      "title": "Taş & Cam Banyo",
+      "desc": "Arka aydınlatmalı LED ayna, seramik lavabo çanağı, yağmur duş ve yumuşak havlular."
+    },
+    "terrace": {
+      "title": "Çam Ağaçları Arasında Teras",
+      "desc": "Sabah espressosu ve akşam deniz meltemi için çam gölgeli özel hasır teras oturma alanı."
+    }
+  },
+  "amenities": {
+    "title": "Özenli Konaklama Olanakları",
+    "subtitle": "Deniz kenarında kendinizi evinizde hissetmeniz için gereken her detay.",
+    "beachAccess": "Plaja Erişim · 40 metre",
+    "seaView": "Ege Denizi ve Kıyı Manzarası",
+    "parking": "Ücretsiz Özel Otopark",
+    "wifi": "Yüksek Hızlı Wi-Fi (92 Mbps)",
+    "climate": "Tüm Odalarda Çift Klima & Isıtma",
+    "kitchen": "Fırınlı Tam Donanımlı Mutfak",
+    "espresso": "Espresso Kahve Makinesi",
+    "laundry": "Daire İçi Çamaşır Makinesi",
+    "entertainment": "İki Adet Smart LED TV & Yayın",
+    "soundproofing": "Ses Yalıtımlı Huzurlu Yapı",
+    "family": "Aile Dostu & Bebek Karyolası (0-3 yaş)",
+    "entrance": "Özel Bağımsız Giriş"
+  },
+  "trust": {
+    "title": "Misafir Değerlendirmeleri",
+    "subtitle": "Önde gelen rezervasyon platformlarında tam puan ile onaylandı.",
+    "airbnbBadge": "Misafirlerin Favorisi",
+    "airbnbSub": "Puan ve güvenilirlik bazında Airbnb'deki uygun evlerin en iyi %1'inde",
+    "airbnbScore": "5.0",
+    "airbnbReviews": "27 doğrulanmış yorum",
+    "bookingScore": "9.9",
+    "bookingLabel": "Kusursuz",
+    "bookingReviews": "19 doğrulanmış yorum",
+    "subScores": {
+      "cleanliness": "Temizlik 10/10",
+      "comfort": "Konfor 10/10",
+      "facilities": "Tesisler 10/10",
+      "staff": "Personel 10/10",
+      "value": "Fiyat/Fayda 10/10",
+      "location": "Konum 9.7/10"
+    }
+  },
+  "location": {
+    "title": "Sakız'a yakın. Denize daha da yakın.",
+    "subtitle": "Kaptan konakları, sakin çakıl koyları ve adanın merkezine yakınlığıyla bilinen tarihi denizci kasabası Vrontados'ta.",
+    "seaDist": "Sahile 40 metre",
+    "monumentDist": "Afanis Naftis Anıtı'na 600 m",
+    "portDist": "Sakız Limanı'na 4.5 km",
+    "townDist": "Sakız Şehir Merkezine 8 dk sürüş",
+    "airportDist": "Sakız Havalimanı'na (JKH) 7 km",
+    "museumDist": "Bizans Müzesi'ne 4.4 km",
+    "amenitiesHeader": "Yakın Çevre",
+    "amenitiesBody": "Yürüme mesafesinde: fırın, süpermarket, deniz kenarı tavernalar, kafeler, eczane ve ada otobüs durağı."
+  },
+  "heritage": {
+    "title": "Damla Sakızının Ruhu",
+    "eyebrow": "UNESCO Somut Olmayan Kültürel Miras",
+    "p1": "Sakız Adası'nın güney yamaçlarında yetişen Pistacia lentiscus var. Chia ağacı, dünyada gerçek damla sakızı reçinesini damlatan tek türdür. 2014 yılında UNESCO tarafından tescil edilen geleneksel sakız hasadı (kentima), adanın sabırlı ve cömert ruhunu simgeler.",
+    "p2": "Mastiha Luxury Suites ilhamını bu nadir cevherden alır: berrak kehribar ışığı, doğal dokular ve adanın sıcak konukseverliği."
+  },
+  "bookingModal": {
+    "title": "Rezervasyon platformunu seçin",
+    "subtitle": "Şeffaf fiyatlandırma ve güvenceyle doğrulanmış resmi rezervasyon kanallarımız üzerinden yerinizi ayırtın.",
+    "airbnbCTA": "Airbnb ile Devam Et",
+    "airbnbNote": "Süper Ev Sahibi · 5.0 Puan · Misafir Favorisi",
+    "bookingCTA": "Booking.com ile Devam Et",
+    "bookingNote": "Kusursuz 9.9 · Ücretsiz Özel Otopark",
+    "securityNote": "Güvenli bir şekilde resmi listeleme sayfasına yönlendirileceksiniz."
+  },
+  "footer": {
+    "tagline": "Sakız Adası Vrontados'ta özel sahil konutu.",
+    "registered": "Yunanistan Ulusal Turizm Sicil No (AMA): 00003302833",
+    "rights": "Tüm hakları saklıdır.",
+    "ownerNotice": "Tesis detayları Eylül 2026 itibarıyla teyit edilmiştir."
+  }
+}

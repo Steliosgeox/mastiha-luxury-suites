@@ -1,0 +1,25 @@
+{
+  "version": "1.0",
+  "aspectRatio": 1.7777777777777777,
+  "poster": "/sequence/poster.webp",
+  "desktop": {
+    "frameCount": 120,
+    "width": 1440,
+    "height": 810,
+    "format": "avif",
+    "basePath": "/sequence/desktop",
+    "filePattern": "frame-%04d.avif",
+    "totalBytes": 3375402,
+    "avgFrameBytes": 28128
+  },
+  "mobile": {
+    "frameCount": 80,
+    "width": 864,
+    "height": 486,
+    "format": "avif",
+    "basePath": "/sequence/mobile",
+    "filePattern": "frame-%04d.avif",
+    "totalBytes": 1156526,
+    "avgFrameBytes": 14457
+  }
+}

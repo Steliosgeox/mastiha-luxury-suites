@@ -1,0 +1,145 @@
+{
+  "common": {
+    "brand": "Mastiha Luxury Suites",
+    "location": "Vrontados · Chios · Greece",
+    "bookStay": "Book your stay",
+    "exploreSuite": "Explore the suite",
+    "discover": "Discover",
+    "close": "Close",
+    "directBooking": "Direct Reservation",
+    "viewGallery": "View full gallery",
+    "getDirections": "Get directions",
+    "openGoogleMaps": "Open in Google Maps",
+    "ratingsVerified": "Ratings verified September 2026",
+    "licenseLabel": "Greek Tourism Registration",
+    "privacyPolicy": "Privacy Policy",
+    "terms": "Terms & Conditions"
+  },
+  "nav": {
+    "home": "Home",
+    "suite": "Suite",
+    "gallery": "Gallery",
+    "location": "Location",
+    "book": "Book"
+  },
+  "hero": {
+    "eyebrow": "Vrontados · Chios · Greece",
+    "headline": "A quieter side of Chios.",
+    "subheadline": "A private 75 m² home in Vrontados for up to four guests, moments from the Aegean and minutes from Chios town.",
+    "ctaExplore": "Explore the space",
+    "ctaBook": "Reserve your stay",
+    "scrollCue": "Scroll to discover"
+  },
+  "sequence": {
+    "step1": "Your place by the Aegean",
+    "step2": "75 m² of private space",
+    "step3": "Two bedrooms · Sleeps four",
+    "step4": "Thoughtfully equipped for calm living",
+    "step5": "Forty metres from the water",
+    "step6": "Welcome to Mastiha"
+  },
+  "intro": {
+    "statement": "Made for slow mornings, salt in the air, and days without a schedule.",
+    "narrative": "Tucked away in the coastal enclave of Vrontados, Mastiha Luxury Suites was conceived as a restful sanctuary. Here, the natural translucence of Chios mastic resin meets Aegean stone, morning sea air, and restrained Mediterranean architecture.",
+    "metricArea": "75 m²",
+    "metricAreaLabel": "Private Living Space",
+    "metricGuests": "4 Guests",
+    "metricGuestsLabel": "Maximum Occupancy",
+    "metricBedrooms": "2 Bedrooms",
+    "metricBedroomsLabel": "King & Single Suite",
+    "metricDistance": "40 m",
+    "metricDistanceLabel": "To the Aegean Shore"
+  },
+  "spaces": {
+    "title": "The Living Space",
+    "subtitle": "An uncluttered atmosphere crafted around natural light, textured textiles, and quiet Aegean privacy.",
+    "living": {
+      "title": "Sunlit Living Lounge",
+      "desc": "Generous modular seating, soft morning shadows, smart entertainment, and direct dining access."
+    },
+    "master": {
+      "title": "Master Bedroom",
+      "desc": "King-size bed framed by warm linen tones, reading illumination, and custom acoustic soundproofing."
+    },
+    "second": {
+      "title": "Second Bedroom",
+      "desc": "Comfortable single bed with botanical accents, generous wardrobe storage, and garden-facing light."
+    },
+    "bathroom": {
+      "title": "Stone & Glass Bathroom",
+      "desc": "Backlit architectural mirror, ceramic vessel basin, rain shower fixtures, and plush cotton towels."
+    },
+    "terrace": {
+      "title": "Pine-Canopied Terrace",
+      "desc": "Private outdoor wicker lounge overlooking coastal pine canopies, suited for slow espresso and evening breeze."
+    }
+  },
+  "amenities": {
+    "title": "Thoughtful Amenities",
+    "subtitle": "Everything provided is intentional. Essential comforts to feel at home by the sea.",
+    "beachAccess": "Beach Access · 40 metres away",
+    "seaView": "Aegean Sea & Coastal Horizons",
+    "parking": "Free Private On-Site Parking",
+    "wifi": "High-Speed Wi-Fi (92 Mbps)",
+    "climate": "Dual Air Conditioning & Heating",
+    "kitchen": "Full Kitchen with Oven & Cookware",
+    "espresso": "Espresso Machine & Coffee Service",
+    "laundry": "In-Unit Washing Machine",
+    "entertainment": "Two Smart LED TVs & Streaming",
+    "soundproofing": "Acoustic Soundproof Construction",
+    "family": "Family Accommodation & Crib (0-3 yrs)",
+    "entrance": "Private Ground-Floor Entrance"
+  },
+  "trust": {
+    "title": "Recognized by Guests",
+    "subtitle": "Unanimously praised by travelers across verified booking platforms.",
+    "airbnbBadge": "Guest Favorite",
+    "airbnbSub": "Top 1% of eligible homes on Airbnb based on ratings and reliability",
+    "airbnbScore": "5.0",
+    "airbnbReviews": "27 verified reviews",
+    "bookingScore": "9.9",
+    "bookingLabel": "Exceptional",
+    "bookingReviews": "19 verified reviews",
+    "subScores": {
+      "cleanliness": "Cleanliness 10/10",
+      "comfort": "Comfort 10/10",
+      "facilities": "Facilities 10/10",
+      "staff": "Staff 10/10",
+      "value": "Value 10/10",
+      "location": "Location 9.7/10"
+    }
+  },
+  "location": {
+    "title": "Close to Chios. Closer to the sea.",
+    "subtitle": "Situated in Vrontados, an ancient maritime town known for neoclassical captain mansions, tranquil pebbled coves, and proximity to Chios town.",
+    "seaDist": "40 m to the shoreline",
+    "monumentDist": "600 m to Afanis Naftis Monument",
+    "portDist": "4.5 km to Port of Chios",
+    "townDist": "8 min drive to Chios Town Centre",
+    "airportDist": "7 km to Chios Airport (JKH)",
+    "museumDist": "4.4 km to Byzantine Museum",
+    "amenitiesHeader": "Immediate Neighborhood",
+    "amenitiesBody": "Within walking distance: fresh local bakery, supermarket, beachfront tavernas, cafés, pharmacy, and bus service connecting to the island."
+  },
+  "heritage": {
+    "title": "The Spirit of Mastiha",
+    "eyebrow": "UNESCO Intangible Cultural Heritage",
+    "p1": "On the southern hillsides of Chios grows the Pistacia lentiscus var. Chia, the only tree in the world that weeps authentic mastiha resin. Inscribed by UNESCO in 2014, the centuries-old practice of 'kentima' (scoring the bark to yield fragrant teardrops) defines the quiet perseverance and warmth of the island.",
+    "p2": "Our suites draw inspiration from this rare gem: clear amber light, organic textures, and hospitality shaped by authentic island heritage."
+  },
+  "bookingModal": {
+    "title": "Select your booking platform",
+    "subtitle": "Book directly through our verified partner channels with transparent pricing and host protection.",
+    "airbnbCTA": "Continue on Airbnb",
+    "airbnbNote": "Superhost · 5.0 Rating · Guest Favorite",
+    "bookingCTA": "Continue on Booking.com",
+    "bookingNote": "Exceptional 9.9 · Free Private Parking",
+    "securityNote": "You will be transferred securely to the official listing page."
+  },
+  "footer": {
+    "tagline": "Private seaside home in Vrontados, Chios.",
+    "registered": "Greek National Tourism Registry License: 00003302833",
+    "rights": "All rights reserved.",
+    "ownerNotice": "Address and operational details verified as of September 2026."
+  }
+}
