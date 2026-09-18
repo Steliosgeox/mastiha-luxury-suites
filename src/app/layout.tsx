@@ -1,6 +1,9 @@
 import type { Metadata } from "next";
 import { EB_Garamond, Inter } from "next/font/google";
 import "./globals.css";
+import "yet-another-react-lightbox/styles.css";
+import "yet-another-react-lightbox/plugins/thumbnails.css";
+import "yet-another-react-lightbox/plugins/captions.css";
 
 const ebGaramond = EB_Garamond({
   subsets: ["latin", "latin-ext", "greek", "greek-ext"],
