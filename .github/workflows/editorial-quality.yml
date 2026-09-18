@@ -1,0 +1,63 @@
+name: Editorial quality review
+on:
+  push:
+    branches: [design/editorial-mastiha]
+  pull_request:
+    branches: [main]
+permissions:
+  contents: read
+concurrency:
+  group: editorial-${{ github.ref }}
+  cancel-in-progress: true
+jobs:
+  repair-lockfile:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/design/editorial-mastiha'
+    permissions:
+      contents: write
+    runs-on: ubuntu-latest
+    timeout-minutes: 5
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+      - run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - name: Commit generated lockfile without modifying source or main
+        run: |
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add package-lock.json
+          if ! git diff --cached --quiet; then
+            git commit -m 'fix: synchronize incomplete npm lockfile for clean installs'
+            git push origin HEAD:refs/heads/design/editorial-mastiha
+          fi
+  review:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      ESLINT_USE_FLAT_CONFIG: 'false'
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+      - run: npm ci
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test:unit --if-present
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run test:e2e
+      - name: Browser review artifacts
+        if: always()
+        uses: actions/upload-artifact@v4
+        with:
+          name: editorial-browser-review
+          path: |
+            test-results/
+            playwright-report/
+          if-no-files-found: ignore
+          retention-days: 7
