@@ -8,29 +8,8 @@ permissions:
   contents: read
 concurrency:
   group: editorial-${{ github.ref }}
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
-  repair-lockfile:
-    if: github.event_name == 'push' && github.ref == 'refs/heads/design/editorial-mastiha'
-    permissions:
-      contents: write
-    runs-on: ubuntu-latest
-    timeout-minutes: 5
-    steps:
-      - uses: actions/checkout@v4
-      - uses: actions/setup-node@v4
-        with:
-          node-version: '22'
-      - run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
-      - name: Commit generated lockfile without modifying source or main
-        run: |
-          git config user.name 'github-actions[bot]'
-          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add package-lock.json
-          if ! git diff --cached --quiet; then
-            git commit -m 'fix: synchronize incomplete npm lockfile for clean installs'
-            git push origin HEAD:refs/heads/design/editorial-mastiha
-          fi
   review:
     runs-on: ubuntu-latest
     timeout-minutes: 20
@@ -43,15 +22,18 @@ jobs:
         with:
           node-version: '22'
           cache: npm
-      - run: npm install --package-lock-only --ignore-scripts --no-audit --no-fund
       - run: npm ci
+      - run: npm run check:ui
       - run: npm run typecheck
       - run: npm run lint
-      - run: npm run test:unit --if-present
+      - run: npm run test:unit
+      - name: Record existing production dependency audit
+        continue-on-error: true
+        run: npm audit --omit=dev --json > dependency-audit.json
       - run: npm run build
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:e2e
-      - name: Browser review artifacts
+      - name: Screenshots and test evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
@@ -59,5 +41,15 @@ jobs:
           path: |
             test-results/
             playwright-report/
+            dependency-audit.json
           if-no-files-found: ignore
           retention-days: 7
+      - name: Source snapshot for review
+        if: always()
+        run: tar -czf editorial-source-review.tar.gz src public messages scripts tests package.json package-lock.json next.config.ts playwright.config.ts tsconfig.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: editorial-source-review
+          path: editorial-source-review.tar.gz
+          retention-days: 1

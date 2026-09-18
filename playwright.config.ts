@@ -1,29 +1,8 @@
-import { defineConfig, devices } from "@playwright/test";
-
+import { defineConfig } from "@playwright/test";
 export default defineConfig({
-  testDir: "./tests",
-  fullyParallel: false,
-  retries: 0,
-  workers: 1,
-  reporter: "list",
-  use: {
-    baseURL: "http://127.0.0.1:3000",
-    trace: "on-first-retry",
-  },
-  webServer: {
-    command: "npm run start",
-    url: "http://127.0.0.1:3000",
-    reuseExistingServer: !process.env.CI,
-    timeout: 120000,
-  },
-  projects: [
-    {
-      name: "chromium",
-      use: { ...devices["Desktop Chrome"] },
-    },
-    {
-      name: "mobile",
-      use: { ...devices["Pixel 7"] },
-    },
-  ],
+  testDir: "./tests", testMatch: "**/*.spec.ts", fullyParallel: false,
+  retries: 0, workers: 2, timeout: 45000, reporter: [["list"], ["html", { open: "never" }]], outputDir: "test-results",
+  use: { baseURL: "http://127.0.0.1:3000", viewport: { width: 1440, height: 900 }, deviceScaleFactor: 1, trace: "retain-on-failure", screenshot: "only-on-failure" },
+  webServer: { command: "npm run start", url: "http://127.0.0.1:3000/en", reuseExistingServer: !process.env.CI, timeout: 120000 },
+  projects: [{ name: "chromium", use: { browserName: "chromium" } }, { name: "webkit", use: { browserName: "webkit" } }],
 });

@@ -1,359 +1,107 @@
-"use client";
-
 import Image from "next/image";
 import Link from "next/link";
-import React, { useEffect, useMemo, useRef, useState } from "react";
-import { useTranslations } from "next-intl";
-import gsap from "gsap";
-import { ScrollTrigger } from "gsap/ScrollTrigger";
-import { SequenceCanvas, SequenceCanvasHandle } from "@/components/sequence/SequenceCanvas";
-import { propertyData } from "@/content/property";
+import { propertyData as property } from "@/content/property";
 import { reviewStats } from "@/content/reviews";
-import { trackEvent } from "@/lib/analytics";
-import { useSmoothScroll } from "@/components/layout/SmoothScrollProvider";
-import styles from "./MastihaOdisej.module.css";
+import { getStayCopy, normalizeStayLocale, fillCopy } from "@/content/stay-copy";
+import { stayPhoto, type PhotoId } from "@/content/stay-media";
+import { StayExperience, BookButton, PhotoButton, MapPanel } from "./StayExperience";
+import { StayFilm } from "./StayFilm";
 import { ImmersiveGallery } from "./ImmersiveGallery";
-import { PremiumDock } from "./PremiumDock";
+import s from "./MastihaOdisej.module.css";
 
-const spaces = [
-  {
-    title: "Living room",
-    image: "/photography/living-room.webp",
-    note: "Light-filled living and dining space",
-  },
-  {
-    title: "Master bedroom",
-    image: "/photography/master-bedroom.webp",
-    note: "King bed · quiet interior",
-  },
-  {
-    title: "Second bedroom",
-    image: "/photography/second-bedroom.webp",
-    note: "Single bed · calm morning light",
-  },
-  {
-    title: "Bathroom",
-    image: "/photography/bathroom.webp",
-    note: "Stone, glass and clean lines",
-  },
-];
-
-function CinematicSequence() {
-  const sectionRef = useRef<HTMLElement | null>(null);
-  const canvasRef = useRef<SequenceCanvasHandle | null>(null);
-  const [caption, setCaption] = useState(0);
-  const t = useTranslations("sequence");
-  const labels = useMemo(() => [t("step1"), t("step3"), t("step5")], [t]);
-
-  useEffect(() => {
-    if (!sectionRef.current) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-    const trigger = ScrollTrigger.create({
-      trigger: sectionRef.current,
-      start: "top top",
-      end: "bottom bottom",
-      scrub: 0.25,
-      onUpdate: (self) => {
-        const count = canvasRef.current?.getFrameCount() || 120;
-        canvasRef.current?.setFrame(Math.round(self.progress * (count - 1)));
-        const next = self.progress < 0.34 ? 0 : self.progress < 0.7 ? 1 : 2;
-        setCaption((current) => current === next ? current : next);
-      },
-    });
-    return () => trigger.kill();
-  }, []);
-
-  return (
-    <section ref={sectionRef} className={styles.film} aria-label="Apartment film">
-      <div className={styles.filmSticky}>
-        <div className={styles.filmCanvas}>
-          <SequenceCanvas ref={canvasRef} />
-        </div>
-        <div className={styles.filmLabel} aria-live="polite">
-          <span className={styles.filmLabelIndex}>0{caption + 1} / 03</span>
-          <span className={styles.filmLabelText}>{labels[caption]}</span>
-        </div>
-      </div>
-    </section>
-  );
+// Every fill image owns a positioned, size-reserved box. No page-wide absolute posters.
+function PropertyPhoto({ id, alt, className = "", sizes = "(max-width: 760px) 100vw, 65vw", priority = false }: { id: PhotoId; alt: string; className?: string; sizes?: string; priority?: boolean }) {
+  const photo = stayPhoto(id);
+  return <div className={`${s.photo} ${className}`} style={{ position: "relative", isolation: "isolate" }} data-media-frame>
+    <Image src={photo.src} alt={alt} fill sizes={sizes} priority={priority} className={s.photoImage} style={{ objectPosition: photo.position }} />
+  </div>;
 }
 
-export function MastihaOdisej() {
-  const rootRef = useRef<HTMLElement | null>(null);
-  const [bookingOpen, setBookingOpen] = useState(false);
-  const [activeSpace, setActiveSpace] = useState(0);
-  const { scrollTo } = useSmoothScroll();
-  const hero = useTranslations("hero");
-  const intro = useTranslations("intro");
-  const amenities = useTranslations("amenities");
-  const location = useTranslations("location");
-
-  useEffect(() => {
-    if (!rootRef.current) return;
-    const reduced = window.matchMedia("(prefers-reduced-motion: reduce)").matches;
-    if (reduced) return;
-
-    gsap.registerPlugin(ScrollTrigger);
-    const ctx = gsap.context(() => {
-      gsap.utils.toArray<HTMLElement>("[data-reveal]").forEach((el) => {
-        gsap.fromTo(el, { y: 28, opacity: 0 }, {
-          y: 0,
-          opacity: 1,
-          duration: 1.05,
-          ease: "power3.out",
-          scrollTrigger: { trigger: el, start: "top 86%", once: true },
-        });
-      });
-    }, rootRef);
-    return () => ctx.revert();
-  }, []);
-
-  useEffect(() => {
-    if (!bookingOpen) return;
-    const original = document.body.style.overflow;
-    document.body.style.overflow = "hidden";
-    const onKey = (event: KeyboardEvent) => {
-      if (event.key === "Escape") setBookingOpen(false);
-    };
-    window.addEventListener("keydown", onKey);
-    return () => {
-      document.body.style.overflow = original;
-      window.removeEventListener("keydown", onKey);
-    };
-  }, [bookingOpen]);
-
-  const openBooking = (source: "hero" | "dock" | "cta") => {
-    if (source === "hero") trackEvent("hero_book_click");
-    if (source === "dock") trackEvent("dock_book_click");
-    setBookingOpen(true);
-  };
-
-  const scroll = (id: string) => scrollTo(id, { offset: -20 });
-
-  return (
-    <main ref={rootRef} className={styles.site}>
-      <section id="home" className={styles.hero}>
-        <Image src="/photography/hero.webp" alt="Mastiha Luxury Suites terrace in Vrontados, Chios" fill priority sizes="100vw" className={styles.heroImage} />
-        <div className={styles.heroShade} />
-        <div className={styles.heroGrain} />
-
-        <header className={styles.masthead}>
-          <nav className={styles.navLeft} aria-label="Primary">
-            <button className={styles.navLink} onClick={() => scroll("#suite")}>The house</button>
-            <button className={styles.navLink} onClick={() => scroll("#spaces")}>Our rooms</button>
-            <button className={styles.navLink} onClick={() => scroll("#location")}>The island</button>
+export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
+  const lang = normalizeStayLocale(locale);
+  const c = getStayCopy(lang);
+  const values = { guests: property.maxGuests, bedrooms: property.bedrooms, bathrooms: property.bathrooms, distance: property.distanceToSeaMeters };
+  const caption = (id: PhotoId) => `${c.captions[id]} · Mastiha Luxury Suites`;
+  return <StayExperience locale={lang}>
+    <a href="#suite" className={s.skip}>{c.skip}</a>
+    <main className={s.site}>
+      <section id="home" className={s.hero} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="mastiha-title" data-testid="landing-hero">
+        <div className={s.heroMedia} style={{ position: "absolute", inset: 0 }} data-media-frame>
+          <Image src={stayPhoto("terrace").src} alt={caption("terrace")} fill priority sizes="100vw" className={s.heroImage} data-testid="hero-image" />
+        </div>
+        <div className={s.heroScrim} aria-hidden="true" />
+        <header className={s.masthead}>
+          <nav className={s.topNav} aria-label={c.nav}>
+            <a href="#suite">{c.suite}</a><a href="#gallery">{c.gallery}</a><a href="#location">{c.location}</a>
           </nav>
-
-          <div className={styles.wordmark} aria-label="Mastiha Luxury Suites">
-            <span>Mastiha</span>
-            <span>Luxury Suites</span>
-          </div>
-
-          <div className={styles.navRight}>
-            <div className={styles.localeGroup} aria-label="Language">
-              <Link className={styles.localeLink} href="/en">EN</Link>
-              <Link className={styles.localeLink} href="/el">EL</Link>
-              <Link className={styles.localeLink} href="/tr">TR</Link>
-            </div>
-            <button className={styles.bookTop} onClick={() => openBooking("hero")}>Check availability ↗</button>
+          <Link href={`/${lang}`} className={s.wordmark} aria-label={property.name}>Mastiha<span>Luxury Suites</span></Link>
+          <div className={s.headerActions}>
+            <nav className={s.locales} aria-label={c.language}>{(["en", "el", "tr"] as const).map((l) => <Link key={l} href={`/${l}`} lang={l} hrefLang={l} aria-current={lang === l ? "page" : undefined}>{l.toUpperCase()}</Link>)}</nav>
+            <BookButton className={s.outlineButton} source="hero">{c.book}<span aria-hidden="true">↗</span></BookButton>
           </div>
         </header>
-
-        <div className={styles.heroLocation}>Vrontados<br />Chios, Greece</div>
-        <div className={styles.heroKicker}>{hero("headline")}</div>
-        <div className={styles.heroCenter}><small>Private seaside stay · 40 m from the Aegean</small></div>
-
-        <div className={styles.heroTitleWrap}>
-          <h1 className={styles.heroTitle}>MASTIHA</h1>
-          <div className={styles.heroTitleSub}>
-            <span>Luxury Suites</span>
-            <span>75 m² · 2 bedrooms · up to 4 guests</span>
-          </div>
+        <div className={s.heroMeta}><span>{c.place}</span><span>{c.heroSmall}</span></div>
+        <div className={s.heroIdentity}>
+          <p>{c.heroLine}</p>
+          <h1 id="mastiha-title">MASTIHA</h1>
+          <div className={s.heroBaseline}><span>Luxury Suites</span><span>{property.areaM2} m² · {property.bedrooms} {c.bedroomsLabel} · {property.maxGuests} {c.guestsLabel}</span></div>
         </div>
-
-        <button className={styles.discover} onClick={() => scroll("#film")}>
-          <span className={styles.discoverIcon}>↓</span>
-          <span>Discover the house</span>
-        </button>
+        <a href="#film" className={s.discover}><span aria-hidden="true">↓</span>{c.discover}</a>
       </section>
 
-      <div id="film"><CinematicSequence /></div>
+      <StayFilm locale={lang} />
 
-      <section id="suite" className={styles.statement}>
-        <div className={styles.statementEyebrow}>Mastiha Luxury Suites · Chios</div>
-        <h2 className={styles.statementText} data-reveal>{intro("statement")}</h2>
-        <div className={styles.statementFoot}>
-          <span>Vrontados · North Aegean</span>
-          <span>40 metres from the shoreline</span>
+      <section id="suite" className={s.intro} aria-labelledby="suite-title">
+        <div className={s.introCopy} data-reveal>
+          <p className={s.eyebrow}>{c.introEyebrow}</p>
+          <h2 id="suite-title" className={s.heading}>{c.introTitle}</h2>
+          <p className={s.body}>{c.introBody}</p>
+          <dl className={s.facts}><div><dt>{c.areaLabel}</dt><dd>{property.areaM2}<small> m²</small></dd></div><div><dt>{c.bedroomsLabel}</dt><dd>{property.bedrooms}</dd></div><div><dt>{c.guestsLabel}</dt><dd>{property.maxGuests}</dd></div></dl>
         </div>
+        <figure className={s.introPhoto} data-reveal><PhotoButton id="living"><PropertyPhoto id="living" alt={caption("living")} className={s.landscape} /></PhotoButton><figcaption className={s.caption}><span>01</span>{c.captions.living}</figcaption></figure>
       </section>
 
-      <section className={`${styles.paper} ${styles.intro}`}>
-        <h2 className={styles.introLead} data-reveal>A house shaped around light, quiet and the sea.</h2>
-        <div className={styles.introRight} data-reveal>
-          <p className={styles.introCopy}>{intro("narrative")}</p>
-          <div className={styles.metrics}>
-            <div className={styles.metric}><strong>75</strong><span>m² private living space</span></div>
-            <div className={styles.metric}><strong>04</strong><span>guests maximum</span></div>
-            <div className={styles.metric}><strong>02</strong><span>bedrooms</span></div>
-            <div className={styles.metric}><strong>40</strong><span>metres to the Aegean</span></div>
-          </div>
+      <section id="spaces" className={s.rooms} aria-labelledby="rooms-title">
+        <div className={s.sectionHeading}><p className={s.eyebrow}>{c.roomsEyebrow}</p><h2 className={s.heading} id="rooms-title">{c.roomsTitle}</h2></div>
+        <div className={s.roomSpread}>
+          <figure className={s.roomMain} data-reveal><PhotoButton id="master"><PropertyPhoto id="master" alt={caption("master")} className={s.landscape} /></PhotoButton><figcaption className={s.caption}><span>02</span>{c.captions.master}</figcaption></figure>
+          <div className={s.roomAside} data-reveal><h3 className={s.subheading}>{c.bedroomTitle}</h3><p className={s.body}>{c.bedroomBody}</p><PhotoButton id="second"><PropertyPhoto id="second" alt={caption("second")} className={s.roomSecondary} sizes="(max-width:760px) 100vw, 32vw" /></PhotoButton><p className={s.caption}>{c.captions.second}</p></div>
         </div>
       </section>
 
-      <section id="spaces" className={`${styles.paper} ${styles.spaces}`}>
-        <div className={styles.sectionTop}><span>01 · The house</span><span>Inside Mastiha</span></div>
-        <div className={styles.imageEditorial}>
-          <figure data-reveal>
-            <div className={styles.imageLarge}>
-              <Image src="/photography/living-room.webp" alt="Mastiha Luxury Suites living room" fill sizes="(max-width:900px) 100vw, 62vw" className={styles.editorialImage} />
-            </div>
-            <figcaption className={styles.imageCaption}><span>Living room</span><span>Natural light · open living</span></figcaption>
-          </figure>
-          <figure data-reveal>
-            <div className={styles.imageSmall}>
-              <Image src="/photography/master-bedroom.webp" alt="Mastiha Luxury Suites master bedroom" fill sizes="(max-width:900px) 75vw, 32vw" className={styles.editorialImage} />
-            </div>
-            <figcaption className={styles.imageCaption}><span>Master bedroom</span><span>King bed</span></figcaption>
-          </figure>
-        </div>
+      <section className={s.terraceScene} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="terrace-title" data-testid="terrace-scene">
+        <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame><Image src={stayPhoto("terrace").src} alt={caption("terrace")} fill sizes="100vw" className={s.sceneImage} data-parallax /></div>
+        <div className={s.sceneScrim} aria-hidden="true" />
+        <div className={s.sceneCopy} data-reveal><p className={s.eyebrow}>{c.outsideEyebrow}</p><h2 id="terrace-title" className={s.heading}>{c.outsideTitle}</h2><p>{c.outsideBody}</p><PhotoButton id="terrace" className={s.outlineButton}>{c.photoAction}<span aria-hidden="true">↗</span></PhotoButton></div>
       </section>
 
-      <section className={styles.rooms}>
-        <div className={styles.sectionTop}><span>02 · Rooms</span><span>Choose a space</span></div>
-        <h2 className={styles.roomsTitle} data-reveal>Small details.<br />Room to exhale.</h2>
-        <div className={styles.roomStage}>
-          <div className={styles.roomRows}>
-            {spaces.map((space, index) => (
-              <button
-                key={space.title}
-                className={`${styles.roomRow} ${activeSpace === index ? styles.roomRowActive : ""}`}
-                onMouseEnter={() => setActiveSpace(index)}
-                onFocus={() => setActiveSpace(index)}
-                onClick={() => setActiveSpace(index)}
-              >
-                <small>0{index + 1}</small>
-                <strong>{space.title}</strong>
-                <span>{space.note}</span>
-              </button>
-            ))}
-          </div>
-          <div className={styles.roomVisual}>
-            <div className={styles.roomImageWrap}>
-              <Image key={spaces[activeSpace].image} src={spaces[activeSpace].image} alt={spaces[activeSpace].title} fill sizes="(max-width:900px) 100vw, 52vw" className={styles.editorialImage} />
-            </div>
-            <div className={styles.roomDesc}><span>{spaces[activeSpace].title}</span><span>{spaces[activeSpace].note}</span></div>
-          </div>
-        </div>
+      <ImmersiveGallery locale={lang} />
+
+      <section id="amenities" className={s.amenities} aria-labelledby="amenities-title">
+        <figure className={s.detailPhoto} data-reveal><PhotoButton id="bathroom"><PropertyPhoto id="bathroom" alt={caption("bathroom")} className={s.portrait} sizes="(max-width:760px) 100vw, 40vw" /></PhotoButton><figcaption className={s.caption}>{c.captions.bathroom}</figcaption></figure>
+        <div data-reveal><p className={s.eyebrow}>{c.amenitiesEyebrow}</p><h2 id="amenities-title" className={s.heading}>{c.amenitiesTitle}</h2><p className={s.body}>{c.amenitiesBody}</p><ul className={s.amenityList}>{c.amenities.map((name) => <li key={name}><span aria-hidden="true">✓</span>{name}</li>)}</ul></div>
       </section>
 
-      <ImmersiveGallery />
-
-      <section id="amenities" className={styles.amenities}>
-        <div className={styles.sectionTop}><span>03 · Details</span><span>What is included</span></div>
-        <div className={styles.amenitiesGrid}>
-          <div className={styles.amenitiesTitle}>
-            <h2 data-reveal>Everything you need.<br />Nothing you don&apos;t.</h2>
-            <p>{amenities("subtitle")}</p>
-          </div>
-          <div className={styles.amenityList}>
-            {propertyData.amenities.slice(0, 10).map((item, index) => (
-              <div className={styles.amenity} key={item.id}>
-                <span className={styles.amenityNum}>{String(index + 1).padStart(2, "0")}</span>
-                <span className={styles.amenityName}>{item.title}</span>
-              </div>
-            ))}
-          </div>
-        </div>
+      <section id="reviews" className={s.reviews} aria-labelledby="reviews-title">
+        <div><p className={s.eyebrow}>{c.ratingsEyebrow}</p><h2 id="reviews-title" className={s.subheading}>{c.ratingsTitle}</h2></div>
+        <div className={s.ratingLinks}>
+          <a href={property.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" aria-label={`Airbnb: ${c.readReviews}`}><span>Airbnb</span><strong data-testid="review-score">{reviewStats.airbnb.score.toFixed(1)}<small> / 5</small></strong><span>{reviewStats.airbnb.count} {c.reviews} <span aria-hidden="true">↗</span></span></a>
+          <a href={property.bookingLinks.booking} target="_blank" rel="noopener noreferrer" aria-label={`Booking.com: ${c.readReviews}`}><span>Booking.com</span><strong data-testid="review-score">{reviewStats.booking.score.toFixed(1)}<small> / 10</small></strong><span>{reviewStats.booking.count} {c.reviews} <span aria-hidden="true">↗</span></span></a>
+        </div><p className={s.ratingNote}>{fillCopy(c.ratingsNote, { date: reviewStats.lastVerified })}</p>
       </section>
 
-      <section className={styles.interlude} aria-label="Mastiha apartment film still">
-        <Image
-          src="/sequence/poster.webp"
-          alt="Mastiha Luxury Suites apartment"
-          fill
-          sizes="100vw"
-          className={styles.interludeImage}
-        />
-        <div className={styles.interludeShade} />
-        <div className={styles.interludeCopy} data-reveal>
-          <span>Vrontados · Chios</span>
-          <h2>The apartment,<br />as it feels.</h2>
-          <p>Light, texture and the calm rhythm of a home by the Aegean.</p>
-        </div>
+      <section id="location" className={s.location} aria-labelledby="location-title">
+        <div className={s.locationCopy} data-reveal><p className={s.eyebrow}>{c.locationEyebrow}</p><h2 id="location-title" className={s.heading}>{c.locationTitle}</h2><p className={s.body}>{fillCopy(c.locationBody, values)}</p><div className={s.locationLinks}><a href={property.location.googleMapsUrl} target="_blank" rel="noopener noreferrer">{c.maps} ↗</a><a href={property.location.googleDirectionsUrl} target="_blank" rel="noopener noreferrer">{c.directions} ↗</a></div><MapPanel locale={lang} /></div>
+        <figure className={s.locationPhoto}><PhotoButton id="terrace"><PropertyPhoto id="terrace" alt={caption("terrace")} className={s.portrait} sizes="(max-width:760px) 100vw, 45vw" /></PhotoButton><figcaption className={s.caption}>{c.place}</figcaption></figure>
       </section>
 
-      <section id="reviews" className={styles.trust}>
-        <div className={styles.sectionTop}><span>04 · Guest ratings</span><span>Verified snapshot · September 2026</span></div>
-        <h2 className={styles.trustHead} data-reveal>Guests have already said enough.</h2>
-        <div className={styles.scores}>
-          <div className={styles.score}>
-            <div className={styles.scoreNumber}>{reviewStats.airbnb.score.toFixed(1)}</div>
-            <div className={styles.scoreMeta}><span>Airbnb</span><span>{reviewStats.airbnb.count} reviews · {reviewStats.airbnb.badge}</span></div>
-          </div>
-          <div className={styles.score}>
-            <div className={styles.scoreNumber}>{reviewStats.booking.score.toFixed(1)}</div>
-            <div className={styles.scoreMeta}><span>Booking.com</span><span>{reviewStats.booking.count} reviews · {reviewStats.booking.label}</span></div>
-          </div>
-        </div>
+      <section id="information" className={s.faq} aria-labelledby="faq-title"><div><p className={s.eyebrow}>{c.faqEyebrow}</p><h2 id="faq-title" className={s.heading}>{c.faqTitle}</h2></div><div>{c.faqs.map((item) => <details key={item.q}><summary>{item.q}<span aria-hidden="true">+</span></summary><p>{fillCopy(item.a, values)}</p></details>)}</div></section>
+
+      <section id="book" className={s.closing} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="closing-title">
+        <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame><Image src={stayPhoto("master").src} alt={caption("master")} fill sizes="100vw" className={s.sceneImage} /></div><div className={s.sceneScrim} aria-hidden="true" />
+        <div className={s.closingContent}><h2 id="closing-title" className={s.heading}>{c.closing}</h2><div><p>{c.closingBody}</p><BookButton source="closing" className={s.solidButton}>{c.bookShort}<span aria-hidden="true">↗</span></BookButton></div></div>
       </section>
-
-      <section id="location" className={styles.location}>
-        <div>
-          <p className={styles.locationBig}>40<span className={styles.locationUnit}> m</span></p>
-          <span>to the Aegean shoreline</span>
-        </div>
-        <div className={styles.locationRight} data-reveal>
-          <h2>{location("title")}</h2>
-          <p>{location("subtitle")}</p>
-          <div className={styles.locationActions}>
-            <a href={propertyData.location.googleMapsUrl} target="_blank" rel="noreferrer" onClick={() => trackEvent("map_open")}>Open Google Maps ↗</a>
-            <a href={propertyData.location.googleDirectionsUrl} target="_blank" rel="noreferrer" onClick={() => trackEvent("directions_click")}>Get directions ↗</a>
-          </div>
-        </div>
-      </section>
-
-      <section className={styles.booking}>
-        <Image src="/photography/master-bedroom.webp" alt="Master bedroom at Mastiha Luxury Suites" fill sizes="100vw" className={styles.bookingImage} />
-        <div className={styles.bookingShade} />
-        <div className={styles.bookingContent}>
-          <h2 data-reveal>Stay a little longer.</h2>
-          <button className={styles.bookingButton} onClick={() => openBooking("cta")}>Check availability ↗</button>
-        </div>
-      </section>
-
-      <footer className={styles.footer}>
-        <div className={styles.footerBrand}>Mastiha<br />Luxury Suites</div>
-        <div className={styles.footerBottom}>
-          <span>Vrontados · Chios · Greece</span>
-          <span>Greek Tourism Registration<br />{propertyData.licenseNumber}</span>
-          <span>Bookings via Airbnb & Booking.com<br />Ratings last verified {reviewStats.lastVerified}</span>
-        </div>
-      </footer>
-
-      <PremiumDock onNavigate={scroll} onBook={() => openBooking("dock")} />
-
-      {bookingOpen && (
-        <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Choose a booking platform" onMouseDown={(event) => {
-          if (event.currentTarget === event.target) setBookingOpen(false);
-        }}>
-          <div className={styles.overlayPanel}>
-            <div className={styles.overlayTop}>
-              <div className={styles.overlayTitle}>Choose where to book.</div>
-              <button className={styles.overlayClose} onClick={() => setBookingOpen(false)} aria-label="Close">×</button>
-            </div>
-            <a className={styles.bookingRow} href={propertyData.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("booking_outbound_click", { platform: "airbnb" })}>
-              <small>01</small><strong>Airbnb</strong><span>5.0 · Guest Favorite ↗</span>
-            </a>
-            <a className={styles.bookingRow} href={propertyData.bookingLinks.booking} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("booking_outbound_click", { platform: "booking" })}>
-              <small>02</small><strong>Booking.com</strong><span>9.9 Exceptional ↗</span>
-            </a>
-          </div>
-        </div>
-      )}
+      <footer className={s.footer}><div className={s.footerWordmark}>Mastiha<span>Luxury Suites</span></div><div className={s.footerMeta}><span>{c.place}</span><span>{c.registration} {property.licenseNumber}</span><Link href={`/${lang}/privacy`}>{c.privacy}</Link><a href="#home">{c.top} ↑</a></div></footer>
     </main>
-  );
+  </StayExperience>;
 }
