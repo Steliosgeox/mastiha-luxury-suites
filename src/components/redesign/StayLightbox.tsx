@@ -1,6 +1,7 @@
 "use client";
 import Lightbox from "yet-another-react-lightbox";
 import { Captions, Counter, Fullscreen, Thumbnails, Zoom } from "yet-another-react-lightbox/plugins";
+import "yet-another-react-lightbox/plugins/counter.css";
 import { stayPhotos } from "@/content/stay-media";
 import { getStayCopy, type StayLocale } from "@/content/stay-copy";
 import { trackEvent } from "@/lib/analytics";

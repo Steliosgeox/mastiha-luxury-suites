@@ -17,15 +17,17 @@ test('directional windows stay unique and bounded',()=>{ for(const target of [0,
 test('mobile fit preserves the complete landscape frame',()=>{ const r=fittedRect(390,844,1440,810,true); assert.equal(r.width,390); assert.ok(r.height<844); assert.ok(r.y>0); });
 
 test('delayed decoding paints the latest requested frame and releases bitmaps',async(t)=>{
- const saved={fetch:globalThis.fetch,createImageBitmap:globalThis.createImageBitmap,ResizeObserver:globalThis.ResizeObserver,requestAnimationFrame:globalThis.requestAnimationFrame,cancelAnimationFrame:globalThis.cancelAnimationFrame};
+ const names=['fetch','createImageBitmap','ResizeObserver','requestAnimationFrame','cancelAnimationFrame','window'];
+ const saved=Object.fromEntries(names.map(name=>[name,Object.getOwnPropertyDescriptor(globalThis,name)]));
  let active=0,maxActive=0,closed=0,last='';
+ globalThis.window={devicePixelRatio:1};
  globalThis.fetch=async(url,{signal})=>{ active++;maxActive=Math.max(maxActive,active); try { await new Promise((resolve,reject)=>{ const timer=setTimeout(resolve,12);signal.addEventListener('abort',()=>{clearTimeout(timer);reject(new Error('Aborted'));},{once:true}); });return {ok:true,blob:async()=>new Blob([String(url)])}; }finally{active--;} };
  globalThis.createImageBitmap=async(blob)=>({width:1440,height:810,url:await blob.text(),close(){closed++;}});
  globalThis.ResizeObserver=class{constructor(callback){this.callback=callback;}observe(){this.callback();}disconnect(){}};
  globalThis.requestAnimationFrame=(fn)=>setTimeout(fn,0);globalThis.cancelAnimationFrame=clearTimeout;
  const canvas={width:0,height:0,dataset:{},getBoundingClientRect:()=>({width:1440,height:900}),getContext:()=>({fillRect(){},drawImage(image){last=image.url;}})};
  const player=createFramePlayer(canvas,manifest.desktop,{mobile:false,onError:()=>assert.fail('unexpected frame error')});
- t.after(()=>{player.dispose();Object.assign(globalThis,saved);});
+ t.after(()=>{player.dispose();for(const name of names){if(saved[name])Object.defineProperty(globalThis,name,saved[name]);else delete globalThis[name];}});
  async function until(check){for(let i=0;i<100&&!check();i++)await new Promise(r=>setTimeout(r,10));assert.ok(check());}
  player.seek(.8);await until(()=>canvas.dataset.frame==='95');assert.ok(last.endsWith('frame-0096.avif'));
  player.seek(.15);await until(()=>canvas.dataset.frame==='18');assert.equal(canvas.dataset.target,'18');

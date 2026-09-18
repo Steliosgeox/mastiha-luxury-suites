@@ -48,19 +48,14 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
         </div>
         <a href="#film" className={s.discover}><span aria-hidden="true">↓</span>{c.discover}</a>
       </section>
-
       <StayFilm locale={lang} />
-
       <section id="suite" className={s.intro} aria-labelledby="suite-title">
         <div className={s.introCopy} data-reveal>
-          <p className={s.eyebrow}>{c.introEyebrow}</p>
-          <h2 id="suite-title" className={s.heading}>{c.introTitle}</h2>
-          <p className={s.body}>{c.introBody}</p>
+          <p className={s.eyebrow}>{c.introEyebrow}</p><h2 id="suite-title" className={s.heading}>{c.introTitle}</h2><p className={s.body}>{c.introBody}</p>
           <dl className={s.facts}><div><dt>{c.areaLabel}</dt><dd>{property.areaM2}<small> m²</small></dd></div><div><dt>{c.bedroomsLabel}</dt><dd>{property.bedrooms}</dd></div><div><dt>{c.guestsLabel}</dt><dd>{property.maxGuests}</dd></div></dl>
         </div>
         <figure className={s.introPhoto} data-reveal><PhotoButton id="living"><PropertyPhoto id="living" alt={caption("living")} className={s.landscape} /></PhotoButton><figcaption className={s.caption}><span>01</span>{c.captions.living}</figcaption></figure>
       </section>
-
       <section id="spaces" className={s.rooms} aria-labelledby="rooms-title">
         <div className={s.sectionHeading}><p className={s.eyebrow}>{c.roomsEyebrow}</p><h2 className={s.heading} id="rooms-title">{c.roomsTitle}</h2></div>
         <div className={s.roomSpread}>
@@ -68,20 +63,15 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
           <div className={s.roomAside} data-reveal><h3 className={s.subheading}>{c.bedroomTitle}</h3><p className={s.body}>{c.bedroomBody}</p><PhotoButton id="second"><PropertyPhoto id="second" alt={caption("second")} className={s.roomSecondary} sizes="(max-width:760px) 100vw, 32vw" /></PhotoButton><p className={s.caption}>{c.captions.second}</p></div>
         </div>
       </section>
-
       <section className={s.terraceScene} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="terrace-title" data-testid="terrace-scene">
         <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame><Image src={stayPhoto("terrace").src} alt={caption("terrace")} fill sizes="100vw" className={s.sceneImage} data-parallax /></div>
-        <div className={s.sceneScrim} aria-hidden="true" />
-        <div className={s.sceneCopy} data-reveal><p className={s.eyebrow}>{c.outsideEyebrow}</p><h2 id="terrace-title" className={s.heading}>{c.outsideTitle}</h2><p>{c.outsideBody}</p><PhotoButton id="terrace" className={s.outlineButton}>{c.photoAction}<span aria-hidden="true">↗</span></PhotoButton></div>
+        <div className={s.sceneScrim} aria-hidden="true" /><div className={s.sceneCopy} data-reveal><p className={s.eyebrow}>{c.outsideEyebrow}</p><h2 id="terrace-title" className={s.heading}>{c.outsideTitle}</h2><p>{c.outsideBody}</p><PhotoButton id="terrace" className={s.outlineButton}>{c.photoAction}<span aria-hidden="true">↗</span></PhotoButton></div>
       </section>
-
       <ImmersiveGallery locale={lang} />
-
       <section id="amenities" className={s.amenities} aria-labelledby="amenities-title">
         <figure className={s.detailPhoto} data-reveal><PhotoButton id="bathroom"><PropertyPhoto id="bathroom" alt={caption("bathroom")} className={s.portrait} sizes="(max-width:760px) 100vw, 40vw" /></PhotoButton><figcaption className={s.caption}>{c.captions.bathroom}</figcaption></figure>
         <div data-reveal><p className={s.eyebrow}>{c.amenitiesEyebrow}</p><h2 id="amenities-title" className={s.heading}>{c.amenitiesTitle}</h2><p className={s.body}>{c.amenitiesBody}</p><ul className={s.amenityList}>{c.amenities.map((name) => <li key={name}><span aria-hidden="true">✓</span>{name}</li>)}</ul></div>
       </section>
-
       <section id="reviews" className={s.reviews} aria-labelledby="reviews-title">
         <div><p className={s.eyebrow}>{c.ratingsEyebrow}</p><h2 id="reviews-title" className={s.subheading}>{c.ratingsTitle}</h2></div>
         <div className={s.ratingLinks}>
@@ -89,14 +79,11 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
           <a href={property.bookingLinks.booking} target="_blank" rel="noopener noreferrer" aria-label={`Booking.com: ${c.readReviews}`}><span>Booking.com</span><strong data-testid="review-score">{reviewStats.booking.score.toFixed(1)}<small> / 10</small></strong><span>{reviewStats.booking.count} {c.reviews} <span aria-hidden="true">↗</span></span></a>
         </div><p className={s.ratingNote}>{fillCopy(c.ratingsNote, { date: reviewStats.lastVerified })}</p>
       </section>
-
       <section id="location" className={s.location} aria-labelledby="location-title">
-        <div className={s.locationCopy} data-reveal><p className={s.eyebrow}>{c.locationEyebrow}</p><h2 id="location-title" className={s.heading}>{c.locationTitle}</h2><p className={s.body}>{fillCopy(c.locationBody, values)}</p><div className={s.locationLinks}><a href={property.location.googleMapsUrl} target="_blank" rel="noopener noreferrer">{c.maps} ↗</a><a href={property.location.googleDirectionsUrl} target="_blank" rel="noopener noreferrer">{c.directions} ↗</a></div><MapPanel locale={lang} /></div>
+        <div data-reveal><p className={s.eyebrow}>{c.locationEyebrow}</p><h2 id="location-title" className={s.heading}>{c.locationTitle}</h2><p className={s.body}>{fillCopy(c.locationBody, values)}</p><div className={s.locationLinks}><a href={property.location.googleMapsUrl} target="_blank" rel="noopener noreferrer">{c.maps} ↗</a><a href={property.location.googleDirectionsUrl} target="_blank" rel="noopener noreferrer">{c.directions} ↗</a></div><MapPanel locale={lang} /></div>
         <figure className={s.locationPhoto}><PhotoButton id="terrace"><PropertyPhoto id="terrace" alt={caption("terrace")} className={s.portrait} sizes="(max-width:760px) 100vw, 45vw" /></PhotoButton><figcaption className={s.caption}>{c.place}</figcaption></figure>
       </section>
-
       <section id="information" className={s.faq} aria-labelledby="faq-title"><div><p className={s.eyebrow}>{c.faqEyebrow}</p><h2 id="faq-title" className={s.heading}>{c.faqTitle}</h2></div><div>{c.faqs.map((item) => <details key={item.q}><summary>{item.q}<span aria-hidden="true">+</span></summary><p>{fillCopy(item.a, values)}</p></details>)}</div></section>
-
       <section id="book" className={s.closing} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="closing-title">
         <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame><Image src={stayPhoto("master").src} alt={caption("master")} fill sizes="100vw" className={s.sceneImage} /></div><div className={s.sceneScrim} aria-hidden="true" />
         <div className={s.closingContent}><h2 id="closing-title" className={s.heading}>{c.closing}</h2><div><p>{c.closingBody}</p><BookButton source="closing" className={s.solidButton}>{c.bookShort}<span aria-hidden="true">↗</span></BookButton></div></div>
