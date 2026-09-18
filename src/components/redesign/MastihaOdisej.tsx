@@ -13,6 +13,7 @@ import { trackEvent } from "@/lib/analytics";
 import { useSmoothScroll } from "@/components/layout/SmoothScrollProvider";
 import styles from "./MastihaOdisej.module.css";
 import { ImmersiveGallery } from "./ImmersiveGallery";
+import { PremiumDock } from "./PremiumDock";
 
 const spaces = [
   {
@@ -36,19 +37,6 @@ const spaces = [
     note: "Stone, glass and clean lines",
   },
 ];
-
-function DockIcon({ name }: { name: "home" | "suite" | "gallery" | "location" | "booking" }) {
-  return (
-    <Image
-      src={`/ui/dock/${name}.webp`}
-      alt=""
-      width={128}
-      height={128}
-      className={styles.dockIcon}
-      aria-hidden="true"
-    />
-  );
-}
 
 function CinematicSequence() {
   const sectionRef = useRef<HTMLElement | null>(null);
@@ -346,13 +334,7 @@ export function MastihaOdisej() {
         </div>
       </footer>
 
-      <nav className={styles.dock} aria-label="Quick navigation">
-        <button className={styles.dockButton} aria-label="Home" onClick={() => scroll("#home")}><DockIcon name="home" /></button>
-        <button className={styles.dockButton} aria-label="The suite" onClick={() => scroll("#suite")}><DockIcon name="suite" /></button>
-        <button className={styles.dockButton} aria-label="Gallery" onClick={() => scroll("#gallery")}><DockIcon name="gallery" /></button>
-        <button className={styles.dockButton} aria-label="Location" onClick={() => scroll("#location")}><DockIcon name="location" /></button>
-        <button className={`${styles.dockButton} ${styles.dockBook}`} onClick={() => openBooking("dock")}><DockIcon name="booking" /><span>Book</span><span aria-hidden="true">↗</span></button>
-      </nav>
+      <PremiumDock onNavigate={scroll} onBook={() => openBooking("dock")} />
 
       {bookingOpen && (
         <div className={styles.overlay} role="dialog" aria-modal="true" aria-label="Choose a booking platform" onMouseDown={(event) => {
