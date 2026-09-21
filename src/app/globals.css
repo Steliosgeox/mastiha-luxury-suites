@@ -4,18 +4,18 @@
 
 @layer base {
   :root {
-    --background: #F6F2E8; /* Chalk / Plaster */
-    --foreground: #0B202B; /* Deep Aegean Ink */
-    --surface: #FBFAF6;    /* Off-white Chalk */
+    --background: #F6F2E8;
+    --foreground: #0B202B;
+    --surface: #FBFAF6;
     --surface-elevated: rgba(251, 250, 246, 0.85);
-    --muted: #7A6F60;      /* Muted Warm Stone */
+    --muted: #7A6F60;
     --muted-light: #DFD8CD;
     --border: rgba(11, 32, 43, 0.08);
     --border-light: rgba(246, 242, 232, 0.15);
-    --sea: #1A5268;        /* Aegean Sea Blue */
+    --sea: #1A5268;
     --sea-deep: #0F3240;
-    --mastiha: #73806B;    /* Mastiha Leaf */
-    --resin: #DCCB9D;      /* Warm Mastiha Resin */
+    --mastiha: #73806B;
+    --resin: #DCCB9D;
     --resin-glow: rgba(220, 203, 157, 0.45);
     --stone: #B7AA98;
     --night: #111310;
@@ -75,6 +75,6 @@ html.lenis, html.lenis body { height: auto; }
 .resin-glow { box-shadow: 0 0 24px -4px var(--resin-glow); }
 
 /* This light section reuses the gallery header composition, not its light-on-dark text. */
-main section[aria-labelledby="neighbourhood-title"] p {
+#neighbourhood-title + p {
   color: var(--muted, #657064);
 }
