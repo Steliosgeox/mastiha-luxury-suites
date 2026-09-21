@@ -5,6 +5,9 @@ on:
     paths: ['scripts/finalize-listing-release.py', '.github/workflows/prepare-real-photo-release.yml']
 permissions:
   contents: read
+concurrency:
+  group: prepare-real-photo-release
+  cancel-in-progress: false
 jobs:
   prepare:
     if: github.ref == 'refs/heads/design/editorial-mastiha'
@@ -24,19 +27,21 @@ jobs:
       - run: npm ci --no-audit --no-fund
       - run: python scripts/finalize-listing-release.py
       - run: npm run check:ui && npm run typecheck && npm run lint && npm run test:unit && npm run build
-      - name: Commit prepared source only after build checks
+      - name: Commit tested application source without workflow mutations
         run: |
           test "$GITHUB_REF" = 'refs/heads/design/editorial-mastiha'
+          git restore --source=HEAD --staged --worktree .github
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src public scripts tests docs .github
+          git add -A -- src public scripts tests docs
           git add -u -- '*.mp4'
+          test -z "$(git diff --cached --name-only -- .github)"
           git diff --cached --stat
-          git commit -m 'release: replace synthetic media with real listing photos, enrich rooms and fix locale SEO'
+          git commit -m 'fix: complete typed real-photo integration and remove synthetic property media'
           git push origin HEAD:refs/heads/design/editorial-mastiha
       - name: Review snapshot
         if: always()
-        run: tar -czf candidate-source.tar.gz src public scripts tests docs .github package.json package-lock.json next.config.ts tsconfig.json playwright.config.ts
+        run: tar -czf candidate-source.tar.gz src public messages scripts tests docs .github package.json package-lock.json next.config.ts tsconfig.json playwright.config.ts
       - uses: actions/upload-artifact@v4
         if: always()
         with:
