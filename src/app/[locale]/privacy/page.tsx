@@ -1,67 +1,15 @@
-import React from "react";
-import { Link } from "@/i18n/routing";
-
-export const metadata = {
-  title: "Privacy Policy | Mastiha Luxury Suites",
-  description: "Privacy policy and EU GDPR disclosures for Mastiha Luxury Suites, Vrontados, Chios, Greece.",
+import Link from 'next/link';
+import { setRequestLocale } from 'next-intl/server';
+import { normalizeStayLocale, getStayCopy } from '@/content/stay-copy';
+import { propertyData } from '@/content/property';
+import { localeMetadata } from '@/lib/site';
+export async function generateMetadata({params}:{params:Promise<{locale:string}>}) {return localeMetadata((await params).locale,true);}
+const texts={
+ en:['This website presents Mastiha Luxury Suites. It has no booking payment form, guest account or newsletter form.','The hosting provider processes technical request information such as IP addresses for delivery and security. This website’s interaction events stay in the browser; no analytics collection service is currently connected in the application.','Photographs are served by this website. Google Maps is contacted only after you choose to load the map. You can instead use the external directions link. Google and the reservation platforms apply their own privacy terms when you visit them.','Reservations and their personal data are handled on Airbnb or Booking.com, not by a payment system on this website. For questions about your data or a reservation, contact the host through the Airbnb listing.'],
+ el:['Αυτός ο ιστότοπος παρουσιάζει το Mastiha Luxury Suites. Δεν διαθέτει φόρμα πληρωμής κράτησης, λογαριασμό επισκέπτη ή φόρμα newsletter.','Ο πάροχος φιλοξενίας επεξεργάζεται τεχνικά στοιχεία αιτημάτων, όπως διευθύνσεις IP, για την παροχή και την ασφάλεια της υπηρεσίας. Τα συμβάντα αλληλεπίδρασης παραμένουν στον browser· στην εφαρμογή δεν έχει συνδεθεί υπηρεσία συλλογής analytics.','Οι φωτογραφίες σερβίρονται από τον ιστότοπό μας. Η Google Maps φορτώνεται μόνο όταν επιλέξετε την προβολή του χάρτη. Εναλλακτικά, υπάρχει εξωτερικός σύνδεσμος οδηγιών. Η Google και οι πλατφόρμες κρατήσεων εφαρμόζουν τους δικούς τους όρους απορρήτου όταν τις επισκέπτεστε.','Οι κρατήσεις και τα προσωπικά δεδομένα τους διαχειρίζονται στο Airbnb ή στο Booking.com, όχι σε σύστημα πληρωμών αυτού του ιστοτόπου. Για ερωτήσεις σχετικά με δεδομένα ή κράτηση, επικοινωνήστε με την οικοδέσποινα μέσω της καταχώρισης του Airbnb.'],
+ tr:['Bu site Mastiha Luxury Suites’i tanıtır. Rezervasyon ödeme formu, misafir hesabı veya bülten formu içermez.','Barındırma sağlayıcısı, hizmet sunumu ve güvenlik için IP adresleri gibi teknik istek bilgilerini işler. Etkileşim olayları tarayıcıda kalır; uygulamaya şu anda bir analitik toplama hizmeti bağlı değildir.','Fotoğraflar bu siteden sunulur. Google Maps yalnızca haritayı yüklemeyi seçtiğinizde açılır. Bunun yerine dış yol tarifi bağlantısını kullanabilirsiniz. Google ve rezervasyon platformlarında kendi gizlilik koşulları geçerlidir.','Rezervasyonlar ve ilgili kişisel veriler bu sitenin ödeme sistemi üzerinden değil, Airbnb veya Booking.com üzerinde işlenir. Verileriniz veya rezervasyonunuzla ilgili sorular için Airbnb ilanı üzerinden ev sahibiyle iletişime geçin.'],
 };
-
-export default function PrivacyPage() {
-  return (
-    <main className="min-h-screen bg-stone-950 text-stone-100 py-24 sm:py-32 px-6 sm:px-10">
-      <div className="max-w-3xl mx-auto space-y-12">
-        <div className="space-y-4">
-          <Link
-            href="/"
-            className="inline-flex items-center gap-2 text-xs uppercase tracking-wider font-sans text-stone-300 hover:text-white"
-          >
-            ← Return to Mastiha Luxury Suites
-          </Link>
-          <h1 className="font-serif text-3xl sm:text-5xl font-normal text-white">
-            Privacy Policy & Data Protection
-          </h1>
-          <p className="font-sans text-xs text-stone-400 uppercase tracking-wider">
-            Last Updated: September 2026 · General Data Protection Regulation (GDPR) Compliance
-          </p>
-        </div>
-
-        <div className="space-y-8 font-sans text-sm text-stone-400 leading-relaxed font-light divide-y divide-white/10">
-          <section className="space-y-3 pt-6">
-            <h2 className="font-serif text-xl text-white font-normal">1. Data Controller</h2>
-            <p>
-              Mastiha Luxury Suites, operating at Ethnikis Antistaseos / G Parodos 18, Vrontados, Chios 822 00, Greece (Registration License: 00003302833), acts as the data controller for information processed through this website.
-            </p>
-          </section>
-
-          <section className="space-y-3 pt-6">
-            <h2 className="font-serif text-xl text-white font-normal">2. Non-Invasive Browsing & Cookie Policy</h2>
-            <p>
-              This marketing website does not deploy advertising trackers, third-party profiling cookies, or invasive behavioral monitoring technologies. We prioritize visitor privacy by utilizing anonymous performance diagnostics and deferring third-party resource loading (such as interactive maps) until direct user activation.
-            </p>
-          </section>
-
-          <section className="space-y-3 pt-6">
-            <h2 className="font-serif text-xl text-white font-normal">3. Direct Booking & Third-Party Platforms</h2>
-            <p>
-              When initiating a reservation via our booking chooser, you are directed to verified partner listings on Airbnb or Booking.com. Your interactions on those external platforms are governed by their respective privacy disclosures and terms of service.
-            </p>
-          </section>
-
-          <section className="space-y-3 pt-6">
-            <h2 className="font-serif text-xl text-white font-normal">4. Your Rights Under EU GDPR</h2>
-            <p>
-              Under Articles 15-22 of the EU GDPR, visitors possess the right to access, rectify, or request erasure of any personal data processed, as well as the right to lodge a complaint with the Hellenic Data Protection Authority (HDPA).
-            </p>
-          </section>
-
-          <section className="space-y-3 pt-6">
-            <h2 className="font-serif text-xl text-white font-normal">5. Inquiries & Verification</h2>
-            <p>
-              For privacy-related inquiries regarding property reservations, please refer to the verified host contact channel provided upon reservation confirmation.
-            </p>
-          </section>
-        </div>
-      </div>
-    </main>
-  );
+export default async function PrivacyPage({params}:{params:Promise<{locale:string}>}) {
+ const {locale}=await params, lang=normalizeStayLocale(locale);setRequestLocale(lang);const c=getStayCopy(lang);
+ return <main style={{minHeight:'100svh',background:'#f5f1e9',color:'#29332a',padding:'80px max(24px,7vw)'}}><div style={{maxWidth:760,margin:'auto'}}><Link href={`/${lang}`}>← Mastiha Luxury Suites</Link><h1 style={{fontFamily:'var(--font-serif)',fontSize:'clamp(38px,6vw,64px)',margin:'40px 0 24px'}}>{c.privacy}</h1>{texts[lang].map(text=><p key={text} style={{lineHeight:1.85,marginBottom:24}}>{text}</p>)}<a href={propertyData.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer">Airbnb ↗</a><p style={{fontSize:12,marginTop:40}}>2026-09-21 · {c.registration} {propertyData.licenseNumber}</p></div></main>;
 }

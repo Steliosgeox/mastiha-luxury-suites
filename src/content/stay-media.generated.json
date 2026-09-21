@@ -1,0 +1,986 @@
+[
+  {
+    "id": "living",
+    "category": "living",
+    "src": "/photography/airbnb/living.webp",
+    "thumbnail": "/photography/airbnb/living-thumb.webp",
+    "width": 1920,
+    "height": 1281,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Living and dining room",
+      "el": "Καθιστικό και τραπεζαρία",
+      "tr": "Oturma ve yemek alanı"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/living-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/living-1280.webp",
+        "width": 1280,
+        "height": 854
+      },
+      {
+        "src": "/photography/airbnb/living.webp",
+        "width": 1920,
+        "height": 1281
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/e009eb43-d9f0-4e53-82d5-1454db6f1979.jpeg?im_w=1920",
+      "sourceLabel": "Dining area image 3",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "3409b7295743f5e312ba018b1502ca6934e020798d57157b4106646dfacb002c",
+      "webpSha256": "cc65c5af26c8167d95543d236615a1b68e00fe7a67afbd56a05f403a0977e3c9"
+    }
+  },
+  {
+    "id": "master",
+    "category": "bedrooms",
+    "src": "/photography/airbnb/master.webp",
+    "thumbnail": "/photography/airbnb/master-thumb.webp",
+    "width": 1920,
+    "height": 1280,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Main bedroom · king bed",
+      "el": "Κύριο υπνοδωμάτιο · king-size κρεβάτι",
+      "tr": "Ana yatak odası · king yatak"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/master-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/master-1280.webp",
+        "width": 1280,
+        "height": 853
+      },
+      {
+        "src": "/photography/airbnb/master.webp",
+        "width": 1920,
+        "height": 1280
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-1368953469779774276/original/388f40fb-b45b-4797-a613-2127db3bf46c.jpeg?im_w=1920",
+      "sourceLabel": "Master bedroom",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "bb437fb0bd32e6e33eb6ac3586d854dba23e0b01ae8b25faa3ad3ca04e553a63",
+      "webpSha256": "0dbd87b8425b6d914ef6ac3d879973ee4db3079badaaa1528cb443cb4cf4ab45"
+    }
+  },
+  {
+    "id": "kitchen",
+    "category": "kitchen",
+    "src": "/photography/airbnb/kitchen.webp",
+    "thumbnail": "/photography/airbnb/kitchen-thumb.webp",
+    "width": 1920,
+    "height": 1280,
+    "position": "50% 50%",
+    "captions": {
+      "en": "The equipped kitchen",
+      "el": "Η εξοπλισμένη κουζίνα",
+      "tr": "Donanımlı mutfak"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/kitchen-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/kitchen-1280.webp",
+        "width": 1280,
+        "height": 853
+      },
+      {
+        "src": "/photography/airbnb/kitchen.webp",
+        "width": 1920,
+        "height": 1280
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-1368953469779774276/original/82a7dbf9-0508-4cd4-8fb1-545857a364d4.jpeg?im_w=1920",
+      "sourceLabel": "Kitchen",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "9ef2ad22d730eeb84109fa1789c581af0830c24277c757c2033b2a432f2f3919",
+      "webpSha256": "3cbb89524c4477b26be1e59a0d47a1476db6cc3b81c07b5448a9723f44dcb92b"
+    }
+  },
+  {
+    "id": "bathroom",
+    "category": "bathroom",
+    "src": "/photography/airbnb/bathroom.webp",
+    "thumbnail": "/photography/airbnb/bathroom-thumb.webp",
+    "width": 1279,
+    "height": 1920,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Bathroom with shower",
+      "el": "Μπάνιο με ντους",
+      "tr": "Duşlu banyo"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/bathroom-640.webp",
+        "width": 640,
+        "height": 961
+      },
+      {
+        "src": "/photography/airbnb/bathroom-1280.webp",
+        "width": 1279,
+        "height": 1920
+      },
+      {
+        "src": "/photography/airbnb/bathroom.webp",
+        "width": 1279,
+        "height": 1920
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/1e8445f6-3fb0-4c96-b0c3-77a5dd63353c.jpeg?im_w=1920",
+      "sourceLabel": "Full bathroom image 4",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "86778581d9b3c511bc27537bf9bce35acbf79bf330d633126a3b8fc4d0e55246",
+      "webpSha256": "3427a66505ec06ea4f64fbdfc2d5c6d6cbc8c29fcd8d6b566cdc4b44205592d9"
+    }
+  },
+  {
+    "id": "terrace",
+    "category": "outdoors",
+    "src": "/photography/airbnb/terrace.webp",
+    "thumbnail": "/photography/airbnb/terrace-thumb.webp",
+    "width": 1082,
+    "height": 1920,
+    "position": "50% 50%",
+    "captions": {
+      "en": "The apartment’s front balcony",
+      "el": "Το μπροστινό μπαλκόνι του διαμερίσματος",
+      "tr": "Dairenin ön balkonu"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/terrace-640.webp",
+        "width": 640,
+        "height": 1136
+      },
+      {
+        "src": "/photography/airbnb/terrace-1280.webp",
+        "width": 1082,
+        "height": 1920
+      },
+      {
+        "src": "/photography/airbnb/terrace.webp",
+        "width": 1082,
+        "height": 1920
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/a3f4b552-1099-43c5-be54-1151f403a1b9.jpeg?im_w=1920",
+      "sourceLabel": "The front balcony of the apartment.",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "1bd2883501f372c67f760262074fffe1a3c8c6f5fe5aaa9fb3033aa6e8fbdc46",
+      "webpSha256": "e6cda60e7ca44965592b96ecc7fa568ec53bb6d040a83fa3683c9dda40bc03be"
+    }
+  },
+  {
+    "id": "second",
+    "category": "bedrooms",
+    "src": "/photography/airbnb/second.webp",
+    "thumbnail": "/photography/airbnb/second-thumb.webp",
+    "width": 1920,
+    "height": 1281,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Second bedroom · single bed",
+      "el": "Δεύτερο υπνοδωμάτιο · μονό κρεβάτι",
+      "tr": "İkinci yatak odası · tek kişilik yatak"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/second-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/second-1280.webp",
+        "width": 1280,
+        "height": 854
+      },
+      {
+        "src": "/photography/airbnb/second.webp",
+        "width": 1920,
+        "height": 1281
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/78864771-9ea3-46d5-bced-3cdf90402902.jpeg?im_w=1920",
+      "sourceLabel": "Bedroom 2 image 1",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "b45c1fd5060c482b3230d731a466f1776b0edfbbd31e540cc44ba16a5a8c3dbe",
+      "webpSha256": "bece06036f8f5e92f74357cf53a3a7fa5be36953ecae03700b8c4525fb0db701"
+    }
+  },
+  {
+    "id": "lounge",
+    "category": "living",
+    "src": "/photography/airbnb/lounge.webp",
+    "thumbnail": "/photography/airbnb/lounge-thumb.webp",
+    "width": 1920,
+    "height": 1280,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Sofa and living space",
+      "el": "Καναπές και καθιστικό",
+      "tr": "Kanepe ve yaşam alanı"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/lounge-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/lounge-1280.webp",
+        "width": 1280,
+        "height": 853
+      },
+      {
+        "src": "/photography/airbnb/lounge.webp",
+        "width": 1920,
+        "height": 1280
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/45f47079-08ab-4995-9283-0d66bfc78af6.jpeg?im_w=1920",
+      "sourceLabel": "Living room image 2",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "4d84daa12d267cb30e6d185b5550c968e28cda648312789f175192178438a15e",
+      "webpSha256": "7e6576d8fc0025ede06b84faaafdfb9bc93dd5638f9320dc4faea8254cc26e54"
+    }
+  },
+  {
+    "id": "table",
+    "category": "living",
+    "src": "/photography/airbnb/table.webp",
+    "thumbnail": "/photography/airbnb/table-thumb.webp",
+    "width": 1920,
+    "height": 1441,
+    "position": "50% 50%",
+    "captions": {
+      "en": "The dining table",
+      "el": "Η τραπεζαρία",
+      "tr": "Yemek masası"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/table-640.webp",
+        "width": 640,
+        "height": 480
+      },
+      {
+        "src": "/photography/airbnb/table-1280.webp",
+        "width": 1280,
+        "height": 961
+      },
+      {
+        "src": "/photography/airbnb/table.webp",
+        "width": 1920,
+        "height": 1441
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/ff275dd7-6fc8-4ac2-88bc-25c35e5b1dc2.jpeg?im_w=1920",
+      "sourceLabel": "Dining area image 5",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "592619a486f60033f2da1dc9a27715cd27726c036550c342a84cad183f18cda6",
+      "webpSha256": "e408956d9dad74a7d49d5b54c5eebeda8614d62bdaac54e4d0bee8f35810a8c5"
+    }
+  },
+  {
+    "id": "kitchen-wide",
+    "category": "kitchen",
+    "src": "/photography/airbnb/kitchen-wide.webp",
+    "thumbnail": "/photography/airbnb/kitchen-wide-thumb.webp",
+    "width": 1920,
+    "height": 1280,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Kitchen and appliances",
+      "el": "Κουζίνα και ηλεκτρικές συσκευές",
+      "tr": "Mutfak ve ev aletleri"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/kitchen-wide-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/kitchen-wide-1280.webp",
+        "width": 1280,
+        "height": 853
+      },
+      {
+        "src": "/photography/airbnb/kitchen-wide.webp",
+        "width": 1920,
+        "height": 1280
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/d4bd99c5-d0a1-4a13-bfb5-7d87e3f8900e.jpeg?im_w=1920",
+      "sourceLabel": "Full kitchen image 9",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "cdfd6e5ea1252a14a765b71c17ae3e2d494289f743caaec29446cf730711285b",
+      "webpSha256": "5688fcb4baa7a8e620918cf9ef088e97f2ff7e9dbab08177c6d5c0292d69f5cc"
+    }
+  },
+  {
+    "id": "espresso",
+    "category": "kitchen",
+    "src": "/photography/airbnb/espresso.webp",
+    "thumbnail": "/photography/airbnb/espresso-thumb.webp",
+    "width": 1920,
+    "height": 1281,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Espresso corner",
+      "el": "Η γωνιά του espresso",
+      "tr": "Espresso köşesi"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/espresso-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/espresso-1280.webp",
+        "width": 1280,
+        "height": 854
+      },
+      {
+        "src": "/photography/airbnb/espresso.webp",
+        "width": 1920,
+        "height": 1281
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/51378822-d877-4131-a5bd-0a6c57ecc0e8.jpeg?im_w=1920",
+      "sourceLabel": "Full kitchen image 7",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "57592dbc42d1e5a144ab31f05c68f07471d18527f02f9b2ff1a6e7e1a6fdd58a",
+      "webpSha256": "50570e22067c87b4bab01c3ea1dcd01745cfaab99eac41273a0000c7b5d82f30"
+    }
+  },
+  {
+    "id": "desk",
+    "category": "living",
+    "src": "/photography/airbnb/desk.webp",
+    "thumbnail": "/photography/airbnb/desk-thumb.webp",
+    "width": 1079,
+    "height": 1920,
+    "position": "50% 50%",
+    "captions": {
+      "en": "A place to work",
+      "el": "Χώρος για εργασία",
+      "tr": "Çalışma alanı"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/desk-640.webp",
+        "width": 640,
+        "height": 1139
+      },
+      {
+        "src": "/photography/airbnb/desk-1280.webp",
+        "width": 1079,
+        "height": 1920
+      },
+      {
+        "src": "/photography/airbnb/desk.webp",
+        "width": 1079,
+        "height": 1920
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/24e793ca-52c6-423b-85e7-bf2b629fd17c.jpeg?im_w=1920",
+      "sourceLabel": "Desk for work",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "4922306387506c61d396b614444088a68b1e4b3c8a2a7cb243003b5b0052fc8e",
+      "webpSha256": "c8f3046ed788e20e6bd3d3fb6a3e9f94d6b1442c553e2597e83f6a59de7c7941"
+    }
+  },
+  {
+    "id": "master-wide",
+    "category": "bedrooms",
+    "src": "/photography/airbnb/master-wide.webp",
+    "thumbnail": "/photography/airbnb/master-wide-thumb.webp",
+    "width": 1920,
+    "height": 1281,
+    "position": "50% 50%",
+    "captions": {
+      "en": "A second look at the main bedroom",
+      "el": "Μια δεύτερη ματιά στο κύριο υπνοδωμάτιο",
+      "tr": "Ana yatak odasına başka bir bakış"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/master-wide-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/master-wide-1280.webp",
+        "width": 1280,
+        "height": 854
+      },
+      {
+        "src": "/photography/airbnb/master-wide.webp",
+        "width": 1920,
+        "height": 1281
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/859ec80d-066b-418b-a0f3-f9c98841f704.jpeg?im_w=1920",
+      "sourceLabel": "Bedroom 1 image 4",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "2fee78512ae35bcef2d17e7f461a7c1a8e2646336b81cd93bd1d48d22a10b92c",
+      "webpSha256": "6f7fd95f884788d85ef42fb1346f938f93e8dc3e7811ff523528f0df621f2fc9"
+    }
+  },
+  {
+    "id": "crib",
+    "category": "bedrooms",
+    "src": "/photography/airbnb/crib.webp",
+    "thumbnail": "/photography/airbnb/crib-thumb.webp",
+    "width": 1440,
+    "height": 1920,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Cot shown in the listing · request availability",
+      "el": "Βρεφικό κρεβάτι · κατόπιν διαθεσιμότητας",
+      "tr": "İlanda gösterilen bebek yatağı · müsaitliği sorun"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/crib-640.webp",
+        "width": 640,
+        "height": 853
+      },
+      {
+        "src": "/photography/airbnb/crib-1280.webp",
+        "width": 1280,
+        "height": 1707
+      },
+      {
+        "src": "/photography/airbnb/crib.webp",
+        "width": 1440,
+        "height": 1920
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/256a9e8b-a74c-4113-a1e2-a93589f297dc.jpeg?im_w=1920",
+      "sourceLabel": "Baby crib",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "0a768b618386912d666e51100e7c2b89a7d245286947d0166edc072d048c2c81",
+      "webpSha256": "3619baa97be57738a9112557046a316aa394dfb1a6cc91005254a4f4a5d82801"
+    }
+  },
+  {
+    "id": "second-wide",
+    "category": "bedrooms",
+    "src": "/photography/airbnb/second-wide.webp",
+    "thumbnail": "/photography/airbnb/second-wide-thumb.webp",
+    "width": 1920,
+    "height": 1280,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Second bedroom and storage",
+      "el": "Δεύτερο υπνοδωμάτιο και αποθηκευτικός χώρος",
+      "tr": "İkinci yatak odası ve dolap"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/second-wide-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/second-wide-1280.webp",
+        "width": 1280,
+        "height": 853
+      },
+      {
+        "src": "/photography/airbnb/second-wide.webp",
+        "width": 1920,
+        "height": 1280
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/miso/Hosting-1368953469779774276/original/09711e76-fb4f-4de3-bd4c-8e8cfa11d4ed.jpeg?im_w=1920",
+      "sourceLabel": "Bedroom 2 image 6",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "aa86959b1d9e13e6beccf70ac2dce3cc3bd67006e9c4981ff7c553787e373001",
+      "webpSha256": "bdcc0a2459c878556c707afa9bc18decb2745a08a1e90f2e421eac677673abf0"
+    }
+  },
+  {
+    "id": "basin",
+    "category": "bathroom",
+    "src": "/photography/airbnb/basin.webp",
+    "thumbnail": "/photography/airbnb/basin-thumb.webp",
+    "width": 1920,
+    "height": 1441,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Basin and bathroom detail",
+      "el": "Νιπτήρας και λεπτομέρεια μπάνιου",
+      "tr": "Lavabo ve banyo detayı"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/basin-640.webp",
+        "width": 640,
+        "height": 480
+      },
+      {
+        "src": "/photography/airbnb/basin-1280.webp",
+        "width": 1280,
+        "height": 961
+      },
+      {
+        "src": "/photography/airbnb/basin.webp",
+        "width": 1920,
+        "height": 1441
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/16251ebc-af2a-4dc6-8061-d79f6c970287.jpeg?im_w=1920",
+      "sourceLabel": "Full bathroom image 2",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "456dca74a2a69db96a125370bbcdda1d7ed6215997e70160a9b7a87de8f337e8",
+      "webpSha256": "2a506f765ae881c353d7b2d17347d404af59be304c7b36009aca258c5c38fed8"
+    }
+  },
+  {
+    "id": "shower",
+    "category": "bathroom",
+    "src": "/photography/airbnb/shower.webp",
+    "thumbnail": "/photography/airbnb/shower-thumb.webp",
+    "width": 1920,
+    "height": 1281,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Shower details",
+      "el": "Λεπτομέρειες του ντους",
+      "tr": "Duş detayları"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/shower-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/shower-1280.webp",
+        "width": 1280,
+        "height": 854
+      },
+      {
+        "src": "/photography/airbnb/shower.webp",
+        "width": 1920,
+        "height": 1281
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/04a0571e-02e6-46a0-8497-76ceb28e1dd1.jpeg?im_w=1920",
+      "sourceLabel": "Full bathroom image 5",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "4f49ec40fac0d33fbb10f9afae15986452fa94fa4f1ceebbde41afa8505c3d1b",
+      "webpSha256": "9f7209cc55091bb840b9ef3605e2364b7de2ad4e8d558a3ae5c87058e35838a1"
+    }
+  },
+  {
+    "id": "laundry",
+    "category": "bathroom",
+    "src": "/photography/airbnb/laundry.webp",
+    "thumbnail": "/photography/airbnb/laundry-thumb.webp",
+    "width": 1920,
+    "height": 1280,
+    "position": "50% 50%",
+    "captions": {
+      "en": "In-apartment washing machine",
+      "el": "Πλυντήριο ρούχων στο διαμέρισμα",
+      "tr": "Dairede çamaşır makinesi"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/laundry-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/laundry-1280.webp",
+        "width": 1280,
+        "height": 853
+      },
+      {
+        "src": "/photography/airbnb/laundry.webp",
+        "width": 1920,
+        "height": 1280
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/c1655a7e-e1b8-42e9-a3b8-89d6a2884b03.jpeg?im_w=1920",
+      "sourceLabel": "Laundry area image 2",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "d7084a18dfad634e8f3897b21768ade7eb5e253892d942e884513bda1834373d",
+      "webpSha256": "43b3c42668d4510de474c1d98068828cf637ec1747b8175180e7b6673cb995ee"
+    }
+  },
+  {
+    "id": "balcony",
+    "category": "outdoors",
+    "src": "/photography/airbnb/balcony.webp",
+    "thumbnail": "/photography/airbnb/balcony-thumb.webp",
+    "width": 1920,
+    "height": 1079,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Front balcony, viewed from outside",
+      "el": "Το μπροστινό μπαλκόνι από έξω",
+      "tr": "Ön balkonun dışarıdan görünümü"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/balcony-640.webp",
+        "width": 640,
+        "height": 360
+      },
+      {
+        "src": "/photography/airbnb/balcony-1280.webp",
+        "width": 1280,
+        "height": 719
+      },
+      {
+        "src": "/photography/airbnb/balcony.webp",
+        "width": 1920,
+        "height": 1079
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/1a1a4f38-75d8-49a7-9b4a-856e9c8e248e.jpeg?im_w=1920",
+      "sourceLabel": "The front balcony of the apartment.",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "a17350639f9e9801ede1c44b7a625b6a303af56b30593917d7afef3fb3063f29",
+      "webpSha256": "3b06c5d6446cf194ca3d1066f57f7e64647b9d1cf7f9257cef47353c7623a0ca"
+    }
+  },
+  {
+    "id": "arrival",
+    "category": "outdoors",
+    "src": "/photography/airbnb/arrival.webp",
+    "thumbnail": "/photography/airbnb/arrival-thumb.webp",
+    "width": 1920,
+    "height": 1079,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Arriving at Mastiha",
+      "el": "Άφιξη στο Mastiha",
+      "tr": "Mastiha’ya varış"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/arrival-640.webp",
+        "width": 640,
+        "height": 360
+      },
+      {
+        "src": "/photography/airbnb/arrival-1280.webp",
+        "width": 1280,
+        "height": 719
+      },
+      {
+        "src": "/photography/airbnb/arrival.webp",
+        "width": 1920,
+        "height": 1079
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/35dd7ecf-f6b5-4a2f-aa5d-aa8d87f35cac.jpeg?im_w=1920",
+      "sourceLabel": "Veranda image 9",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "0aadf4751f71d6a0b1a0c41fd3371290543de08452448b54fee2b4c14e92815d",
+      "webpSha256": "4c350388d2dc2bbae9988dcce63fc04978f9b93d92e77fecc4d03b6589316ee6"
+    }
+  },
+  {
+    "id": "coast",
+    "category": "neighbourhood",
+    "src": "/photography/airbnb/coast.webp",
+    "thumbnail": "/photography/airbnb/coast-thumb.webp",
+    "width": 1920,
+    "height": 1281,
+    "position": "50% 50%",
+    "captions": {
+      "en": "The neighbourhood seafront · not a room view",
+      "el": "Παραλιακό μέτωπο της γειτονιάς · όχι θέα δωματίου",
+      "tr": "Mahallenin sahili · oda manzarası değildir"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/coast-640.webp",
+        "width": 640,
+        "height": 427
+      },
+      {
+        "src": "/photography/airbnb/coast-1280.webp",
+        "width": 1280,
+        "height": 854
+      },
+      {
+        "src": "/photography/airbnb/coast.webp",
+        "width": 1920,
+        "height": 1281
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/91d87dc9-de27-40b5-beee-ea553a3e48b9.jpeg?im_w=1920",
+      "sourceLabel": "The view from our neighborhood!",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "ecaf0bd22b0aad8f0968b6e833fddabc569b3bd1d1821b3bbffe119e766c05e9",
+      "webpSha256": "d4c37d4d1fb2dc8891015ba8dfaae777faf0ad08e366db35fbea9b872ccc0611"
+    }
+  },
+  {
+    "id": "sunrise",
+    "category": "neighbourhood",
+    "src": "/photography/airbnb/sunrise.webp",
+    "thumbnail": "/photography/airbnb/sunrise-thumb.webp",
+    "width": 1157,
+    "height": 1920,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Morning light on the nearby coast",
+      "el": "Πρωινό φως στην κοντινή ακτή",
+      "tr": "Yakındaki sahilde sabah ışığı"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/sunrise-640.webp",
+        "width": 640,
+        "height": 1062
+      },
+      {
+        "src": "/photography/airbnb/sunrise-1280.webp",
+        "width": 1157,
+        "height": 1920
+      },
+      {
+        "src": "/photography/airbnb/sunrise.webp",
+        "width": 1157,
+        "height": 1920
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==/original/32474965-9666-4d40-bf1d-dd298f87d804.jpeg?im_w=1920",
+      "sourceLabel": "The view from our neighborhood!",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "0d2912ec9ff0a2e46aef144fb83ee972df8adf6922af1bd3f1cfe6f31ad5c882",
+      "webpSha256": "88b00e6ea0db2d28e17eab8aad6e5822144868ef26792cee1012d89e052eb049"
+    }
+  },
+  {
+    "id": "windmills",
+    "category": "neighbourhood",
+    "src": "/photography/airbnb/windmills.webp",
+    "thumbnail": "/photography/airbnb/windmills-thumb.webp",
+    "width": 1920,
+    "height": 1080,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Vrontados windmills · neighbourhood photograph",
+      "el": "Ανεμόμυλοι Βροντάδου · φωτογραφία γειτονιάς",
+      "tr": "Vrontados yel değirmenleri · mahalle fotoğrafı"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/windmills-640.webp",
+        "width": 640,
+        "height": 360
+      },
+      {
+        "src": "/photography/airbnb/windmills-1280.webp",
+        "width": 1280,
+        "height": 720
+      },
+      {
+        "src": "/photography/airbnb/windmills.webp",
+        "width": 1920,
+        "height": 1080
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/7fdce540-cba6-4c78-b256-fc3d854fa8ae.jpeg?im_w=1920",
+      "sourceLabel": "The harbor of 3 mills , 60 meters from the accommodation.",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "60de4bc92a9ce2d9fee9c57cf7673046d6fcc90f8f6ffd938b8aa36bad72ee96",
+      "webpSha256": "008dad25e6654290f83931463577fab5ab919fdb38703c9ba32f24d59574eaa4"
+    }
+  },
+  {
+    "id": "beach",
+    "category": "neighbourhood",
+    "src": "/photography/airbnb/beach.webp",
+    "thumbnail": "/photography/airbnb/beach-thumb.webp",
+    "width": 1080,
+    "height": 1920,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Mersinidi beach · an island outing",
+      "el": "Παραλία Μερσινίδι · μια εξόρμηση στο νησί",
+      "tr": "Mersinidi plajı · adada bir gezi"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/beach-640.webp",
+        "width": 640,
+        "height": 1138
+      },
+      {
+        "src": "/photography/airbnb/beach-1280.webp",
+        "width": 1080,
+        "height": 1920
+      },
+      {
+        "src": "/photography/airbnb/beach.webp",
+        "width": 1080,
+        "height": 1920
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/e2f52fdd-d15a-4df3-b876-67be78c6ec1e.jpeg?im_w=1920",
+      "sourceLabel": "Mersinidi Beach",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "17e3175304cb9ce66728636b4544e32801895528188526f2dea0e4afb9b4e659",
+      "webpSha256": "816510ae771cee1bd48cc1c61f279c5e1e6219fea3d7e758d822e6bf49eb62e5"
+    }
+  },
+  {
+    "id": "keys",
+    "category": "outdoors",
+    "src": "/photography/airbnb/keys.webp",
+    "thumbnail": "/photography/airbnb/keys-thumb.webp",
+    "width": 1440,
+    "height": 1920,
+    "position": "50% 50%",
+    "captions": {
+      "en": "Mastiha keys by the sea",
+      "el": "Τα κλειδιά του Mastiha δίπλα στη θάλασσα",
+      "tr": "Deniz kenarında Mastiha anahtarları"
+    },
+    "srcSet": [
+      {
+        "src": "/photography/airbnb/keys-640.webp",
+        "width": 640,
+        "height": 853
+      },
+      {
+        "src": "/photography/airbnb/keys-1280.webp",
+        "width": 1280,
+        "height": 1707
+      },
+      {
+        "src": "/photography/airbnb/keys.webp",
+        "width": 1440,
+        "height": 1920
+      }
+    ],
+    "source": {
+      "platform": "Airbnb",
+      "listingId": "1368953469779774276",
+      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
+      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/f0684d6e-5d87-4037-a19e-cdf049e0cd58.jpeg?im_w=1920",
+      "sourceLabel": "Additional photos image 2",
+      "retrievedAt": "2026-09-21T15:17:20.323Z",
+      "originalSha256": "0765a0fb765078c621b2a5489cdbc000878b197d840b23d56d45ea830856defe",
+      "webpSha256": "1abd5aba1fa3beb0a7b09ff007178da0eeab96da4c58f231b051730b8cc51c76"
+    }
+  }
+]

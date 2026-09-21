@@ -1,0 +1,133 @@
+/* The dock owns its layout: no implicit grid tracks or intrinsic-size images. */
+.dock {
+  position: fixed;
+  z-index: 30;
+  left: 50%;
+  bottom: calc(12px + env(safe-area-inset-bottom, 0px));
+  transform: translateX(-50%);
+  display: flex;
+  flex-flow: row nowrap;
+  align-items: center;
+  gap: 4px;
+  width: max-content;
+  max-width: calc(100vw - 16px);
+  box-sizing: border-box;
+  padding: 6px;
+  border: 1px solid rgba(255, 255, 255, .32);
+  border-radius: 999px;
+  background: rgba(49, 55, 48, .76);
+  box-shadow: 0 12px 38px rgba(0, 0, 0, .16), inset 0 1px 0 rgba(255, 255, 255, .22);
+  backdrop-filter: blur(18px) saturate(135%);
+  -webkit-backdrop-filter: blur(18px) saturate(135%);
+  isolation: isolate;
+}
+
+.button,
+.book {
+  appearance: none;
+  box-sizing: border-box;
+  display: inline-flex;
+  flex-flow: row nowrap;
+  flex: 0 0 auto;
+  justify-content: center;
+  align-items: center;
+  height: 52px;
+  min-width: 0;
+  margin: 0;
+  border: 0;
+  padding: 0;
+  line-height: 1;
+  font-family: inherit;
+  text-decoration: none;
+  cursor: pointer;
+  touch-action: manipulation;
+  -webkit-tap-highlight-color: transparent;
+  transition: background-color 180ms ease, transform 180ms ease;
+}
+
+.button {
+  width: 52px;
+  border-radius: 50%;
+  background: transparent;
+  color: #fff;
+}
+
+.book {
+  width: 116px;
+  gap: 7px;
+  padding: 0 12px;
+  border-radius: 999px;
+  background: #f1eee7;
+  color: #17241d;
+}
+
+.icon,
+.bookingIcon {
+  display: block;
+  flex: 0 0 auto;
+  object-fit: contain;
+  object-position: center;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  pointer-events: none;
+  user-select: none;
+}
+
+.icon {
+  width: 40px;
+  height: 40px;
+  max-width: 40px;
+  max-height: 40px;
+}
+
+.bookingIcon {
+  width: 28px;
+  height: 28px;
+  max-width: 28px;
+  max-height: 28px;
+}
+
+.label,
+.arrow {
+  flex: 0 0 auto;
+  display: block;
+  white-space: nowrap;
+  font-size: 13px;
+  font-weight: 500;
+  line-height: 1;
+}
+
+.arrow { font-size: 15px; }
+
+.button:focus-visible,
+.book:focus-visible {
+  outline: 2px solid #f2dfb8;
+  outline-offset: 2px;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .button:hover { background: rgba(255, 255, 255, .12); transform: translateY(-1px); }
+  .book:hover { background: #fffaf0; }
+}
+
+.button:active,
+.book:active { transform: scale(.97); }
+
+@media (max-width: 480px) {
+  .dock { gap: 2px; padding: 5px; }
+  .button { width: 44px; height: 44px; }
+  .book { width: 104px; height: 44px; gap: 6px; padding: 0 10px; }
+  .icon { width: 34px; height: 34px; max-width: 34px; max-height: 34px; }
+  .bookingIcon { width: 24px; height: 24px; max-width: 24px; max-height: 24px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .button,
+  .book { transition: none; }
+  .button:hover,
+  .button:active,
+  .book:active { transform: none; }
+}
+
+@media(max-width:480px){.book .label{font-size:11px}.book{gap:4px;padding-inline:7px}}

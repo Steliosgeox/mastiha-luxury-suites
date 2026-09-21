@@ -52,21 +52,5 @@ export const reviewStats: ReviewStats = {
     },
   },
   lastVerified: "2026-09-18",
-  verifiedQuotes: [
-    {
-      quote: "Spotlessly clean, quiet, and moments from the sea. The attention to detail throughout the suite made our stay in Chios unforgettable.",
-      author: "Verified Guest",
-      platform: "Airbnb",
-    },
-    {
-      quote: "Exceptional hospitality and comfort. Having private parking and being so close to both Vrontados coast and Chios town was ideal.",
-      author: "Verified Guest",
-      platform: "Booking.com",
-    },
-    {
-      quote: "The terrace overlooking the pine trees is wonderful for morning espresso. The apartment has everything you could possibly need.",
-      author: "Verified Guest",
-      platform: "Airbnb",
-    },
-  ],
+  verifiedQuotes: [],
 };

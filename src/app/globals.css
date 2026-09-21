@@ -4,36 +4,31 @@
 
 @layer base {
   :root {
-    --background: #F6F2E8; /* Chalk / Plaster */
-    --foreground: #0B202B; /* Deep Aegean Ink */
-    --surface: #FBFAF6;    /* Off-white Chalk */
+    --background: #F6F2E8;
+    --foreground: #0B202B;
+    --surface: #FBFAF6;
     --surface-elevated: rgba(251, 250, 246, 0.85);
-    --muted: #7A6F60;      /* Muted Warm Stone */
+    --muted: #7A6F60;
     --muted-light: #DFD8CD;
     --border: rgba(11, 32, 43, 0.08);
     --border-light: rgba(246, 242, 232, 0.15);
-    --sea: #1A5268;        /* Aegean Sea Blue */
+    --sea: #1A5268;
     --sea-deep: #0F3240;
-    --mastiha: #73806B;    /* Mastiha Leaf */
-    --resin: #DCCB9D;      /* Warm Mastiha Resin */
+    --mastiha: #73806B;
+    --resin: #DCCB9D;
     --resin-glow: rgba(220, 203, 157, 0.45);
     --stone: #B7AA98;
     --night: #111310;
   }
-
-  * {
-    border-color: var(--border);
-  }
-
+  * { border-color: var(--border); }
   html {
     background-color: var(--background);
     color: var(--foreground);
     text-rendering: optimizeLegibility;
     -webkit-font-smoothing: antialiased;
     -moz-osx-font-smoothing: grayscale;
-    scroll-behavior: auto; /* Lenis drives programmatic smooth scroll */
+    scroll-behavior: auto;
   }
-
   body {
     background-color: var(--background);
     color: var(--foreground);
@@ -41,89 +36,45 @@
     min-height: 100vh;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
-
-  /* Bespoke text selection in amber resin tint */
-  ::selection {
-    background-color: var(--resin);
-    color: var(--foreground);
-  }
-
-  /* Mobile safe area padding utilities */
-  .safe-bottom {
-    padding-bottom: max(1rem, env(safe-area-inset-bottom));
-  }
+  ::selection { background-color: var(--resin); color: var(--foreground); }
+  .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
 }
 
-/* Lenis core layout styles */
-html.lenis, html.lenis body {
-  height: auto;
-}
+html.lenis, html.lenis body { height: auto; }
+.lenis.lenis-smooth { scroll-behavior: auto !important; }
+.lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
+.lenis.lenis-stopped { overflow: hidden; }
+.lenis.lenis-scrolling iframe { pointer-events: none; }
 
-.lenis.lenis-smooth {
-  scroll-behavior: auto !important;
-}
+::-webkit-scrollbar { width: 6px; }
+::-webkit-scrollbar-track { background: transparent; }
+::-webkit-scrollbar-thumb { background: rgba(11, 32, 43, 0.15); border-radius: 9999px; }
+::-webkit-scrollbar-thumb:hover { background: rgba(11, 32, 43, 0.3); }
 
-.lenis.lenis-smooth [data-lenis-prevent] {
-  overscroll-behavior: contain;
-}
-
-.lenis.lenis-stopped {
-  overflow: hidden;
-}
-
-.lenis.lenis-scrolling iframe {
-  pointer-events: none;
-}
-
-/* Custom Refined Scrollbar */
-::-webkit-scrollbar {
-  width: 6px;
-}
-::-webkit-scrollbar-track {
-  background: transparent;
-}
-::-webkit-scrollbar-thumb {
-  background: rgba(11, 32, 43, 0.15);
-  border-radius: 9999px;
-}
-::-webkit-scrollbar-thumb:hover {
-  background: rgba(11, 32, 43, 0.3);
-}
-
-/* Fallback Liquid Glass and Resin Styling */
 .mastiha-glass-dock {
   background: rgba(246, 242, 232, 0.72);
   backdrop-filter: blur(20px) saturate(180%);
   -webkit-backdrop-filter: blur(20px) saturate(180%);
   border: 1px solid rgba(220, 203, 157, 0.4);
-  box-shadow: 
-    0 10px 30px -5px rgba(11, 32, 43, 0.08),
-    0 0 0 1px rgba(255, 255, 255, 0.6) inset,
-    0 1px 2px 0 rgba(220, 203, 157, 0.3) inset;
+  box-shadow: 0 10px 30px -5px rgba(11, 32, 43, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.6) inset, 0 1px 2px 0 rgba(220, 203, 157, 0.3) inset;
 }
-
 .mastiha-glass-card {
   background: rgba(251, 250, 246, 0.82);
   backdrop-filter: blur(16px) saturate(160%);
   -webkit-backdrop-filter: blur(16px) saturate(160%);
   border: 1px solid rgba(220, 203, 157, 0.25);
-  box-shadow:
-    0 12px 32px -4px rgba(11, 32, 43, 0.06),
-    0 0 0 1px rgba(255, 255, 255, 0.8) inset;
+  box-shadow: 0 12px 32px -4px rgba(11, 32, 43, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
 }
-
 .mastiha-glass-modal {
   background: rgba(246, 242, 232, 0.92);
   backdrop-filter: blur(24px) saturate(200%);
   -webkit-backdrop-filter: blur(24px) saturate(200%);
   border: 1px solid rgba(220, 203, 157, 0.5);
-  box-shadow:
-    0 25px 50px -12px rgba(11, 32, 43, 0.25),
-    0 0 0 1px rgba(255, 255, 255, 0.7) inset,
-    0 2px 8px rgba(220, 203, 157, 0.2) inset;
+  box-shadow: 0 25px 50px -12px rgba(11, 32, 43, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.7) inset, 0 2px 8px rgba(220, 203, 157, 0.2) inset;
 }
+.resin-glow { box-shadow: 0 0 24px -4px var(--resin-glow); }
 
-/* Subtle resin glow highlight */
-.resin-glow {
-  box-shadow: 0 0 24px -4px var(--resin-glow);
+/* This light section reuses the gallery header composition, not its light-on-dark text. */
+#neighbourhood-title + p {
+  color: var(--muted, #657064);
 }

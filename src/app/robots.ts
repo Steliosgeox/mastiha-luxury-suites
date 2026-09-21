@@ -1,13 +1,3 @@
-import { MetadataRoute } from "next";
-
-export default function robots(): MetadataRoute.Robots {
-  const baseUrl = process.env.NEXT_PUBLIC_SITE_URL || "https://mastihasuites.gr";
-
-  return {
-    rules: {
-      userAgent: "*",
-      allow: "/",
-    },
-    sitemap: `${baseUrl}/sitemap.xml`,
-  };
-}
+import type { MetadataRoute } from 'next';
+import { SITE_URL } from '@/lib/site';
+export default function robots():MetadataRoute.Robots {return process.env.VERCEL_ENV==='preview'?{rules:{userAgent:'*',disallow:'/'}}:{rules:{userAgent:'*',allow:'/'},sitemap:`${SITE_URL}/sitemap.xml`};}
