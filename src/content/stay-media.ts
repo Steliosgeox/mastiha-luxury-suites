@@ -1,17 +1,18 @@
-export type PhotoId = "living" | "master" | "second" | "bathroom" | "terrace";
-export type StayMedia = { id: PhotoId; src: string; width: number; height: number; position: string };
+import catalogue from './stay-media.generated.json';
+import type { StayLocale } from './stay-copy';
 
-// Existing repository photographs only. hero.webp and terrace.webp are the same image.
-// Film frames belong in the walkthrough, not in an inflated photograph count.
-export const stayPhotos: StayMedia[] = [
-  { id: "living", src: "/photography/living-room.webp", width: 1920, height: 1080, position: "50% 50%" },
-  { id: "master", src: "/photography/master-bedroom.webp", width: 1920, height: 1080, position: "50% 55%" },
-  { id: "second", src: "/photography/second-bedroom.webp", width: 1920, height: 1080, position: "50% 55%" },
-  { id: "bathroom", src: "/photography/bathroom.webp", width: 1920, height: 1080, position: "48% 50%" },
-  { id: "terrace", src: "/photography/hero.webp", width: 1920, height: 1080, position: "50% 54%" },
-];
+export type PhotoId = 'living' | 'master' | 'second' | 'bathroom' | 'terrace' | 'kitchen' | 'lounge' | 'table' | 'kitchen-wide' | 'espresso' | 'desk' | 'master-wide' | 'crib' | 'second-wide' | 'basin' | 'shower' | 'laundry' | 'balcony' | 'arrival' | 'coast' | 'sunrise' | 'windmills' | 'beach' | 'keys';
+export type PhotoCategory = 'living' | 'kitchen' | 'bedrooms' | 'bathroom' | 'outdoors' | 'neighbourhood';
+export type StayMedia = Omit<(typeof catalogue)[number], 'id' | 'category'> & { id: PhotoId; category: PhotoCategory };
+// Local files are visually reviewed exports of the owner's public Airbnb listing.
+// Source URLs, original and output hashes are retained; no runtime scraping/hotlinking.
+export const stayPhotos = catalogue as StayMedia[];
 export function stayPhoto(id: PhotoId): StayMedia {
-  const photo = stayPhotos.find((item) => item.id === id);
-  if (!photo) throw new Error(`Unknown property photograph: ${id}`);
+  const photo = stayPhotos.find(item => item.id === id);
+  if (!photo) throw new Error(`Unknown photograph: ${id}`);
   return photo;
 }
+export function photoCaption(id: PhotoId, locale: StayLocale): string {
+  return stayPhoto(id).captions[locale];
+}
+export const tourPhotos = (['living','kitchen','master','second','terrace'] as const).map(stayPhoto);
