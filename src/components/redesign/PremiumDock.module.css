@@ -129,3 +129,5 @@
   .button:active,
   .book:active { transform: none; }
 }
+
+@media(max-width:480px){.book .label{font-size:11px}.book{gap:4px;padding-inline:7px}}

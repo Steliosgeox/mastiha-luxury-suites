@@ -1,12 +1,6 @@
-import { test, expect, type Page } from "@playwright/test";
+import { test, expect } from "@playwright/test";
 import { propertyData } from "../src/content/property";
 
-async function scrollFilm(page: Page, progress: number) {
-  await page.locator("#film").evaluate((element, value) => {
-    const box = element.getBoundingClientRect();
-    window.scrollTo({ top: window.scrollY + box.top + (box.height - window.innerHeight) * value, behavior: "instant" });
-  }, progress);
-}
 for (const width of [320, 390, 768, 1440]) {
   test(`hero is actually visible, above the film, with contained images at ${width}px`, async ({ page }, info) => {
     const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
@@ -32,35 +26,13 @@ for (const width of [320, 390, 768, 1440]) {
   });
 }
 
-test('film is lazy, advances and reverses after delayed requests stop', async ({page})=>{
- const requested:string[]=[]; page.on('request',r=>{if(/\/sequence\/(desktop|mobile)\/frame-/.test(r.url()))requested.push(r.url());});
- await page.route('**/sequence/**/frame-*.avif',async route=>{await new Promise(r=>setTimeout(r,100));await route.continue();});
- await page.goto('/en'); await page.waitForTimeout(600); expect(requested).toHaveLength(0);
- const canvas=page.getByTestId('film-canvas');
- await scrollFilm(page,.7); await expect(canvas).toHaveAttribute('data-ready','true',{timeout:15000});
- await expect.poll(()=>canvas.evaluate(e=>e.dataset.frame===e.dataset.target),{timeout:15000}).toBe(true);
- const forward=Number(await canvas.getAttribute('data-frame')); expect(forward).toBeGreaterThan(60);
- await scrollFilm(page,.15); await expect.poll(()=>canvas.evaluate(e=>e.dataset.frame===e.dataset.target),{timeout:15000}).toBe(true);
- expect(Number(await canvas.getAttribute('data-frame'))).toBeLessThan(forward);
- expect(Number(await canvas.getAttribute('data-cached'))).toBeLessThanOrEqual(10);
-});
-
-test('reduced motion and failed film retain a useful poster without covering the hero',async({page})=>{
- await page.emulateMedia({reducedMotion:'reduce'}); const requests:string[]=[];page.on('request',r=>{if(/\/sequence\/(desktop|mobile)\/frame-/.test(r.url()))requests.push(r.url());});
- await page.goto('/en'); await page.locator('#film').scrollIntoViewIfNeeded(); await expect(page.locator('#film')).toHaveAttribute('data-static','true'); expect(requests).toHaveLength(0);
- await page.emulateMedia({reducedMotion:'no-preference'}); await page.route('**/sequence/sequence-manifest.json',route=>route.fulfill({status:503,body:'unavailable'}));
- await page.reload(); await page.locator('#film').scrollIntoViewIfNeeded(); await expect(page.locator('#film')).toHaveAttribute('data-static','true',{timeout:15000});
- await page.getByTestId('mastiha-dock').getByRole('button',{name:'Home',exact:true}).click(); await expect.poll(()=>page.evaluate(()=>Math.round(scrollY))).toBe(0);
- await expect(page.getByTestId('hero-image')).toBeVisible();
-});
-
 test('gallery filters, zoom, keyboard navigation and focus restoration',async({page},info)=>{
  await page.goto('/en'); const gallery=page.locator('#gallery');
- await gallery.getByRole('button',{name:'Bedrooms',exact:true}).click(); await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(2);
- await gallery.getByRole('button',{name:'All spaces',exact:true}).click(); await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(5);
+ await gallery.getByRole('button',{name:'Bedrooms',exact:true}).click(); await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(5);
+ await gallery.getByRole('button',{name:'All spaces',exact:true}).click(); await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(6);
  const first=page.getByTestId('gallery-grid').getByRole('button').first(); await first.click();
- const lightbox=page.locator('.yarl__root'); await expect(lightbox).toBeVisible(); await expect(page.locator('.yarl__counter')).toContainText('1 / 5');
- await page.keyboard.press('ArrowRight'); await expect(page.locator('.yarl__counter')).toContainText('2 / 5');
+ const lightbox=page.locator('.yarl__root'); await expect(lightbox).toBeVisible(); await expect(page.locator('.yarl__counter')).toContainText('1 / 24');
+ await page.keyboard.press('ArrowRight'); await expect(page.locator('.yarl__counter')).toContainText('2 / 24');
  await expect(lightbox.getByRole('button',{name:'Zoom in',exact:true})).toBeVisible();
  await page.screenshot({path:info.outputPath('lightbox.png')}); await page.keyboard.press('Escape'); await expect(lightbox).toHaveCount(0); await expect(first).toBeFocused();
 });

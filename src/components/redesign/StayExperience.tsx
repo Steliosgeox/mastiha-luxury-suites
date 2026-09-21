@@ -6,7 +6,7 @@ import gsap from "gsap";
 import { ScrollTrigger } from "gsap/ScrollTrigger";
 import { useSmoothScroll } from "@/components/layout/SmoothScrollProvider";
 import { propertyData } from "@/content/property";
-import { stayPhotos, type PhotoId } from "@/content/stay-media";
+import { stayPhotos, photoCaption, type PhotoId } from "@/content/stay-media";
 import { getStayCopy, type StayLocale } from "@/content/stay-copy";
 import { trackEvent } from "@/lib/analytics";
 import { PremiumDock } from "./PremiumDock";
@@ -22,7 +22,7 @@ export function BookButton({ children, className, source }: { children: ReactNod
 }
 export function PhotoButton({ id, children, className }: { id: PhotoId; children: ReactNode; className?: string }) {
   const { photo, locale } = useStay(); const c = getStayCopy(locale);
-  return <button type="button" className={className ?? s.photoButton} aria-label={`${c.photoAction}: ${c.captions[id]}`} onClick={() => photo(id)}>{children}</button>;
+  return <button type="button" className={className ?? s.photoButton} aria-label={`${c.photoAction}: ${photoCaption(id, locale)}`} onClick={() => photo(id)}>{children}</button>;
 }
 export function MapPanel({ locale }: { locale: StayLocale }) {
   const [loaded, setLoaded] = useState(false); const c = getStayCopy(locale);
@@ -108,7 +108,7 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
   return <StayContext.Provider value={{ book: openBook, photo: openPhoto, locale }}>
     <div ref={root} className={s.experience} onClick={anchorClick}>
       {children}
-      <PremiumDock onNavigate={navigate} onBook={() => openBook("dock")} />
+      <PremiumDock locale={locale} onNavigate={navigate} onBook={() => openBook("dock")} />
       <dialog ref={dialog} className={s.dialog} aria-labelledby="booking-title" aria-describedby="booking-description" onKeyDown={trapBookingFocus} data-lenis-prevent onCancel={(event) => { event.preventDefault(); closeBooking(); }} onClick={(event) => { if (event.target === event.currentTarget) closeBooking(); }}>
         <div className={s.dialogInner}><div className={s.dialogTop}><h2 id="booking-title">{c.bookingTitle}</h2><button type="button" className={s.closeButton} onClick={closeBooking} aria-label={c.close}>×</button></div><p id="booking-description">{c.bookingBody}</p>
           <a className={s.platformLink} href={propertyData.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("booking_outbound_click", { platform: "airbnb" })}>Airbnb<span aria-hidden="true">↗</span></a>

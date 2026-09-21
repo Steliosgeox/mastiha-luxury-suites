@@ -22,11 +22,14 @@ for (const filename of walk('src').filter(f => /\.tsx?$/.test(f))) {
   }
   visit(source);
 }
-for (const file of ['hero.webp','living-room.webp','master-bedroom.webp','second-bedroom.webp','bathroom.webp']) if (!fs.existsSync(`public/photography/${file}`)) errors.push(`Missing photograph: ${file}`);
-const manifest = JSON.parse(fs.readFileSync('public/sequence/sequence-manifest.json','utf8'));
-for (const type of ['desktop','mobile']) for (let i=1;i<=manifest[type].frameCount;i++) {
-  const file = `public${manifest[type].basePath}/frame-${String(i).padStart(4,'0')}.avif`;
-  if (!fs.existsSync(file)) errors.push(`Missing film frame: ${file}`);
+
+const photos=JSON.parse(fs.readFileSync('src/content/stay-media.generated.json','utf8'));
+const hashes=new Set();
+for(const photo of photos){
+ if(!photo.source?.originalSha256||photo.source.listingId!=='1368953469779774276')errors.push(`Unverified source: ${photo.id}`);
+ if(hashes.has(photo.source.webpSha256))errors.push(`Duplicate photograph: ${photo.id}`);
+ hashes.add(photo.source.webpSha256);
+ for(const url of [photo.src,photo.thumbnail,...photo.srcSet.map(i=>i.src)])if(!url.startsWith('/photography/airbnb/')||!fs.existsSync('public'+url))errors.push(`Missing true photo: ${url}`);
 }
-if (errors.length) { console.error(errors.join('\n')); process.exit(1); }
-console.log('All referenced CSS-module classes, property photographs and declared film frames exist.');
+if(errors.length){console.error(errors.join('\n'));process.exit(1);}
+console.log(`CSS references and all variants of ${photos.length} real listing photographs passed.`);

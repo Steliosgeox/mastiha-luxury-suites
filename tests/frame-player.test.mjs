@@ -5,7 +5,7 @@ import ts from 'typescript';
 const source = fs.readFileSync('src/components/redesign/frame-player.ts','utf8');
 const output = ts.transpileModule(source,{compilerOptions:{module:ts.ModuleKind.ESNext,target:ts.ScriptTarget.ES2022}}).outputText;
 const {parseFrameManifest, progressFrame, frameUrl, desiredFrames, fittedRect, createFramePlayer} = await import(`data:text/javascript;base64,${Buffer.from(output).toString('base64')}`);
-const manifest = JSON.parse(fs.readFileSync('public/sequence/sequence-manifest.json','utf8'));
+const manifest = JSON.parse(fs.readFileSync('tests/fixtures/sequence-manifest.json','utf8'));
 
 test('manifest validation rejects invalid counts, paths and dimensions',()=>{
  assert.equal(parseFrameManifest(manifest).desktop.frameCount,120);

@@ -1,6 +1,7 @@
 "use client";
 
 import Image from "next/image";
+import { getStayCopy, type StayLocale } from "@/content/stay-copy";
 import styles from "./PremiumDock.module.css";
 
 type IconName = "home" | "suite" | "gallery" | "location" | "booking";
@@ -32,27 +33,31 @@ function DockImage({ name, booking = false }: { name: IconName; booking?: boolea
 export function PremiumDock({
   onNavigate,
   onBook,
+  locale = "en",
 }: {
   onNavigate: (target: string) => void;
   onBook: () => void;
+  locale?: StayLocale;
 }) {
+  const c = getStayCopy(locale);
+  const names = {home:c.home,suite:c.suite,gallery:c.gallery,location:c.location};
   return (
     <nav className={styles.dock} aria-label="Quick navigation" data-testid="mastiha-dock">
-      {links.map(({ name, label, target }) => (
+      {links.map(({ name, target }) => (
         <button
           key={name}
           type="button"
           className={styles.button}
-          aria-label={label}
-          title={label}
+          aria-label={names[name]}
+          title={names[name]}
           onClick={() => onNavigate(target)}
         >
           <DockImage name={name} />
         </button>
       ))}
-      <button type="button" className={styles.book} aria-label="Book your stay" onClick={onBook}>
+      <button type="button" className={styles.book} aria-label={c.bookShort} onClick={onBook}>
         <DockImage name="booking" booking />
-        <span className={styles.label}>Book</span>
+        <span className={styles.label}>{locale === "el" ? "Κράτηση" : locale === "tr" ? "Ayırt" : "Book"}</span>
         <span className={styles.arrow} aria-hidden="true">↗</span>
       </button>
     </nav>
