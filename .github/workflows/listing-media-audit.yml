@@ -2,7 +2,7 @@ name: Listing media audit
 on:
   push:
     branches: [design/editorial-mastiha]
-    paths: ['.github/workflows/listing-media-audit.yml']
+    paths: ['.github/workflows/listing-media-audit.yml', 'scripts/review-listing-media.mjs']
 permissions:
   contents: read
 jobs:
@@ -16,71 +16,10 @@ jobs:
           node-version: '22'
           cache: npm
       - run: npm ci --no-audit --no-fund
-      - name: Download listing photographs for visual inspection only
-        shell: bash
-        run: |
-          mkdir -p media-review
-          cat > /tmp/listing-review.mjs <<'JS'
-          import { mkdir, writeFile } from 'node:fs/promises';
-          import { createHash } from 'node:crypto';
-          import { createRequire } from 'node:module';
-          const require = createRequire(process.cwd() + '/package.json');
-          const sharp = require('sharp');
-          const root = 'media-review';
-          const airbnb = 'https://www.airbnb.co.in/rooms/1368953469779774276';
-          const booking = 'https://www.booking.com/hotel/gr/mastiha-luxury-suites.html';
-          const hosted = 'https://a0.muscache.com/im/pictures/hosting/Hosting-U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng%3D%3D/original/';
-          const seeds = [
-            ['a01', hosted + '9bd4e6b3-3d72-4d3f-ae9b-45b64f96a81a.jpeg?im_w=1920', airbnb],
-            ['a02', hosted + 'e009eb43-d9f0-4e53-82d5-1454db6f1979.jpeg?im_w=1920', airbnb],
-            ['a03', 'https://a0.muscache.com/im/pictures/miso/Hosting-1368953469779774276/original/388f40fb-b45b-4797-a613-2127db3bf46c.jpeg?im_w=1920', airbnb],
-            ['a04', 'https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/1ec5bf1f-4fc1-40b1-b59d-de1dbf8d14ec.jpeg?im_w=1920', airbnb],
-            ['a05', hosted + '32474965-9666-4d40-bf1d-dd298f87d804.jpeg?im_w=1920', airbnb],
-            ['a06', hosted + '78864771-9ea3-46d5-bced-3cdf90402902.jpeg?im_w=1920', airbnb],
-            ['a07', hosted + 'a0ff6f6b-042f-479a-b4da-49d39632fc05.jpeg?im_w=1920', airbnb],
-            ...[
-              ['b01','687634043','75c04c5684cb819c62cbdc52894656d3631143fe7d513ac375aeb678c16aeaf6'],
-              ['b02','687637126','6b4b03e84f006d97e8cd81bfd14c6fa1a55dcb62b670f827af4690e6a76853dc'],
-              ['b03','687636520','d399950e41558e26a2526bf6b428b7d49ce8797ac52377f487d81a4a6f0362f3'],
-              ['b04','687636410','c43b17ee1e2f5a6bd6aec0604a0a60e22ad3404d5d19457801a03ff77d2a02a5'],
-              ['b05','687637002','118d68214b52947462d725c35771f5ecafa6b1251c69ec12154bb7e545326fda'],
-              ['b06','687636599','4ff41a2c6fab6e18e6951c94f90419f1279bf7f60f02909e58a19dfff19a8412'],
-              ['b07','687636440','79da91e0b7cb26b22260a4808eeede1a0a73cbcf789cf2d28bef3de6fa5ddfcc'],
-              ['b08','687636480','9d5b7898c861a5ecbf92ca46da8b239cc7328d2a9e9c81a622fb9beb5dc0acec'],
-            ].map(([id,num,key]) => [id,`https://cf.bstatic.com/xdata/images/hotel/max1920x1080/${num}.jpg?k=${key}&o=`,booking]),
-          ];
-          const results = [];
-          for (const [id,url,source] of seeds) {
-            try {
-              const res = await fetch(url, { signal: AbortSignal.timeout(20000) });
-              if (!res.ok) throw new Error(`HTTP ${res.status}`);
-              const bytes = Buffer.from(await res.arrayBuffer());
-              if (bytes.length > 15000000) throw new Error('Unexpectedly large image');
-              const meta = await sharp(bytes).metadata();
-              if (!meta.width || !meta.height) throw new Error('Invalid image');
-              await writeFile(`${root}/${id}.original`,bytes);
-              await sharp(bytes).rotate().resize({width:1920,height:1920,fit:'inside',withoutEnlargement:true}).webp({quality:88}).toFile(`${root}/${id}.webp`);
-              await sharp(bytes).rotate().resize({width:480,height:360,fit:'inside',withoutEnlargement:true}).jpeg({quality:85}).toFile(`${root}/${id}.jpg`);
-              results.push({id,url,source,width:meta.width,height:meta.height,sha256:createHash('sha256').update(bytes).digest('hex'),bytes:bytes.length});
-            } catch (err) { results.push({id,url,source,error:String(err)}); }
-          }
-          for (const [id,url] of [['airbnb',airbnb],['booking',booking]]) {
-            try {
-              const res = await fetch(url, {signal:AbortSignal.timeout(20000)});
-              const html = await res.text();
-              await writeFile(`${root}/${id}.html`,html);
-              console.log(id, res.status, html.length);
-            } catch(err) { console.log(id,String(err)); }
-          }
-          await writeFile(`${root}/manifest.json`,JSON.stringify({retrievedAt:new Date().toISOString(),images:results},null,2));
-          console.log(JSON.stringify(results.map(({id,width,height,error}) => ({id,width,height,error}))));
-          JS
-          node /tmp/listing-review.mjs
-      - name: Source snapshot
-        run: tar -czf media-review/source.tar.gz src public messages scripts tests docs package.json package-lock.json next.config.ts playwright.config.ts tsconfig.json postcss.config.mjs tailwind.config.ts .eslintrc.json .github
+      - run: node scripts/review-listing-media.mjs
       - uses: actions/upload-artifact@v4
         if: always()
         with:
-          name: listing-media-review
+          name: listing-media-full-review
           path: media-review/
           retention-days: 7
