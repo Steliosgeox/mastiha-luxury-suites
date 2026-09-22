@@ -27,9 +27,11 @@ test('reduced motion uses one true photograph and never downloads synthetic fram
 });
 
 test('a delayed photograph paints when it arrives after scrolling stops',async({page})=>{
- await page.route('**/_next/image?*',async route=>{if(route.request().url().includes('kitchen.webp'))await new Promise(r=>setTimeout(r,600));await route.continue();});
+ let delayed=0;
+ await page.route('**/photography/airbnb/kitchen*.webp',async route=>{delayed++;await new Promise(r=>setTimeout(r,600));await route.continue();});
  await page.goto('/en');const tour=page.getByTestId('scroll-film');await expect(tour).toHaveAttribute('data-static','false');
  await tour.evaluate(element=>{const r=element.getBoundingClientRect();window.scrollTo({top:scrollY+r.top+(r.height-innerHeight)*.35,behavior:'instant'});});
+ await expect.poll(()=>delayed).toBeGreaterThan(0);
  await expect(tour).toHaveAttribute('data-target','1');await expect(tour).toHaveAttribute('data-frame','1',{timeout:15000});
 });
 
