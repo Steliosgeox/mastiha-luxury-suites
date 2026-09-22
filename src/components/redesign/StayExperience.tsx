@@ -11,6 +11,7 @@ import { getStayCopy, type StayLocale } from "@/content/stay-copy";
 import { trackEvent } from "@/lib/analytics";
 import { PremiumDock } from "./PremiumDock";
 import s from "./MastihaOdisej.module.css";
+import keyboard from "./KeyboardNavigation.module.css";
 
 const GalleryLightbox = dynamic(() => import("./StayLightbox"), { ssr: false, loading: () => <div className={s.galleryLoading} role="status" aria-label="Loading photographs">Mastiha</div> });
 const StayContext = createContext<{ book: (source: string) => void; photo: (id: PhotoId) => void; locale: StayLocale } | null>(null);
@@ -101,12 +102,20 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
     if (event.defaultPrevented || event.metaKey || event.ctrlKey || event.shiftKey || event.altKey || event.button !== 0) return;
     const target = event.target instanceof Element ? event.target.closest<HTMLAnchorElement>("a[href^='#']") : null;
     const hash = target?.getAttribute("href");
-    if (!hash || hash.length < 2 || !document.getElementById(hash.slice(1))) return;
+    const destination = hash && hash.length > 1 ? document.getElementById(hash.slice(1)) : null;
+    if (!hash || !destination) return;
     event.preventDefault(); navigate(hash);
+    // Smooth scrolling must not leave keyboard focus stranded at the old link.
+    if (event.detail === 0 || target?.classList.contains(s.skip)) {
+      const temporaryTabIndex = !destination.hasAttribute("tabindex");
+      if (temporaryTabIndex) destination.setAttribute("tabindex", "-1");
+      destination.focus({ preventScroll: true });
+      if (temporaryTabIndex) destination.addEventListener("blur", () => destination.removeAttribute("tabindex"), { once: true });
+    }
   };
 
   return <StayContext.Provider value={{ book: openBook, photo: openPhoto, locale }}>
-    <div ref={root} className={s.experience} onClick={anchorClick}>
+    <div ref={root} className={`${s.experience} ${keyboard.root}`} onClick={anchorClick}>
       {children}
       <PremiumDock locale={locale} onNavigate={navigate} onBook={() => openBook("dock")} />
       <dialog ref={dialog} className={s.dialog} aria-labelledby="booking-title" aria-describedby="booking-description" onKeyDown={trapBookingFocus} data-lenis-prevent onCancel={(event) => { event.preventDefault(); closeBooking(); }} onClick={(event) => { if (event.target === event.currentTarget) closeBooking(); }}>

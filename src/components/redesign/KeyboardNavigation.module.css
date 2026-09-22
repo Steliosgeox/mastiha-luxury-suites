@@ -1,0 +1,10 @@
+/* The direct child is the page's skip-to-content link. Keep it focusable
+   without an offscreen painted rectangle in tall-section captures. */
+.root > a[href="#suite"]:not(:focus) {
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  overflow: hidden;
+  white-space: nowrap;
+  clip-path: inset(50%);
+}
