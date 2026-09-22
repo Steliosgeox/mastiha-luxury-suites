@@ -8,8 +8,7 @@ import { listingCopy } from '@/content/listing-copy';
 import type { StayLocale } from '@/content/stay-copy';
 import s from './MastihaOdisej.module.css';
 
-// A transparent, photographic substitute until an authentic property video is supplied.
-// No synthesized rooms, interpolated frames or AI walkthrough assets are used.
+// Authentic photographs; no synthesized rooms or interpolated walkthrough frames.
 export function StayFilm({locale}:{locale:StayLocale}) {
   const section=useRef<HTMLElement>(null), bar=useRef<HTMLSpanElement>(null);
   const [enabled,setEnabled]=useState(false), [near,setNear]=useState(false), [index,setIndex]=useState(0);
@@ -36,10 +35,11 @@ export function StayFilm({locale}:{locale:StayLocale}) {
   const displayed=ready.has(index)?index:0;
   return <section id="film" ref={section} className={s.film} data-static={!enabled} data-testid="scroll-film" aria-label={l.tour} data-target={index} data-frame={displayed}>
     <div className={s.filmViewport} data-media-frame data-testid="photo-tour-viewport">
-      {tourPhotos.map((photo,i)=>(i===0||(near&&enabled))&&<div key={photo.id} className={s.tourLayer} data-active={i===displayed} aria-hidden={i!==displayed} style={{position:'absolute',inset:0}} data-media-frame>
-        <Image src={photo.src} alt={photoCaption(photo.id,locale)} fill sizes="(max-width:760px) 100vw, 100vw" className={s.tourImage} loading="lazy" onLoad={()=>setReady(old=>new Set(old).add(i))}/>
-      </div>)}
-      <div className={s.filmShade} aria-hidden="true"/>
+      <div className={s.tourMedia}>
+        {tourPhotos.map((photo,i)=>(i===0||(near&&enabled))&&<div key={photo.id} className={s.tourLayer} data-active={i===displayed} aria-hidden={i!==displayed} style={{position:'absolute',inset:0}} data-media-frame>
+          <Image src={photo.src} alt={photoCaption(photo.id,locale)} fill sizes="(max-width:760px) 100vw, 100vw" className={s.tourImage} loading="lazy" onLoad={()=>setReady(old=>new Set(old).add(i))}/>
+        </div>)}
+      </div>
       <div className={s.filmTop}><span>{l.tour}</span><a href="#suite">{l.skip} ↘</a></div>
       <div className={s.filmCaption}><p>{l.tourNote}</p><h2>{photoCaption(tourPhotos[displayed].id,locale)}</h2></div>
       <div className={s.filmProgress} aria-hidden="true"><span ref={bar}/></div>

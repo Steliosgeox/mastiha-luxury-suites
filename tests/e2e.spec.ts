@@ -6,7 +6,7 @@ for (const width of [320, 390, 768, 1440]) {
     const errors: string[] = []; page.on("pageerror", error => errors.push(error.message));
     await page.setViewportSize({ width, height: 900 }); await page.goto("/en");
     await expect(page).toHaveTitle(/Mastiha Luxury Suites/);
-    await expect(page.locator("h1")).toHaveText("MASTIHA");
+    await expect(page.locator("h1")).toHaveText("Mastiha Luxury Suites");
     const hero = page.getByTestId("landing-hero");
     const image = page.getByTestId("hero-image");
     await expect.poll(() => image.evaluate((node: HTMLImageElement) => node.complete && node.naturalWidth > 0)).toBe(true);
@@ -62,7 +62,7 @@ test('photographic sections, compact ratings, map privacy and FAQ',async({page},
 test('Greek and Turkish remain readable and navigable at phone width',async({page})=>{
  await page.setViewportSize({width:390,height:844});
  for(const [locale,headline] of [['el','Μια πιο ήρεμη πλευρά της Χίου.'],['tr',"Sakız Adası'nın daha sakin bir yüzü."]]){
-  await page.goto(`/${locale}`);await expect(page.getByTestId('landing-hero')).toContainText(headline);await expect(page.locator('h1')).toHaveText('MASTIHA');
+  await page.goto(`/${locale}`);await expect(page.getByTestId('landing-hero')).toContainText(headline);await expect(page.locator('h1')).toHaveText('Mastiha Luxury Suites');
   expect(await page.evaluate(()=>document.documentElement.scrollWidth<=document.documentElement.clientWidth)).toBe(true);
   await expect(page.locator('header nav').last()).toBeVisible();
  }
@@ -70,5 +70,5 @@ test('Greek and Turkish remain readable and navigable at phone width',async({pag
 
 test('server-rendered hero works when JavaScript is disabled',async({browser})=>{
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:1440,height:900}});const page=await context.newPage();
- await page.goto('/en');await expect(page.locator('h1')).toHaveText('MASTIHA');await expect(page.getByTestId('hero-image')).toBeVisible();await expect(page.locator('#reviews a')).toHaveCount(2);await context.close();
+ await page.goto('/en');await expect(page.locator('h1')).toHaveText('Mastiha Luxury Suites');await expect(page.getByTestId('hero-image')).toBeVisible();await expect(page.locator('#reviews a')).toHaveCount(2);await context.close();
 });

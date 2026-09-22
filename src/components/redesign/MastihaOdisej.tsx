@@ -35,7 +35,7 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
           <nav className={s.topNav} aria-label={c.nav}>
             <a href="#suite">{c.suite}</a><a href="#gallery">{c.gallery}</a><a href="#location">{c.location}</a>
           </nav>
-          <Link href={`/${lang}`} className={s.wordmark} aria-label={property.name}>Mastiha<span>Luxury Suites</span></Link>
+          <Link href={`/${lang}`} className={s.wordmark} aria-label={property.name}>{property.name}</Link>
           <div className={s.headerActions}>
             <nav className={s.locales} aria-label={c.language}>{(["en", "el", "tr"] as const).map((l) => <Link key={l} href={`/${l}`} lang={l} hrefLang={l} aria-current={lang === l ? "page" : undefined}>{l.toUpperCase()}</Link>)}</nav>
             <BookButton className={s.outlineButton} source="hero">{c.book}<span aria-hidden="true">↗</span></BookButton>
@@ -44,8 +44,8 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
         <div className={s.heroMeta}><span>{c.place}</span><span>{c.heroSmall}</span></div>
         <div className={s.heroIdentity}>
           <p>{c.heroLine}</p>
-          <h1 id="mastiha-title">MASTIHA</h1>
-          <div className={s.heroBaseline}><span>Luxury Suites</span><span>{property.areaM2} m² · {property.bedrooms} {c.bedroomsLabel} · {property.maxGuests} {c.guestsLabel}</span></div>
+          <h1 id="mastiha-title">{property.name}</h1>
+          <div className={s.heroBaseline}><span>{property.areaM2} m² · {property.bedrooms} {c.bedroomsLabel} · {property.maxGuests} {c.guestsLabel}</span></div>
         </div>
         <a href="#film" className={s.discover}><span aria-hidden="true">↓</span>{c.discover}</a>
       </section>
@@ -92,7 +92,7 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
         <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame><Image src={stayPhoto("master").src} alt={caption("master")} fill sizes="(max-width: 760px) 130vh, 100vw" className={s.sceneImage} /></div><div className={s.sceneScrim} aria-hidden="true" />
         <div className={s.closingContent}><h2 id="closing-title" className={s.heading}>{c.closing}</h2><div><p>{c.closingBody}</p><BookButton source="closing" className={s.solidButton}>{c.bookShort}<span aria-hidden="true">↗</span></BookButton></div></div>
       </section>
-      <footer className={s.footer}><div className={s.footerWordmark}>Mastiha<span>Luxury Suites</span></div><div className={s.footerMeta}><span>{c.place}</span><span>{c.registration} {property.licenseNumber}</span><Link href={`/${lang}/privacy`}>{c.privacy}</Link><a href="#home">{c.top} ↑</a></div></footer>
+      <footer className={s.footer}><div className={s.footerWordmark}>{property.name}</div><div className={s.footerMeta}><span>{c.place}</span><span>{c.registration} {property.licenseNumber}</span><Link href={`/${lang}/privacy`}>{c.privacy}</Link><a href="#home">{c.top} ↑</a></div></footer>
     </main>
   </StayExperience>;
 }

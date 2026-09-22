@@ -1,0 +1,10 @@
+{
+  "src/components/redesign/PremiumDock.tsx": "5be70ea0c3a58f7ee740d72e1fca0630ce806a00702851d9b0d3a4ca0fc5c0b6",
+  "src/components/redesign/PremiumDock.module.css": "9a34a2974f7e89b613d0855b2d33dac84d1317e956aba94b2d90d06f2421fef0",
+  "public/ui/dock/booking.webp": "8768ef543e2bc465be857c17a54cf4ec18b4f03337894c80660a06a5db8ac35b",
+  "public/ui/dock/gallery.webp": "087650982df5af294e88ee2870d43df7fe8faa29745791e2594f2ee1821844fb",
+  "public/ui/dock/home.webp": "acb6b5411f27bae444e71583c2224d698a99c64a95957657f5fda0b1609b289e",
+  "public/ui/dock/location.webp": "87982c9ce288feb2a6b88344897d5f28b48c6d989bf849f9c709430ea190d33e",
+  "public/ui/dock/suite-repaired.webp": "cd8beb0ecf1f849aead5c96421dd5cdc243b48e8f39cb8719f41aa6ef7179517",
+  "public/ui/dock/suite.webp": "436489bdfcc24e2d18d085967ba45ca2751b58e9fdf7a63f3ef9fc326370aac4"
+}

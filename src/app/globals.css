@@ -4,12 +4,14 @@
 
 @layer base {
   :root {
-    --background: #F6F2E8;
-    --foreground: #0B202B;
-    --surface: #FBFAF6;
+    /* Legacy font utilities inherit the modern display family. */
+    --font-serif: var(--font-display);
+    --background: #FFFFFF;
+    --foreground: #252729;
+    --surface: #FAFAF9;
     --surface-elevated: rgba(251, 250, 246, 0.85);
-    --muted: #7A6F60;
-    --muted-light: #DFD8CD;
+    --muted: #5B6063;
+    --muted-light: #E7E8E6;
     --border: rgba(11, 32, 43, 0.08);
     --border-light: rgba(246, 242, 232, 0.15);
     --sea: #1A5268;
@@ -36,7 +38,7 @@
     min-height: 100vh;
     font-feature-settings: "cv02", "cv03", "cv04", "cv11";
   }
-  ::selection { background-color: var(--resin); color: var(--foreground); }
+  ::selection { background-color: #E5E7E6; color: var(--foreground); }
   .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
 }
 
@@ -73,8 +75,5 @@ html.lenis, html.lenis body { height: auto; }
   box-shadow: 0 25px 50px -12px rgba(11, 32, 43, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.7) inset, 0 2px 8px rgba(220, 203, 157, 0.2) inset;
 }
 .resin-glow { box-shadow: 0 0 24px -4px var(--resin-glow); }
-
-/* This light section reuses the gallery header composition, not its light-on-dark text. */
-#neighbourhood-title + p {
-  color: var(--muted, #657064);
-}
+#neighbourhood-title + p { color: var(--muted, #5b6063); }
+.yarl__root { font-family:var(--font-sans),sans-serif; }
