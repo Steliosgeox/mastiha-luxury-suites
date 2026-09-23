@@ -36,7 +36,7 @@ for (const locale of ['en', 'el', 'tr']) {
           overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
         };
       });
-      expect(geometry.font).toMatch(/Inter.?Tight/i);
+      expect(geometry.font).toMatch(/Commissioner/i);
       expect(geometry.font).not.toMatch(/Garamond|Georgia|Times/i);
       expect(geometry.size).toBeLessThanOrEqual(104);
       expect(geometry.textFits).toBe(true);
@@ -56,7 +56,7 @@ for (const locale of ['en', 'el', 'tr']) {
 test('white sections and photo-tour rails have neutral backgrounds and readable text', async ({ page }, info) => {
   await page.goto('/en');
   await page.evaluate(() => document.fonts.ready);
-  const surfaces = await page.locator('#suite,#spaces,#gallery,#amenities,#reviews,#location,#information,footer,section[aria-labelledby="host-title"],section[aria-labelledby="neighbourhood-title"],#film').evaluateAll(elements => elements.map(element => {
+  const surfaces = await page.locator('#suite,#spaces,#gallery,#amenities,#reviews,#location,#information,footer,section[aria-labelledby="host-title"],section[aria-labelledby="neighbourhood-title"]').evaluateAll(elements => elements.map(element => {
     let parent: Element | null = element;
     let channels: number[] = [];
     while (parent) {
@@ -86,6 +86,20 @@ test('white sections and photo-tour rails have neutral backgrounds and readable 
   await page.locator('#film').evaluate(element => { const r = element.getBoundingClientRect(); window.scrollTo({ top: scrollY + r.top + (r.height - innerHeight) * .5, behavior: 'instant' }); });
   const image = page.locator('#film [data-active=true] img');
   await expect.poll(() => image.evaluate((img: HTMLImageElement) => img.complete && img.naturalWidth > 0)).toBe(true);
+  const cinematic = await image.evaluate(img => {
+    const viewport = document.querySelector('[data-testid="photo-tour-viewport"]')!.getBoundingClientRect();
+    const layer = img.parentElement!.getBoundingClientRect();
+    return {
+      objectFit: getComputedStyle(img).objectFit,
+      layerWidth: layer.width,
+      layerHeight: layer.height,
+      viewportWidth: viewport.width,
+      viewportHeight: viewport.height,
+    };
+  });
+  expect(cinematic.objectFit).toBe('cover');
+  expect(cinematic.layerWidth).toBeGreaterThanOrEqual(cinematic.viewportWidth * .99);
+  expect(cinematic.layerHeight).toBeGreaterThanOrEqual(cinematic.viewportHeight * .99);
   const overlaps = await image.evaluate(img => {
     const frame = img.parentElement!.parentElement!.getBoundingClientRect();
     const section = document.querySelector('#film')!;
@@ -108,7 +122,7 @@ test('privacy shares the new typography and retired marketing copy is not serial
     await page.goto(`/${locale}/privacy`);
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('h1')).toBeVisible();
-    expect(await page.locator('h1').evaluate(element => getComputedStyle(element).fontFamily)).toMatch(/Inter.?Tight/i);
+    expect(await page.locator('h1').evaluate(element => getComputedStyle(element).fontFamily)).toMatch(/Commissioner/i);
     expect(await page.locator('main').evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(255, 255, 255)');
   }
 });
