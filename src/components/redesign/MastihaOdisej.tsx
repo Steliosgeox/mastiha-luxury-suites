@@ -27,8 +27,8 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
     <a href="#suite" className={s.skip}>{c.skip}</a>
     <main className={s.site}>
       <section id="home" className={s.hero} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="mastiha-title" data-testid="landing-hero">
-        <div className={s.heroMedia} style={{ position: "absolute", inset: 0 }} data-media-frame data-hero-media data-photo-id="arrival">
-          <Image src={stayPhoto("arrival").src} alt={caption("arrival")} fill priority sizes="(max-aspect-ratio: 3/2) 150vh, 100vw" className={s.heroImage} style={{ objectPosition: stayPhoto("arrival").position }} data-testid="hero-image" />
+        <div className={s.heroMedia} style={{ position: "absolute", inset: 0 }} data-media-frame data-hero-media data-photo-id="living">
+          <Image src={stayPhoto("living").src} alt={caption("living")} fill priority sizes="(max-aspect-ratio: 3/2) 150vh, 100vw" className={s.heroImage} style={{ objectPosition: stayPhoto("living").position }} data-testid="hero-image" />
         </div>
         <div className={s.heroScrim} aria-hidden="true" />
         <header className={s.masthead} data-hero-nav>
@@ -55,7 +55,7 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
           <p className={s.eyebrow}>{c.introEyebrow}</p><h2 id="suite-title" className={s.heading}>{c.introTitle}</h2><p className={s.body}>{c.introBody}</p>
           <dl className={s.facts}><div><dt>{c.areaLabel}</dt><dd>{property.areaM2}<small> m²</small></dd></div><div><dt>{c.bedroomsLabel}</dt><dd>{property.bedrooms}</dd></div><div><dt>{c.guestsLabel}</dt><dd>{property.maxGuests}</dd></div></dl>
         </div>
-        <figure className={s.introPhoto} data-reveal><PhotoButton id="living"><PropertyPhoto id="living" alt={caption("living")} className={s.landscape} /></PhotoButton><figcaption className={s.caption}><span>01</span>{c.captions.living}</figcaption></figure>
+        <figure className={s.introPhoto} data-reveal><PhotoButton id="lounge"><PropertyPhoto id="lounge" alt={caption("lounge")} className={s.landscape} /></PhotoButton><figcaption className={s.caption}><span>01</span>{photoCaption("lounge",lang)}</figcaption></figure>
       </section>
       <section id="spaces" className={s.rooms} aria-labelledby="rooms-title">
         <div className={s.sectionHeading}><p className={s.eyebrow}>{c.roomsEyebrow}</p><h2 className={s.heading} id="rooms-title">{c.roomsTitle}</h2></div>

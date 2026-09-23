@@ -15,4 +15,4 @@ export function stayPhoto(id: PhotoId): StayMedia {
 export function photoCaption(id: PhotoId, locale: StayLocale): string {
   return stayPhoto(id).captions[locale];
 }
-export const tourPhotos = (['lounge','kitchen-wide','master-wide','second-wide','terrace'] as const).map(stayPhoto);
+export const tourPhotos = (['kitchen-wide','master-wide','second-wide','shower','terrace'] as const).map(stayPhoto);

@@ -2,9 +2,9 @@ import { test, expect } from '@playwright/test';
 
 test('hero, tour and editorial storytelling do not lazily repeat the same photographs', async ({ page }) => {
   await page.goto('/en');
-  await expect(page.getByTestId('hero-image')).toHaveAttribute('alt', /Arriving at Mastiha/i);
+  await expect(page.getByTestId('hero-image')).toHaveAttribute('alt', /Living and dining room/i);
   const heroId = await page.locator('[data-hero-media]').getAttribute('data-photo-id');
-  expect(heroId).toBe('arrival');
+  expect(heroId).toBe('living');
 
   const staticIds = await page.locator('main [data-photo-id]').evaluateAll(elements =>
     elements.map(element => element.getAttribute('data-photo-id')).filter(Boolean)
@@ -21,6 +21,6 @@ test('hero, tour and editorial storytelling do not lazily repeat the same photog
     const r = element.getBoundingClientRect();
     window.scrollTo({ top: scrollY + r.top + 80, behavior: 'instant' });
   });
-  await expect(tour.locator('[data-active=true] img')).toHaveAttribute('alt', /Sofa and living space/i);
+  await expect(tour.locator('[data-active=true] img')).toHaveAttribute('alt', /Kitchen and appliances/i);
   expect(staticIds.length).toBeGreaterThan(8);
 });
