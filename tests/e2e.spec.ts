@@ -55,9 +55,17 @@ test('photographic sections, compact ratings, map privacy and FAQ',async({page},
  for(const score of await page.getByTestId('review-score').all())expect(await score.evaluate(e=>parseFloat(getComputedStyle(e).fontSize))).toBeLessThanOrEqual(28);
  await page.locator('#information summary').first().click();await expect(page.locator('#information details').first()).toHaveAttribute('open','');
  await expect(page.locator('#location').getByRole('link',{name:/Open Google Maps/})).toHaveAttribute('href',propertyData.location.googleMapsUrl);
- await page.route('https://maps.google.com/**',route=>route.fulfill({contentType:'text/html',body:'<p>Google map test response</p>'}));
- await page.getByRole('button',{name:'Load location map'}).click();await expect(page.locator('iframe')).toHaveCount(1);
- await page.getByRole('button',{name:'Close',exact:true}).click();await expect(page.locator('iframe')).toHaveCount(0);
+ expect(propertyData.location.googlePlaceId).toBe('ChIJC2Y7IgBmuxQRQN6ormboZOk');
+ expect(propertyData.location.googleMapsUrl).toContain('query_place_id='+propertyData.location.googlePlaceId);
+ expect(propertyData.location.googleDirectionsUrl).toContain('destination_place_id='+propertyData.location.googlePlaceId);
+ await page.route('https://www.google.com/maps**',route=>route.fulfill({contentType:'text/html',body:'<p>Google Maps place embed test response</p>'}));
+ await page.getByRole('button',{name:'Open the Google Map',exact:true}).click();
+ const map=page.getByTestId('google-map');
+ await expect(map).toHaveCount(1);
+ await expect(map).toHaveAttribute('data-place-id',propertyData.location.googlePlaceId);
+ const mapSrc=await map.getAttribute('src');
+ expect(mapSrc).toContain(encodeURIComponent('place_id:'+propertyData.location.googlePlaceId));
+ await page.getByRole('button',{name:'Close',exact:true}).click();await expect(map).toHaveCount(0);
  await expect(page.locator('footer')).toContainText(propertyData.licenseNumber);await expect(page.locator('footer').getByRole('link',{name:'Privacy',exact:true})).toHaveAttribute('href','/en/privacy');
  for(const id of ['suite','spaces','gallery','amenities','reviews','location']) { const section=page.locator(`#${id}`);await section.scrollIntoViewIfNeeded();await page.waitForTimeout(900);await section.screenshot({path:info.outputPath(`${id}.png`)}); }
  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await page.screenshot({path:info.outputPath('full-page.png'),fullPage:true});
@@ -100,4 +108,19 @@ test('mobile hero copy is visible immediately and stays readable until late in t
   expect(discoverMid).toBeGreaterThanOrEqual(.95);
 
   await page.screenshot({ path: info.outputPath('hero-copy-early-390.png'), animations: 'disabled' });
+});
+
+test('real Google Maps place is used in every locale',async({page})=>{
+ const cases=[['en','Open the Google Map','Close'],['el','Άνοιγμα Google Map','Κλείσιμο'],['tr','Google haritasını aç','Kapat']] as const;
+ for(const [locale,openLabel,closeLabel] of cases){
+  await page.route('https://www.google.com/maps**',route=>route.fulfill({contentType:'text/html',body:'<p>Google Maps place embed test response</p>'}));
+  await page.goto('/'+locale);
+  await page.getByRole('button',{name:openLabel,exact:true}).click();
+  const map=page.getByTestId('google-map');
+  await expect(map).toHaveAttribute('data-place-id',propertyData.location.googlePlaceId);
+  const src=await map.getAttribute('src');
+  expect(src).toContain(encodeURIComponent('place_id:'+propertyData.location.googlePlaceId));
+  await page.getByRole('button',{name:closeLabel,exact:true}).click();
+  await expect(map).toHaveCount(0);
+ }
 });
