@@ -92,8 +92,8 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
         // Entry choreography: one restrained timeline instead of unrelated fades.
         const entrance = gsap.timeline({ defaults: { ease: "power3.out" } });
         if (heroMedia) entrance.fromTo(heroMedia, { scale: 1.055 }, { scale: 1, duration: 1.45, clearProps: "scale" }, 0);
-        entrance.from([heroNav, heroMeta].filter(Boolean), { autoAlpha: 0, y: -12, duration: .7, stagger: .08 }, .12);
-        entrance.from([heroCopy, heroDiscover].filter(Boolean), { autoAlpha: 0, y: 24, duration: .9, stagger: .1 }, .28);
+        entrance.from([heroNav, heroMeta].filter(Boolean), { opacity: 0, y: -12, duration: .7, stagger: .08 }, .12);
+        entrance.from([heroCopy, heroDiscover].filter(Boolean), { opacity: 0, y: 24, duration: .9, stagger: .1 }, .28);
 
         // Hero yields to the cinematic tour as the page scrolls.
         if (hero && heroMedia) {
@@ -107,7 +107,7 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
         if (hero && heroCopy) {
           gsap.to(heroCopy, {
             yPercent: -10,
-            autoAlpha: .45,
+            opacity: .45,
             ease: "none",
             scrollTrigger: { trigger: hero, start: "35% top", end: "bottom top", scrub: .6 },
           });
@@ -116,8 +116,8 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
         // React-Bits-style content reveal, adapted to this site's existing GSAP stack.
         gsap.utils.toArray<HTMLElement>("[data-reveal]", scope).forEach((element) => {
           gsap.fromTo(element,
-            { y: 34, autoAlpha: 0 },
-            { y: 0, autoAlpha: 1, duration: .95, ease: "power3.out", scrollTrigger: { trigger: element, start: "top 88%", once: true } }
+            { y: 34, opacity: 0 },
+            { y: 0, opacity: 1, duration: .95, ease: "power3.out", scrollTrigger: { trigger: element, start: "top 88%", once: true } }
           );
         });
 
@@ -144,8 +144,8 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
         const galleryItems = gsap.utils.toArray<HTMLElement>("[data-gallery-item]", scope);
         if (galleryItems.length) {
           gsap.fromTo(galleryItems,
-            { y: 38, autoAlpha: 0 },
-            { y: 0, autoAlpha: 1, duration: .85, stagger: .07, ease: "power3.out", scrollTrigger: { trigger: "#gallery", start: "top 74%", once: true } }
+            { y: 38, opacity: 0 },
+            { y: 0, opacity: 1, duration: .85, stagger: .07, ease: "power3.out", scrollTrigger: { trigger: "#gallery", start: "top 74%", once: true } }
           );
         }
 

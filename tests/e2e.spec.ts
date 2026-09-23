@@ -15,7 +15,11 @@ for (const width of [320, 390, 768, 1440]) {
       const hero = document.querySelector("#home")!.getBoundingClientRect(); const film = document.querySelector("#film")!.getBoundingClientRect();
       return { heroTop: hero.top, heroBottom: hero.bottom, filmTop: film.top, overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth, escaped: [...document.querySelectorAll<HTMLImageElement>('img[data-nimg="fill"]')].filter(image => {
         const parent=image.parentElement!; const p=parent.getBoundingClientRect(), r=image.getBoundingClientRect();
-        return !["relative","absolute","fixed","sticky"].includes(getComputedStyle(parent).position) || (!image.hasAttribute("data-parallax") && (r.left < p.left-2 || r.right > p.right+2 || r.top < p.top-2 || r.bottom > p.bottom+2));
+        const style=getComputedStyle(parent);
+        const positioned=["relative","absolute","fixed","sticky"].includes(style.position);
+        const clipped=[style.overflow,style.overflowX,style.overflowY].some(value=>value==="hidden"||value==="clip");
+        const extendsOutside=r.left < p.left-2 || r.right > p.right+2 || r.top < p.top-2 || r.bottom > p.bottom+2;
+        return !positioned || (!image.hasAttribute("data-parallax") && !clipped && extendsOutside);
       }).map(image=>image.getAttribute("alt")) };
     });
     expect(geometry.heroTop).toBe(0); expect(geometry.filmTop).toBeGreaterThanOrEqual(geometry.heroBottom-1); expect(geometry.overflow).toBe(false); expect(geometry.escaped).toEqual([]);
