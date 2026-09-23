@@ -76,3 +76,28 @@ test('server-rendered hero works when JavaScript is disabled',async({browser})=>
  const context=await browser.newContext({javaScriptEnabled:false,viewport:{width:1440,height:900}});const page=await context.newPage();
  await page.goto('/en');await expect(page.locator('h1')).toHaveText('Mastiha Luxury Suites');await expect(page.getByTestId('hero-image')).toBeVisible();await expect(page.locator('#reviews a')).toHaveCount(2);await context.close();
 });
+
+test('mobile hero copy is visible immediately and stays readable until late in the hero scroll', async ({ page }, info) => {
+  await page.setViewportSize({ width: 390, height: 844 });
+  await page.goto('/en');
+  const hero = page.getByTestId('landing-hero');
+  const copy = hero.locator('[data-hero-copy]');
+  const discover = hero.locator('[data-hero-discover]');
+
+  await expect(copy).toBeVisible();
+  await expect(discover).toBeVisible();
+
+  const initial = await copy.evaluate(element => Number(getComputedStyle(element).opacity));
+  expect(initial).toBeGreaterThanOrEqual(.98);
+
+  // Reproduce the user's screenshot zone: hero is already moving upward but the
+  // photographic tour has only just started to enter.
+  await page.evaluate(() => window.scrollTo({ top: Math.round(innerHeight * .42), behavior: 'instant' }));
+  await page.waitForTimeout(120);
+  const mid = await copy.evaluate(element => Number(getComputedStyle(element).opacity));
+  const discoverMid = await discover.evaluate(element => Number(getComputedStyle(element).opacity));
+  expect(mid).toBeGreaterThanOrEqual(.95);
+  expect(discoverMid).toBeGreaterThanOrEqual(.95);
+
+  await page.screenshot({ path: info.outputPath('hero-copy-early-390.png'), animations: 'disabled' });
+});

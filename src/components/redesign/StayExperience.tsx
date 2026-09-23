@@ -92,8 +92,10 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
         // Entry choreography: one restrained timeline instead of unrelated fades.
         const entrance = gsap.timeline({ defaults: { ease: "power3.out" } });
         if (heroMedia) entrance.fromTo(heroMedia, { scale: 1.055 }, { scale: 1, duration: 1.45, clearProps: "scale" }, 0);
-        entrance.from([heroNav, heroMeta].filter(Boolean), { opacity: 0, y: -12, duration: .7, stagger: .08 }, .12);
-        entrance.from([heroCopy, heroDiscover].filter(Boolean), { opacity: 0, y: 24, duration: .9, stagger: .1 }, .28);
+        entrance.from([heroNav, heroMeta].filter(Boolean), { y: -8, duration: .45, stagger: .05 }, .04);
+        // Keep hero copy visible from first paint. A transform-only entrance avoids
+        // mobile hydration/scroll timing making the title appear late.
+        entrance.from([heroCopy, heroDiscover].filter(Boolean), { y: 12, duration: .5, stagger: .06 }, .06);
 
         // Hero yields to the cinematic tour as the page scrolls.
         if (hero && heroMedia) {
@@ -106,10 +108,17 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
         }
         if (hero && heroCopy) {
           gsap.to(heroCopy, {
-            yPercent: -10,
-            opacity: .45,
+            yPercent: -6,
+            opacity: .9,
             ease: "none",
-            scrollTrigger: { trigger: hero, start: "35% top", end: "bottom top", scrub: .6 },
+            scrollTrigger: { trigger: hero, start: "72% top", end: "bottom top", scrub: .5 },
+          });
+        }
+        if (hero && heroDiscover) {
+          gsap.to(heroDiscover, {
+            opacity: .9,
+            ease: "none",
+            scrollTrigger: { trigger: hero, start: "78% top", end: "bottom top", scrub: .45 },
           });
         }
 
