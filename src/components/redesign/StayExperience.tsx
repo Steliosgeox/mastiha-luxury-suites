@@ -31,11 +31,62 @@ export function PhotoButton({ id, children, className }: { id: PhotoId; children
   return <button type="button" className={className ?? s.photoButton} aria-label={`${c.photoAction}: ${photoCaption(id, locale)}`} onClick={() => photo(id)}>{children}</button>;
 }
 export function MapPanel({ locale }: { locale: StayLocale }) {
-  const [loaded, setLoaded] = useState(false); const c = getStayCopy(locale);
-  const query = new URL(propertyData.location.googleMapsUrl).searchParams.get("query") ?? "Mastiha Luxury Suites Vrontados Chios";
-  return <div><button type="button" className={s.mapButton} aria-expanded={loaded} aria-controls="property-map" onClick={() => { setLoaded((value) => !value); if (!loaded) trackEvent("map_open"); }}>{loaded ? c.close : c.mapLoad}</button>
-    {loaded && <iframe id="property-map" className={s.map} title={c.mapTitle} src={`https://maps.google.com/maps?q=${encodeURIComponent(query)}&output=embed`} loading="lazy" referrerPolicy="no-referrer-when-downgrade" />}
-    <p className={s.mapNote}>{c.mapNote}</p></div>;
+  const [loaded, setLoaded] = useState(false);
+  const c = getStayCopy(locale);
+  const placeId = propertyData.location.googlePlaceId;
+  const embedKey = process.env.NEXT_PUBLIC_GOOGLE_MAPS_EMBED_KEY?.trim();
+  const placeQuery = `place_id:${placeId}`;
+  const embedSrc = embedKey
+    ? `https://www.google.com/maps/embed/v1/place?key=${encodeURIComponent(embedKey)}&q=${encodeURIComponent(placeQuery)}&zoom=17&maptype=roadmap&language=${locale}`
+    : `https://www.google.com/maps?q=${encodeURIComponent(placeQuery)}&output=embed&hl=${locale}`;
+
+  return <div className={s.mapPanel} data-google-place-id={placeId}>
+    <div className={s.mapPanelTop}>
+      <div>
+        <span className={s.mapProvider}>Google Maps</span>
+        <strong>Mastiha Luxury Suites</strong>
+        <small>Vrontados · Chios · Greece</small>
+      </div>
+      <a
+        href={propertyData.location.googleMapsUrl}
+        target="_blank"
+        rel="noopener noreferrer"
+        onClick={() => trackEvent("map_open", { mode: "external" })}
+      >
+        Google Maps ↗
+      </a>
+    </div>
+
+    <button
+      type="button"
+      className={s.mapButton}
+      aria-expanded={loaded}
+      aria-controls="property-map"
+      onClick={() => {
+        setLoaded((value) => !value);
+        if (!loaded) trackEvent("map_open", { mode: embedKey ? "embed-api" : "place-id-embed" });
+      }}
+    >
+      {loaded ? c.close : c.mapLoad}
+      <span aria-hidden="true">{loaded ? "×" : "↘"}</span>
+    </button>
+
+    {loaded && <div className={s.mapFrame}>
+      <iframe
+        id="property-map"
+        className={s.map}
+        title={c.mapTitle}
+        src={embedSrc}
+        loading="lazy"
+        allowFullScreen
+        referrerPolicy="strict-origin-when-cross-origin"
+        data-testid="google-map"
+        data-place-id={placeId}
+      />
+    </div>}
+
+    <p className={s.mapNote}>{c.mapNote}</p>
+  </div>;
 }
 
 export function StayExperience({ locale, children }: { locale: StayLocale; children: ReactNode }) {
