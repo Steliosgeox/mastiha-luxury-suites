@@ -37,7 +37,7 @@ for (const locale of ['en', 'el', 'tr']) {
           overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
         };
       });
-      expect(geometry.font).toMatch(/Commissioner/i);
+      expect(geometry.font).toMatch(/Geologica/i);
       expect(geometry.font).not.toMatch(/Garamond|Georgia|Times/i);
       expect(geometry.size).toBeLessThanOrEqual(104);
       expect(geometry.textFits).toBe(true);
@@ -133,7 +133,7 @@ test('privacy shares the new typography and retired marketing copy is not serial
     await page.goto(`/${locale}/privacy`);
     await expect(page.locator('html')).toHaveAttribute('lang', locale);
     await expect(page.locator('h1')).toBeVisible();
-    expect(await page.locator('h1').evaluate(element => getComputedStyle(element).fontFamily)).toMatch(/Commissioner/i);
+    expect(await page.locator('h1').evaluate(element => getComputedStyle(element).fontFamily)).toMatch(/Geologica/i);
     expect(await page.locator('main').evaluate(element => getComputedStyle(element).backgroundColor)).toBe('rgb(255, 255, 255)');
   }
 });

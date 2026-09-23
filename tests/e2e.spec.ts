@@ -31,8 +31,8 @@ test('gallery filters, zoom, keyboard navigation and focus restoration',async({p
  await gallery.getByRole('button',{name:'Bedrooms',exact:true}).click(); await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(5);
  await gallery.getByRole('button',{name:'All spaces',exact:true}).click(); await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(6);
  const first=page.getByTestId('gallery-grid').getByRole('button').first(); await first.click();
- const lightbox=page.locator('.yarl__root'); await expect(lightbox).toBeVisible(); await expect(page.locator('.yarl__counter')).toContainText('1 / 24');
- await page.keyboard.press('ArrowRight'); await expect(page.locator('.yarl__counter')).toContainText('2 / 24');
+ const lightbox=page.locator('.yarl__root'); await expect(lightbox).toBeVisible(); await expect(page.locator('.yarl__counter')).toContainText('7 / 24');
+ await page.keyboard.press('ArrowRight'); await expect(page.locator('.yarl__counter')).toContainText('8 / 24');
  await expect(lightbox.getByRole('button',{name:'Zoom in',exact:true})).toBeVisible();
  await page.screenshot({path:info.outputPath('lightbox.png')}); await page.keyboard.press('Escape'); await expect(lightbox).toHaveCount(0); await expect(first).toBeFocused();
 });

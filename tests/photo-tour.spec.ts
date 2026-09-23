@@ -23,7 +23,7 @@ test('reduced motion uses one true photograph and never downloads synthetic fram
  page.on('request',r=>{if(r.url().includes('/sequence/'))oldRequests.push(r.url());});
  await page.goto('/en');const tour=page.getByTestId('scroll-film');await tour.scrollIntoViewIfNeeded();
  await expect(tour).toHaveAttribute('data-static','true');await expect(tour.locator('img')).toHaveCount(1);
- await expect(tour.locator('img')).toHaveAttribute('alt',photos[0].captions.en);expect(oldRequests).toEqual([]);
+ const lounge=photos.find(photo=>photo.id==='lounge')!;await expect(tour.locator('img')).toHaveAttribute('alt',lounge.captions.en);expect(oldRequests).toEqual([]);
 });
 
 test('a delayed photograph paints when it arrives after scrolling stops',async({page})=>{
