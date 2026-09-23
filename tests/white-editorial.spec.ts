@@ -32,6 +32,7 @@ for (const locale of ['en', 'el', 'tr']) {
         return {
           font: css.fontFamily, size: parseFloat(css.fontSize),
           textFits: rects.every(r => r.left >= box.left - 1 && r.right <= box.right + 1),
+          viewportFits: box.left >= -1 && box.right <= innerWidth + 1,
           top: box.top, bottom: box.bottom, headerBottom: header.bottom, discoverTop: discover.top,
           overflow: document.documentElement.scrollWidth > document.documentElement.clientWidth,
         };
@@ -40,6 +41,7 @@ for (const locale of ['en', 'el', 'tr']) {
       expect(geometry.font).not.toMatch(/Garamond|Georgia|Times/i);
       expect(geometry.size).toBeLessThanOrEqual(104);
       expect(geometry.textFits).toBe(true);
+      expect(geometry.viewportFits).toBe(true);
       expect(geometry.top).toBeGreaterThan(geometry.headerBottom);
       expect(geometry.bottom).toBeLessThan(geometry.discoverTop);
       expect(geometry.overflow).toBe(false);
@@ -100,14 +102,23 @@ test('white sections and photo-tour rails have neutral backgrounds and readable 
   expect(cinematic.objectFit).toBe('cover');
   expect(cinematic.layerWidth).toBeGreaterThanOrEqual(cinematic.viewportWidth * .99);
   expect(cinematic.layerHeight).toBeGreaterThanOrEqual(cinematic.viewportHeight * .99);
-  const overlaps = await image.evaluate(img => {
-    const frame = img.parentElement!.parentElement!.getBoundingClientRect();
+  const overlayStack = await image.evaluate(img => {
     const section = document.querySelector('#film')!;
-    const heading = section.querySelector('h2')!.getBoundingClientRect();
-    const top = section.querySelector('a')!.getBoundingClientRect();
-    return { caption: frame.bottom > heading.top, navigation: frame.top < top.bottom };
+    const layer = img.parentElement!;
+    const caption = section.querySelector('h2')!.parentElement!.parentElement!;
+    const top = section.querySelector('a')!.parentElement!;
+    return {
+      layer: Number(getComputedStyle(layer).zIndex || 0),
+      caption: Number(getComputedStyle(caption).zIndex || 0),
+      navigation: Number(getComputedStyle(top).zIndex || 0),
+      captionVisible: getComputedStyle(caption).visibility !== 'hidden',
+      navigationVisible: getComputedStyle(top).visibility !== 'hidden',
+    };
   });
-  expect(overlaps).toEqual({ caption: false, navigation: false });
+  expect(overlayStack.caption).toBeGreaterThan(overlayStack.layer);
+  expect(overlayStack.navigation).toBeGreaterThan(overlayStack.layer);
+  expect(overlayStack.captionVisible).toBe(true);
+  expect(overlayStack.navigationVisible).toBe(true);
   await page.waitForTimeout(500);
   await page.screenshot({ path: info.outputPath('white-photo-tour.png'), animations: 'disabled' });
 });
