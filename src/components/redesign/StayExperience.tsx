@@ -15,7 +15,7 @@ import keyboard from "./KeyboardNavigation.module.css";
 
 const GalleryLightbox = dynamic(() => import("./StayLightbox"), { ssr: false, loading: () => <div className={s.galleryLoading} role="status" aria-label="Loading photographs">Mastiha</div> });
 function scopeButtons(root: HTMLElement) {
-  return [...root.querySelectorAll<HTMLElement>("main .outlineButton, main .solidButton")]
+  return [...root.querySelectorAll<HTMLElement>(`main .${s.outlineButton}, main .${s.solidButton}`)]
     .filter(element => !element.closest("[data-testid='mastiha-dock']") && !element.classList.contains(s.photoButton));
 }
 
