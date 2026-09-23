@@ -13,7 +13,7 @@ import s from "./MastihaOdisej.module.css";
 // Every fill image owns a positioned, size-reserved box. No page-wide absolute posters.
 function PropertyPhoto({ id, alt, className = "", sizes = "(max-width: 760px) 100vw, 65vw", priority = false }: { id: PhotoId; alt: string; className?: string; sizes?: string; priority?: boolean }) {
   const photo = stayPhoto(id);
-  return <div className={`${s.photo} ${className}`} style={{ position: "relative", isolation: "isolate" }} data-media-frame>
+  return <div className={`${s.photo} ${className}`} style={{ position: "relative", isolation: "isolate" }} data-media-frame data-photo-reveal data-photo-id={id}>
     <Image src={photo.src} alt={alt} fill sizes={sizes} priority={priority} className={s.photoImage} style={{ objectPosition: photo.position }} />
   </div>;
 }
@@ -27,11 +27,11 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
     <a href="#suite" className={s.skip}>{c.skip}</a>
     <main className={s.site}>
       <section id="home" className={s.hero} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="mastiha-title" data-testid="landing-hero">
-        <div className={s.heroMedia} style={{ position: "absolute", inset: 0 }} data-media-frame>
-          <Image src={stayPhoto("living").src} alt={caption("living")} fill priority sizes="(max-aspect-ratio: 3/2) 150vh, 100vw" className={s.heroImage} data-testid="hero-image" />
+        <div className={s.heroMedia} style={{ position: "absolute", inset: 0 }} data-media-frame data-hero-media data-photo-id="arrival">
+          <Image src={stayPhoto("arrival").src} alt={caption("arrival")} fill priority sizes="(max-aspect-ratio: 3/2) 150vh, 100vw" className={s.heroImage} style={{ objectPosition: stayPhoto("arrival").position }} data-testid="hero-image" />
         </div>
         <div className={s.heroScrim} aria-hidden="true" />
-        <header className={s.masthead}>
+        <header className={s.masthead} data-hero-nav>
           <nav className={s.topNav} aria-label={c.nav}>
             <a href="#suite">{c.suite}</a><a href="#gallery">{c.gallery}</a><a href="#location">{c.location}</a>
           </nav>
@@ -41,13 +41,13 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
             <BookButton className={s.outlineButton} source="hero">{c.book}<span aria-hidden="true">↗</span></BookButton>
           </div>
         </header>
-        <div className={s.heroMeta}><span>{c.place}</span><span>{c.heroSmall}</span></div>
-        <div className={s.heroIdentity}>
+        <div className={s.heroMeta} data-hero-meta><span>{c.place}</span><span>{c.heroSmall}</span></div>
+        <div className={s.heroIdentity} data-hero-copy>
           <p>{c.heroLine}</p>
           <h1 id="mastiha-title">{property.name}</h1>
           <div className={s.heroBaseline}><span>{property.areaM2} m² · {property.bedrooms} {c.bedroomsLabel} · {property.maxGuests} {c.guestsLabel}</span></div>
         </div>
-        <a href="#film" className={s.discover}><span aria-hidden="true">↓</span>{c.discover}</a>
+        <a href="#film" className={s.discover} data-hero-discover><span aria-hidden="true">↓</span>{c.discover}</a>
       </section>
       <StayFilm locale={lang} />
       <section id="suite" className={s.intro} aria-labelledby="suite-title">
@@ -86,10 +86,10 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
         <figure className={s.locationPhoto}><PhotoButton id="coast"><PropertyPhoto id="coast" alt={caption("coast")} className={s.portrait} sizes="(max-width:760px) 100vw, 45vw" /></PhotoButton><figcaption className={s.caption}>{photoCaption("coast",lang)}</figcaption></figure>
       </section>
       <section className={s.neighbourhood} aria-labelledby="neighbourhood-title"><div className={s.galleryHeader}><h2 id="neighbourhood-title" className={s.heading}>{l.neighbourhoodTitle}</h2><p className={s.body}>{l.neighbourhoodBody}</p></div><div className={s.destinationGrid}>{(["sunrise","windmills","beach"] as const).map(id=><figure key={id}><PhotoButton id={id}><PropertyPhoto id={id} alt={caption(id)} className={s.destinationPhoto} sizes="(max-width:760px) 90vw, 30vw"/></PhotoButton><figcaption className={s.caption}>{photoCaption(id,lang)}</figcaption></figure>)}</div></section>
-      <section className={s.host} aria-labelledby="host-title"><div><p className={s.eyebrow}>{l.hostEyebrow}</p><h2 id="host-title" className={s.subheading}>{l.hostTitle}</h2><p className={s.body}>{l.hostBody}</p><a href={property.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" className={s.outlineButton}>{l.hostAction} ↗</a></div><PhotoButton id="arrival"><PropertyPhoto id="arrival" alt={caption("arrival")} className={s.landscape} sizes="(max-width:760px) 90vw, 35vw"/></PhotoButton></section>
+      <section className={s.host} aria-labelledby="host-title"><div><p className={s.eyebrow}>{l.hostEyebrow}</p><h2 id="host-title" className={s.subheading}>{l.hostTitle}</h2><p className={s.body}>{l.hostBody}</p><a href={property.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" className={s.outlineButton}>{l.hostAction} ↗</a></div><PhotoButton id="keys"><PropertyPhoto id="keys" alt={caption("keys")} className={s.landscape} sizes="(max-width:760px) 90vw, 35vw"/></PhotoButton></section>
       <section id="information" className={s.faq} aria-labelledby="faq-title"><div><p className={s.eyebrow}>{c.faqEyebrow}</p><h2 id="faq-title" className={s.heading}>{c.faqTitle}</h2></div><div>{[...c.faqs,...l.faqs].map((item) => <details key={item.q}><summary>{item.q}<span aria-hidden="true">+</span></summary><p>{fillCopy(item.a, values)}</p></details>)}</div></section>
       <section id="book" className={s.closing} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="closing-title">
-        <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame><Image src={stayPhoto("master").src} alt={caption("master")} fill sizes="(max-width: 760px) 130vh, 100vw" className={s.sceneImage} /></div><div className={s.sceneScrim} aria-hidden="true" />
+        <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame data-photo-id="table"><Image src={stayPhoto("table").src} alt={caption("table")} fill sizes="(max-width: 760px) 130vh, 100vw" className={s.sceneImage} style={{ objectPosition: stayPhoto("table").position }} /></div><div className={s.sceneScrim} aria-hidden="true" />
         <div className={s.closingContent}><h2 id="closing-title" className={s.heading}>{c.closing}</h2><div><p>{c.closingBody}</p><BookButton source="closing" className={s.solidButton}>{c.bookShort}<span aria-hidden="true">↗</span></BookButton></div></div>
       </section>
       <footer className={s.footer}><div className={s.footerWordmark}>{property.name}</div><div className={s.footerMeta}><span>{c.place}</span><span>{c.registration} {property.licenseNumber}</span><Link href={`/${lang}/privacy`}>{c.privacy}</Link><a href="#home">{c.top} ↑</a></div></footer>

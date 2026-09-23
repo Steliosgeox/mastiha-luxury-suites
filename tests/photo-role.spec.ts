@@ -1,0 +1,26 @@
+import { test, expect } from '@playwright/test';
+
+test('hero, tour and editorial storytelling do not lazily repeat the same photographs', async ({ page }) => {
+  await page.goto('/en');
+  await expect(page.getByTestId('hero-image')).toHaveAttribute('alt', /Arriving at Mastiha/i);
+  const heroId = await page.locator('[data-hero-media]').getAttribute('data-photo-id');
+  expect(heroId).toBe('arrival');
+
+  const staticIds = await page.locator('main [data-photo-id]').evaluateAll(elements =>
+    elements.map(element => element.getAttribute('data-photo-id')).filter(Boolean)
+  );
+  // Gallery and scroll tour are intentionally excluded: galleries are collections,
+  // while the tour has its own alternate angles.
+  const nonGallery = await page.locator('main > :not(#gallery):not(#film) [data-photo-id], main > [data-photo-id]').evaluateAll(elements =>
+    elements.map(element => element.getAttribute('data-photo-id')).filter(Boolean)
+  );
+  expect(new Set(nonGallery).size).toBe(nonGallery.length);
+
+  const tour = page.getByTestId('scroll-film');
+  await tour.evaluate(element => {
+    const r = element.getBoundingClientRect();
+    window.scrollTo({ top: scrollY + r.top + 80, behavior: 'instant' });
+  });
+  await expect(tour.locator('[data-active=true] img')).toHaveAttribute('alt', /Sofa and living space/i);
+  expect(staticIds.length).toBeGreaterThan(8);
+});

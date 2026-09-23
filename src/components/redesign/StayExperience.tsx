@@ -14,6 +14,11 @@ import s from "./MastihaOdisej.module.css";
 import keyboard from "./KeyboardNavigation.module.css";
 
 const GalleryLightbox = dynamic(() => import("./StayLightbox"), { ssr: false, loading: () => <div className={s.galleryLoading} role="status" aria-label="Loading photographs">Mastiha</div> });
+function scopeButtons(root: HTMLElement) {
+  return [...root.querySelectorAll<HTMLElement>("main .outlineButton, main .solidButton")]
+    .filter(element => !element.closest("[data-testid='mastiha-dock']") && !element.classList.contains(s.photoButton));
+}
+
 const StayContext = createContext<{ book: (source: string) => void; photo: (id: PhotoId) => void; locale: StayLocale } | null>(null);
 function useStay() { const value = useContext(StayContext); if (!value) throw new Error("StayExperience provider missing"); return value; }
 
@@ -76,13 +81,105 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
     const media = gsap.matchMedia();
     const context = gsap.context(() => {
       media.add("(prefers-reduced-motion: no-preference)", () => {
-        gsap.utils.toArray<HTMLElement>("[data-reveal]", root.current).forEach((element) => {
-          // The hero never waits for animation or media preloading.
-          gsap.from(element, { y: 22, duration: .85, ease: "power2.out", scrollTrigger: { trigger: element, start: "top 92%", once: true } });
+        const scope = root.current!;
+        const hero = scope.querySelector<HTMLElement>("#home");
+        const heroMedia = scope.querySelector<HTMLElement>("[data-hero-media]");
+        const heroCopy = scope.querySelector<HTMLElement>("[data-hero-copy]");
+        const heroNav = scope.querySelector<HTMLElement>("[data-hero-nav]");
+        const heroMeta = scope.querySelector<HTMLElement>("[data-hero-meta]");
+        const heroDiscover = scope.querySelector<HTMLElement>("[data-hero-discover]");
+
+        // Entry choreography: one restrained timeline instead of unrelated fades.
+        const entrance = gsap.timeline({ defaults: { ease: "power3.out" } });
+        if (heroMedia) entrance.fromTo(heroMedia, { scale: 1.055 }, { scale: 1, duration: 1.45, clearProps: "scale" }, 0);
+        entrance.from([heroNav, heroMeta].filter(Boolean), { autoAlpha: 0, y: -12, duration: .7, stagger: .08 }, .12);
+        entrance.from([heroCopy, heroDiscover].filter(Boolean), { autoAlpha: 0, y: 24, duration: .9, stagger: .1 }, .28);
+
+        // Hero yields to the cinematic tour as the page scrolls.
+        if (hero && heroMedia) {
+          gsap.to(heroMedia, {
+            scale: 1.075,
+            yPercent: 4,
+            ease: "none",
+            scrollTrigger: { trigger: hero, start: "top top", end: "bottom top", scrub: .7 },
+          });
+        }
+        if (hero && heroCopy) {
+          gsap.to(heroCopy, {
+            yPercent: -10,
+            autoAlpha: .45,
+            ease: "none",
+            scrollTrigger: { trigger: hero, start: "35% top", end: "bottom top", scrub: .6 },
+          });
+        }
+
+        // React-Bits-style content reveal, adapted to this site's existing GSAP stack.
+        gsap.utils.toArray<HTMLElement>("[data-reveal]", scope).forEach((element) => {
+          gsap.fromTo(element,
+            { y: 34, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: .95, ease: "power3.out", scrollTrigger: { trigger: element, start: "top 88%", once: true } }
+          );
         });
-        gsap.utils.toArray<HTMLElement>("[data-parallax]", root.current).forEach((image) => {
-          gsap.fromTo(image, { scale: 1.08, yPercent: -3 }, { scale: 1.08, yPercent: 3, ease: "none", scrollTrigger: { trigger: image.parentElement, start: "top bottom", end: "bottom top", scrub: true } });
+
+        // Editorial headings reveal through a simple mask instead of blur/glow effects.
+        gsap.utils.toArray<HTMLElement>("main section:not(#film) h2", scope).forEach((heading) => {
+          gsap.fromTo(heading,
+            { clipPath: "inset(0 0 100% 0)", y: 24 },
+            { clipPath: "inset(0 0 0% 0)", y: 0, duration: 1.05, ease: "power3.out", scrollTrigger: { trigger: heading, start: "top 90%", once: true } }
+          );
         });
+
+        // Photographs open into place while their image settles in the opposite direction.
+        gsap.utils.toArray<HTMLElement>("[data-photo-reveal]", scope).forEach((frame) => {
+          const image = frame.querySelector<HTMLElement>("img");
+          const timeline = gsap.timeline({ scrollTrigger: { trigger: frame, start: "top 92%", once: true } });
+          timeline.fromTo(frame,
+            { clipPath: "inset(6% 5% 6% 5%)" },
+            { clipPath: "inset(0% 0% 0% 0%)", duration: 1.05, ease: "power3.out" }
+          );
+          if (image) timeline.fromTo(image, { scale: 1.07 }, { scale: 1, duration: 1.25, ease: "power3.out" }, 0);
+        });
+
+        // Gallery images arrive as a composed sequence rather than twelve simultaneous tiles.
+        const galleryItems = gsap.utils.toArray<HTMLElement>("[data-gallery-item]", scope);
+        if (galleryItems.length) {
+          gsap.fromTo(galleryItems,
+            { y: 38, autoAlpha: 0 },
+            { y: 0, autoAlpha: 1, duration: .85, stagger: .07, ease: "power3.out", scrollTrigger: { trigger: "#gallery", start: "top 74%", once: true } }
+          );
+        }
+
+        // Existing full-bleed scenes receive a slow spatial drift.
+        gsap.utils.toArray<HTMLElement>("[data-parallax]", scope).forEach((image) => {
+          gsap.fromTo(image,
+            { scale: 1.09, yPercent: -3.5 },
+            { scale: 1.09, yPercent: 3.5, ease: "none", scrollTrigger: { trigger: image.parentElement, start: "top bottom", end: "bottom top", scrub: .8 } }
+          );
+        });
+
+        return () => entrance.kill();
+      });
+
+      media.add("(hover:hover) and (pointer:fine) and (prefers-reduced-motion: no-preference)", () => {
+        const cleanups: Array<() => void> = [];
+        const magnetic = scopeButtons(root.current!);
+        magnetic.forEach((element) => {
+          const x = gsap.quickTo(element, "x", { duration: .45, ease: "power3.out" });
+          const y = gsap.quickTo(element, "y", { duration: .45, ease: "power3.out" });
+          const move = (event: PointerEvent) => {
+            const box = element.getBoundingClientRect();
+            x((event.clientX - (box.left + box.width / 2)) * .12);
+            y((event.clientY - (box.top + box.height / 2)) * .12);
+          };
+          const leave = () => { x(0); y(0); };
+          element.addEventListener("pointermove", move);
+          element.addEventListener("pointerleave", leave);
+          cleanups.push(() => {
+            element.removeEventListener("pointermove", move);
+            element.removeEventListener("pointerleave", leave);
+          });
+        });
+        return () => cleanups.forEach(cleanup => cleanup());
       });
     }, root);
     return () => { media.revert(); context.revert(); };

@@ -1,5 +1,5 @@
 import type { ReactNode } from 'react';
-import { Commissioner, Inter } from 'next/font/google';
+import { Geologica, Inter } from 'next/font/google';
 import { NextIntlClientProvider } from 'next-intl';
 import { setRequestLocale } from 'next-intl/server';
 import { notFound } from 'next/navigation';
@@ -11,8 +11,8 @@ import 'yet-another-react-lightbox/styles.css';
 import 'yet-another-react-lightbox/plugins/thumbnails.css';
 import 'yet-another-react-lightbox/plugins/captions.css';
 
-// Commissioner is the display face: modern, distinctive and fully Greek-capable.
-const display = Commissioner({ subsets: ['latin', 'latin-ext', 'greek'], variable: '--font-display', display: 'swap' });
+// Geologica gives the display system a more architectural, contemporary voice while retaining Greek coverage.
+const display = Geologica({ subsets: ['latin', 'latin-ext', 'greek'], variable: '--font-display', display: 'swap' });
 const sans = Inter({ subsets: ['latin', 'latin-ext', 'greek', 'greek-ext'], variable: '--font-sans', display: 'swap' });
 
 export function generateStaticParams() { return routing.locales.map(locale => ({ locale })); }
