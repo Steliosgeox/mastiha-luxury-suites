@@ -21,6 +21,7 @@ export interface PropertyData {
       lat: number;
       lng: number;
     };
+    googlePlaceId: string;
     googleMapsUrl: string;
     googleDirectionsUrl: string;
   };
@@ -76,9 +77,10 @@ export const propertyData: PropertyData = {
     address: "Ethnikis Antistaseos / G Parodos 18",
     postalCode: "822 00",
     addressConfirmationRequired: true,
-    // Exact GPS coordinates pending owner confirmation. Address query used for Google Maps navigation.
-    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Mastiha+Luxury+Suites+Ethnikis+Antistaseos+G+Parodos+18+Vrontados+Chios+82200",
-    googleDirectionsUrl: "https://www.google.com/maps/dir/?api=1&destination=Ethnikis+Antistaseos+G+Parodos+18+Vrontados+Chios+82200",
+    // Verified Google Maps place for Mastiha Luxury Suites in Vrontados.
+    googlePlaceId: "ChIJC2Y7IgBmuxQRQN6ormboZOk",
+    googleMapsUrl: "https://www.google.com/maps/search/?api=1&query=Mastiha%20Luxury%20Suites&query_place_id=ChIJC2Y7IgBmuxQRQN6ormboZOk",
+    googleDirectionsUrl: "https://www.google.com/maps/dir/?api=1&destination=Mastiha%20Luxury%20Suites&destination_place_id=ChIJC2Y7IgBmuxQRQN6ormboZOk",
   },
   bedArrangement: [
     { room: "Bedroom 1", bedType: "1 King bed" },
