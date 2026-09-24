@@ -57,7 +57,8 @@ test('localized document language, SEO, photo categories and host information ar
  }
  await page.goto('/en');const gallery=page.locator('#gallery');
  await gallery.getByRole('button',{name:'Around Mastiha',exact:true}).click();await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(4);
- await expect(gallery).toContainText('not views promised from the apartment');\n await gallery.getByRole('button',{name:'Family',exact:true}).click();await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(5);
+ await expect(gallery).toContainText('not views promised from the apartment');
+ await gallery.getByRole('button',{name:'Family',exact:true}).click();await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(5);
  await gallery.getByRole('button',{name:'All spaces',exact:true}).click();await gallery.getByRole('button',{name:'Show more photographs (33)',exact:true}).click();await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(33);
  await page.screenshot({path:info.outputPath('real-gallery-expanded.png'),fullPage:true});
  expect((await request.get('/robots.txt')).status()).toBe(200);expect(await (await request.get('/sitemap.xml')).text()).not.toContain('mastihasuites.gr');
