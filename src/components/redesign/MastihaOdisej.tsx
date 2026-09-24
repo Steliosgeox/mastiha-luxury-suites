@@ -68,22 +68,38 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
           <div className={s.roomAside} data-reveal><h3 className={s.subheading}>{c.bedroomTitle}</h3><p className={s.body}>{l.bedroomBody}</p><PhotoButton id="second"><PropertyPhoto id="second" alt={caption("second")} className={s.roomSecondary} sizes="(max-width:760px) 100vw, 32vw" /></PhotoButton><p className={s.caption}>{c.captions.second}</p></div>
         </div>
       </section>
-      <section id="family" className={s.family} aria-labelledby="family-title">
-        <div className={s.familyVisuals}>
-          <figure className={s.familyMain} data-reveal>
-            <PhotoButton id="playpen"><PropertyPhoto id="playpen" alt={caption("playpen")} className={s.familyMainPhoto} sizes="(max-width:760px) 100vw, 52vw" /></PhotoButton>
-            <figcaption className={s.caption}>{photoCaption("playpen",lang)}</figcaption>
-          </figure>
-          <div className={s.familyMiniGrid} data-reveal>
-            <figure><PhotoButton id="crib"><PropertyPhoto id="crib" alt={caption("crib")} className={s.familyMiniPhoto} sizes="(max-width:760px) 48vw, 18vw" /></PhotoButton><figcaption className={s.caption}>{photoCaption("crib",lang)}</figcaption></figure>
-            <figure><PhotoButton id="high-chair"><PropertyPhoto id="high-chair" alt={caption("high-chair")} className={s.familyMiniPhoto} sizes="(max-width:760px) 48vw, 18vw" /></PhotoButton><figcaption className={s.caption}>{photoCaption("high-chair",lang)}</figcaption></figure>
-          </div>
-        </div>
+      <section id="family" className={s.familySection} aria-labelledby="family-title">
         <div className={s.familyCopy} data-reveal>
           <p className={s.eyebrow}>{l.familyEyebrow}</p>
           <h2 id="family-title" className={s.heading}>{l.familyTitle}</h2>
           <p className={s.body}>{l.familyBody}</p>
-          <ul className={s.familyFacts}>{l.familyItems.map((item,index)=><li key={item}><StayGlyph name={familyGlyphs[index]} className={s.familyIcon}/><span>{item}</span></li>)}</ul>
+          <ul className={s.familyFacts}>
+            {l.familyItems.map((item,index)=><li key={item}><StayGlyph name={familyGlyphs[index]} className={s.familyIcon}/><span>{item}</span></li>)}
+          </ul>
+        </div>
+
+        <div className={s.familyMedia} aria-label={l.familyEyebrow}>
+          <figure className={s.familyHero} data-reveal>
+            <PhotoButton id="playpen">
+              <PropertyPhoto id="playpen" alt={caption("playpen")} className={s.familyHeroPhoto} sizes="(max-width:760px) 100vw, 50vw" />
+            </PhotoButton>
+            <figcaption className={s.familyMediaLabel}><span>01</span><strong>{photoCaption("playpen",lang)}</strong></figcaption>
+          </figure>
+
+          <div className={s.familyDetails}>
+            <figure className={s.familyDetail} data-reveal>
+              <PhotoButton id="kids-corner">
+                <PropertyPhoto id="kids-corner" alt={caption("kids-corner")} className={s.familyDetailPhoto} sizes="(max-width:760px) 50vw, 19vw" />
+              </PhotoButton>
+              <figcaption className={s.familyMediaLabel}><span>02</span><strong>{photoCaption("kids-corner",lang)}</strong></figcaption>
+            </figure>
+            <figure className={s.familyDetail} data-reveal>
+              <PhotoButton id="crib">
+                <PropertyPhoto id="crib" alt={caption("crib")} className={s.familyDetailPhoto} sizes="(max-width:760px) 50vw, 19vw" />
+              </PhotoButton>
+              <figcaption className={s.familyMediaLabel}><span>03</span><strong>{photoCaption("crib",lang)}</strong></figcaption>
+            </figure>
+          </div>
         </div>
       </section>
       <section className={s.terraceScene} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="terrace-title" data-testid="terrace-scene">
