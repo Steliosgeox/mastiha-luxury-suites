@@ -1,6 +1,6 @@
 import type { StayLocale } from './stay-copy';
 const en = {
-  kitchen: 'Kitchen', living: 'Living', bathroom: 'Bathroom', neighbourhood: 'Around Mastiha',
+  kitchen: 'Kitchen', living: 'Living', bathroom: 'Bathroom', neighbourhood: 'Around Mastiha', familyFilter: 'Family',
   tour: 'A photographic tour', tourNote: 'Real listing photographs · scroll to explore', skip: 'Skip the photo tour', more: 'Show more photographs', less: 'Show fewer photographs',
   kitchenEyebrow: 'Settle into your own routine', kitchenTitle: 'Coffee first.\nThe day is yours.', kitchenBody: 'An oven, hob, fridge and cookware for meals at home. An espresso machine for the morning. The dining table and the small work desk share the living space.',
   neighbourhoodTitle: 'Beyond the front door.', neighbourhoodBody: 'Photographs of Vrontados and the surrounding island from our listing. These are places to explore, not views promised from the apartment.',
@@ -15,7 +15,7 @@ const en = {
 };
 type Copy = typeof en;
 const el: Copy = {
-  kitchen:'Κουζίνα', living:'Καθιστικό', bathroom:'Μπάνιο', neighbourhood:'Γύρω από το Mastiha',
+  kitchen:'Κουζίνα', living:'Καθιστικό', bathroom:'Μπάνιο', neighbourhood:'Γύρω από το Mastiha', familyFilter:'Οικογένεια',
   tour:'Φωτογραφική περιήγηση', tourNote:'Πραγματικές φωτογραφίες · κυλήστε για περιήγηση', skip:'Παράλειψη φωτογραφικής περιήγησης', more:'Περισσότερες φωτογραφίες', less:'Λιγότερες φωτογραφίες',
   kitchenEyebrow:'Ο δικός σας καθημερινός ρυθμός', kitchenTitle:'Πρώτα ο καφές.\nΜετά, η μέρα σας.', kitchenBody:'Φούρνος, εστίες, ψυγείο και μαγειρικά σκεύη για τα γεύματά σας. Μηχανή espresso για το πρωί. Η τραπεζαρία και το μικρό γραφείο βρίσκονται στον χώρο του καθιστικού.',
   neighbourhoodTitle:'Πέρα από την πόρτα.', neighbourhoodBody:'Φωτογραφίες του Βροντάδου και του νησιού από την καταχώρισή μας. Πρόκειται για μέρη που μπορείτε να εξερευνήσετε, όχι για θέα από το διαμέρισμα.',
@@ -29,7 +29,7 @@ const el: Copy = {
   ],
 };
 const tr: Copy = {
-  kitchen:'Mutfak', living:'Yaşam alanı', bathroom:'Banyo', neighbourhood:'Mastiha çevresi',
+  kitchen:'Mutfak', living:'Yaşam alanı', bathroom:'Banyo', neighbourhood:'Mastiha çevresi', familyFilter:'Aile',
   tour:'Fotoğraflarla bir gezinti', tourNote:'Gerçek ilan fotoğrafları · keşfetmek için kaydırın', skip:'Fotoğraf gezintisini atla', more:'Daha fazla fotoğraf', less:'Daha az fotoğraf',
   kitchenEyebrow:'Kendi günlük ritminiz', kitchenTitle:'Önce kahve.\nSonra gün sizin.', kitchenBody:'Evde yemek hazırlamak için fırın, ocak, buzdolabı ve mutfak gereçleri. Sabah için espresso makinesi. Yemek masası ve küçük çalışma masası yaşam alanında yer alır.',
   neighbourhoodTitle:'Kapının ötesinde.', neighbourhoodBody:'İlanımızdan Vrontados ve ada çevresinin fotoğrafları. Bunlar keşfedilecek yerlerdir; daireden görülen manzaralar olarak sunulmaz.',
