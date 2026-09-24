@@ -135,7 +135,7 @@ test('family section uses real baby equipment photography and trust cards show p
  const familyAlts=await family.locator('img').evaluateAll(images=>images.map(image=>image.getAttribute('alt')||''));
  expect(familyAlts.some(alt=>/Playpen/i.test(alt))).toBe(true);
  expect(familyAlts.some(alt=>/Cot/i.test(alt))).toBe(true);
- expect(familyAlts.some(alt=>/High chair/i.test(alt))).toBe(true);
+ expect(familyAlts.some(alt=>/little corner for children/i.test(alt))).toBe(true);
  const reviews=page.locator('#reviews');
  await expect(reviews.locator('svg')).toHaveCount(4);
  await expect(reviews.getByText('Guest Favorite',{exact:true})).toBeVisible();
@@ -144,4 +144,34 @@ test('family section uses real baby equipment photography and trust cards show p
   await family.screenshot({path:info.outputPath('family-section.png'),animations:'disabled'});
   await reviews.screenshot({path:info.outputPath('trust-cards.png'),animations:'disabled'});
  }
+});
+
+test('family section keeps its media aligned and readable on mobile', async ({ page }, info) => {
+  await page.setViewportSize({ width:390, height:844 });
+  await page.goto('/en');
+  const family=page.locator('#family');
+  await family.scrollIntoViewIfNeeded();
+  await expect(family).toBeVisible();
+  const geometry=await family.evaluate(section=>{
+    const box=section.getBoundingClientRect();
+    const media=section.querySelector<HTMLElement>('[aria-label="For little travellers"]')!;
+    const mediaBox=media.getBoundingClientRect();
+    const figures=[...media.querySelectorAll('figure')].map(figure=>figure.getBoundingClientRect());
+    const labels=[...media.querySelectorAll('figcaption')].map(label=>label.getBoundingClientRect());
+    return {
+      sectionLeft:box.left,
+      sectionRight:box.right,
+      mediaLeft:mediaBox.left,
+      mediaRight:mediaBox.right,
+      figuresContained:figures.every(r=>r.left>=box.left-1&&r.right<=box.right+1&&r.width>120&&r.height>120),
+      labelsContained:labels.every(r=>r.left>=box.left-1&&r.right<=box.right+1&&r.top>=0&&r.bottom<=innerHeight+document.documentElement.scrollHeight),
+      horizontalOverflow:document.documentElement.scrollWidth>document.documentElement.clientWidth
+    };
+  });
+  expect(geometry.mediaLeft).toBeGreaterThanOrEqual(geometry.sectionLeft-1);
+  expect(geometry.mediaRight).toBeLessThanOrEqual(geometry.sectionRight+1);
+  expect(geometry.figuresContained).toBe(true);
+  expect(geometry.labelsContained).toBe(true);
+  expect(geometry.horizontalOverflow).toBe(false);
+  if(info.project.name==='chromium') await family.screenshot({path:info.outputPath('family-mobile-redesign.png'),animations:'disabled'});
 });
