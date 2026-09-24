@@ -40,7 +40,7 @@ export const reviewStats: ReviewStats = {
   booking: {
     score: 9.9,
     maxScore: 10.0,
-    count: 19,
+    count: 21,
     label: "Exceptional",
     subScores: {
       cleanliness: 10.0,
@@ -48,9 +48,9 @@ export const reviewStats: ReviewStats = {
       facilities: 10.0,
       staff: 10.0,
       valueForMoney: 10.0,
-      location: 9.7,
+      location: 9.8,
     },
   },
-  lastVerified: "2026-09-18",
+  lastVerified: "2026-09-24",
   verifiedQuotes: [],
 };
