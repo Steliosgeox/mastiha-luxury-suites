@@ -67,8 +67,10 @@ test('photographic sections, compact ratings, map privacy and FAQ',async({page},
  expect(mapSrc).toContain(encodeURIComponent('place_id:'+propertyData.location.googlePlaceId));
  await page.getByRole('button',{name:'Close',exact:true}).click();await expect(map).toHaveCount(0);
  await expect(page.locator('footer')).toContainText(propertyData.licenseNumber);await expect(page.locator('footer').getByRole('link',{name:'Privacy',exact:true})).toHaveAttribute('href','/en/privacy');
- for(const id of ['suite','spaces','gallery','amenities','reviews','location']) { const section=page.locator(`#${id}`);await section.scrollIntoViewIfNeeded();await page.waitForTimeout(900);await section.screenshot({path:info.outputPath(`${id}.png`)}); }
- await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await page.screenshot({path:info.outputPath('full-page.png'),fullPage:true});
+ if(info.project.name==='chromium'){
+  for(const id of ['suite','spaces','gallery','family','amenities','reviews','location']) { const section=page.locator(`#${id}`);await section.scrollIntoViewIfNeeded();await page.waitForTimeout(500);await section.screenshot({path:info.outputPath(`${id}.png`),animations:'disabled'}); }
+  await page.evaluate(()=>window.scrollTo({top:0,behavior:'instant'}));await page.screenshot({path:info.outputPath('full-page.png'),fullPage:true,animations:'disabled'});
+ }
 });
 
 test('Greek and Turkish remain readable and navigable at phone width',async({page})=>{
@@ -138,6 +140,8 @@ test('family section uses real baby equipment photography and trust cards show p
  await expect(reviews.locator('svg')).toHaveCount(4);
  await expect(reviews.getByText('Guest Favorite',{exact:true})).toBeVisible();
  await expect(reviews.getByText('Exceptional',{exact:true})).toBeVisible();
- await family.screenshot({path:info.outputPath('family-section.png'),animations:'disabled'});
- await reviews.screenshot({path:info.outputPath('trust-cards.png'),animations:'disabled'});
+ if(info.project.name==='chromium'){
+  await family.screenshot({path:info.outputPath('family-section.png'),animations:'disabled'});
+  await reviews.screenshot({path:info.outputPath('trust-cards.png'),animations:'disabled'});
+ }
 });
