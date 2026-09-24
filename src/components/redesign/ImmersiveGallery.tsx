@@ -11,8 +11,8 @@ export function ImmersiveGallery({ locale = 'en' }: { locale?: StayLocale }) {
   const [filter, setFilter] = useState<'all' | PhotoCategory>('all');
   const [expanded, setExpanded] = useState(false);
   const c = getStayCopy(locale), l = listingCopy(locale);
-  const categories: {id:'all'|PhotoCategory;label:string}[] = [{id:'all',label:c.all},{id:'living',label:l.living},{id:'kitchen',label:l.kitchen},{id:'bedrooms',label:c.bedrooms},{id:'bathroom',label:l.bathroom},{id:'outdoors',label:c.outdoors},{id:'neighbourhood',label:l.neighbourhood}];
-  const featured = ['lounge','desk','espresso','crib','basin','keys'] as const;
+  const categories: {id:'all'|PhotoCategory;label:string}[] = [{id:'all',label:c.all},{id:'living',label:l.living},{id:'kitchen',label:l.kitchen},{id:'bedrooms',label:c.bedrooms},{id:'family',label:l.familyFilter},{id:'bathroom',label:l.bathroom},{id:'outdoors',label:c.outdoors},{id:'neighbourhood',label:l.neighbourhood}];
+  const featured = ['desk','sofa-bed','smart-tv','vanity','bathroom-wide','arrival'] as const;
   const photos = filter === 'all'
     ? [...featured.map(id => stayPhotos.find(photo => photo.id === id)!).filter(Boolean), ...stayPhotos.filter(photo => !featured.includes(photo.id as typeof featured[number]))]
     : stayPhotos.filter(photo => photo.category === filter);
@@ -20,7 +20,7 @@ export function ImmersiveGallery({ locale = 'en' }: { locale?: StayLocale }) {
   return <section id="gallery" className={s.gallery} aria-labelledby="gallery-title">
     <div className={s.galleryHeader}><div><p className={s.eyebrow}>{c.galleryEyebrow}</p><h2 id="gallery-title" className={s.heading}>{c.galleryTitle}</h2></div><p className={s.body}>{c.galleryBody}</p></div>
     <div className={s.galleryTools}><div className={s.filters} role="group" aria-label={c.gallery}>{categories.map(category => <button type="button" key={category.id} aria-pressed={filter === category.id} onClick={() => setFilter(category.id)}>{category.label}</button>)}</div><span className={s.galleryCount} aria-live="polite">{photos.length} {c.galleryCount}</span></div>
-    {filter === 'neighbourhood' && <p className={s.neighbourhoodNote}>{l.neighbourhoodBody}</p>}
+    {filter === 'neighbourhood' && <p className={s.neighbourhoodNote}>{l.neighbourhoodBody}</p>}{filter === 'family' && <p className={s.neighbourhoodNote}>{l.familyBody}</p>}
     <div className={s.galleryGrid} data-filtered={filter !== 'all' || expanded} data-testid="gallery-grid">{visible.map(photo => <figure className={s.galleryItem} key={photo.id} data-gallery-item><PhotoButton id={photo.id}><div className={s.photo} style={{position:'relative',isolation:'isolate'}} data-media-frame><Image src={photo.src} alt={photoCaption(photo.id,locale)} fill sizes="(max-width:760px) 90vw, 60vw" className={s.photoImage} style={{objectPosition:photo.position}} /></div></PhotoButton><figcaption className={s.caption}>{photoCaption(photo.id,locale)}</figcaption></figure>)}</div>
     <div className={s.galleryFooter}>{filter === 'all' && <button type="button" className={s.outlineButton} aria-expanded={expanded} onClick={() => setExpanded(value=>!value)}>{expanded?l.less:l.more} ({photos.length})</button>}<PhotoButton id={photos[0]?.id ?? 'living'} className={s.outlineButton}>{c.galleryOpen}<span aria-hidden="true">↗</span></PhotoButton></div>
   </section>;
