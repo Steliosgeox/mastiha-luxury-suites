@@ -35,8 +35,8 @@ test('gallery filters, zoom, keyboard navigation and focus restoration',async({p
  await gallery.getByRole('button',{name:'Bedrooms',exact:true}).click(); await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(5);
  await gallery.getByRole('button',{name:'All spaces',exact:true}).click(); await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(6);
  const first=page.getByTestId('gallery-grid').getByRole('button').first(); await first.click();
- const lightbox=page.locator('.yarl__root'); await expect(lightbox).toBeVisible(); await expect(page.locator('.yarl__counter')).toContainText('7 / 24');
- await page.keyboard.press('ArrowRight'); await expect(page.locator('.yarl__counter')).toContainText('8 / 24');
+ const lightbox=page.locator('.yarl__root'); await expect(lightbox).toBeVisible(); await expect(page.locator('.yarl__counter')).toContainText('11 / 33');
+ await page.keyboard.press('ArrowRight'); await expect(page.locator('.yarl__counter')).toContainText('12 / 33');
  await expect(lightbox.getByRole('button',{name:'Zoom in',exact:true})).toBeVisible();
  await page.screenshot({path:info.outputPath('lightbox.png')}); await page.keyboard.press('Escape'); await expect(lightbox).toHaveCount(0); await expect(first).toBeFocused();
 });
@@ -123,4 +123,21 @@ test('real Google Maps place is used in every locale',async({page})=>{
   await page.getByRole('button',{name:closeLabel,exact:true}).click();
   await expect(map).toHaveCount(0);
  }
+});
+
+test('family section uses real baby equipment photography and trust cards show platform marks',async({page},info)=>{
+ await page.goto('/en');
+ const family=page.locator('#family');await expect(family).toBeVisible();
+ await expect(family).toContainText('Free cot');
+ await expect(family.locator('img')).toHaveCount(3);
+ const familyAlts=await family.locator('img').evaluateAll(images=>images.map(image=>image.getAttribute('alt')||''));
+ expect(familyAlts.some(alt=>/Playpen/i.test(alt))).toBe(true);
+ expect(familyAlts.some(alt=>/Cot/i.test(alt))).toBe(true);
+ expect(familyAlts.some(alt=>/High chair/i.test(alt))).toBe(true);
+ const reviews=page.locator('#reviews');
+ await expect(reviews.locator('svg')).toHaveCount(4);
+ await expect(reviews.getByText('Guest Favorite',{exact:true})).toBeVisible();
+ await expect(reviews.getByText('Exceptional',{exact:true})).toBeVisible();
+ await family.screenshot({path:info.outputPath('family-section.png'),animations:'disabled'});
+ await reviews.screenshot({path:info.outputPath('trust-cards.png'),animations:'disabled'});
 });
