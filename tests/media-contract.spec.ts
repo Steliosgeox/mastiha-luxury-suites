@@ -1,8 +1,8 @@
 import { test, expect } from '@playwright/test';
 import { stayPhotos, stayPhoto, photoCaption } from '../src/content/stay-media';
 
-test('all 24 PhotoIds resolve their own captions in all three languages', () => {
-  expect(stayPhotos).toHaveLength(24);
+test('all 33 PhotoIds resolve their own captions in all three languages', () => {
+  expect(stayPhotos).toHaveLength(33);
   expect(new Set(stayPhotos.map(photo => photo.id)).size).toBe(stayPhotos.length);
   for (const photo of stayPhotos) {
     expect(stayPhoto(photo.id)).toBe(photo);
