@@ -10,6 +10,7 @@ import { stayPhotos, photoCaption, type PhotoId } from "@/content/stay-media";
 import { getStayCopy, type StayLocale } from "@/content/stay-copy";
 import { trackEvent } from "@/lib/analytics";
 import { PremiumDock } from "./PremiumDock";
+import { AirbnbMark, BookingMark } from "./TrustIcons";
 import s from "./MastihaOdisej.module.css";
 import keyboard from "./KeyboardNavigation.module.css";
 
@@ -277,8 +278,8 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
       <PremiumDock locale={locale} onNavigate={navigate} onBook={() => openBook("dock")} />
       <dialog ref={dialog} className={s.dialog} aria-labelledby="booking-title" aria-describedby="booking-description" onKeyDown={trapBookingFocus} data-lenis-prevent onCancel={(event) => { event.preventDefault(); closeBooking(); }} onClick={(event) => { if (event.target === event.currentTarget) closeBooking(); }}>
         <div className={s.dialogInner}><div className={s.dialogTop}><h2 id="booking-title">{c.bookingTitle}</h2><button type="button" className={s.closeButton} onClick={closeBooking} aria-label={c.close}>×</button></div><p id="booking-description">{c.bookingBody}</p>
-          <a className={s.platformLink} href={propertyData.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("booking_outbound_click", { platform: "airbnb" })}>Airbnb<span aria-hidden="true">↗</span></a>
-          <a className={s.platformLink} href={propertyData.bookingLinks.booking} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("booking_outbound_click", { platform: "booking" })}>Booking.com<span aria-hidden="true">↗</span></a>
+          <a className={s.platformLink} href={propertyData.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("booking_outbound_click", { platform: "airbnb" })}><span className={s.platformLinkBrand}><AirbnbMark className={s.platformLinkIcon}/><span>Airbnb</span></span><span aria-hidden="true">↗</span></a>
+          <a className={s.platformLink} href={propertyData.bookingLinks.booking} target="_blank" rel="noopener noreferrer" onClick={() => trackEvent("booking_outbound_click", { platform: "booking" })}><span className={s.platformLinkBrand}><BookingMark className={s.platformLinkIcon}/><span>Booking.com</span></span><span aria-hidden="true">↗</span></a>
         </div>
       </dialog>
       {photoIndex !== null && <GalleryLightbox index={photoIndex} locale={locale} onClose={closeGallery} />}
