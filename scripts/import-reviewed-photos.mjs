@@ -20,7 +20,7 @@ const selections = [
   [12,'espresso','kitchen','Espresso corner','Η γωνιά του espresso','Espresso köşesi'],
   [30,'desk','living','A place to work','Χώρος για εργασία','Çalışma alanı'],
   [35,'master-wide','bedrooms','A second look at the main bedroom','Μια δεύτερη ματιά στο κύριο υπνοδωμάτιο','Ana yatak odasına başka bir bakış'],
-  [44,'crib','bedrooms','Cot shown in the listing · request availability','Βρεφικό κρεβάτι · κατόπιν διαθεσιμότητας','İlanda gösterilen bebek yatağı · müsaitliği sorun'],
+  [44,'crib','family','Cot shown in the listing · request availability','Βρεφική κούνια · κατόπιν διαθεσιμότητας','İlanda gösterilen bebek yatağı · müsaitliği sorun'],
   [51,'second-wide','bedrooms','Second bedroom and storage','Δεύτερο υπνοδωμάτιο και αποθηκευτικός χώρος','İkinci yatak odası ve dolap'],
   [54,'basin','bathroom','Basin and bathroom detail','Νιπτήρας και λεπτομέρεια μπάνιου','Lavabo ve banyo detayı'],
   [57,'shower','bathroom','Shower details','Λεπτομέρειες του ντους','Duş detayları'],
@@ -32,6 +32,15 @@ const selections = [
   [70,'windmills','neighbourhood','Vrontados windmills · neighbourhood photograph','Ανεμόμυλοι Βροντάδου · φωτογραφία γειτονιάς','Vrontados yel değirmenleri · mahalle fotoğrafı'],
   [73,'beach','neighbourhood','Mersinidi beach · an island outing','Παραλία Μερσινίδι · μια εξόρμηση στο νησί','Mersinidi plajı · adada bir gezi'],
   [76,'keys','outdoors','Mastiha keys by the sea','Τα κλειδιά του Mastiha δίπλα στη θάλασσα','Deniz kenarında Mastiha anahtarları'],
+  [5,'sofa-bed','living','Sofa bed prepared for an additional guest','Καναπές-κρεβάτι για επιπλέον επισκέπτη','Ek misafir için hazırlanmış çekyat'],
+  [26,'smart-tv','living','55-inch Smart TV','Smart TV 55 ιντσών','55 inç Smart TV'],
+  [28,'kids-corner','family','A little corner for children','Μια μικρή γωνιά για παιδιά','Çocuklar için küçük bir köşe'],
+  [29,'toys','family','Toys for little guests','Παιχνίδια για τους μικρούς επισκέπτες','Küçük misafirler için oyuncaklar'],
+  [31,'high-chair','family','High chair shown in the listing','Καρεκλάκι φαγητού στην καταχώριση','İlanda gösterilen mama sandalyesi'],
+  [41,'playpen','family','Playpen beside the main bedroom','Παρκοκρέβατο δίπλα στο κύριο υπνοδωμάτιο','Ana yatak odasının yanında park yatak'],
+  [43,'vanity','bedrooms','Bedroom vanity and illuminated mirror','Μπουντουάρ και φωτιζόμενος καθρέφτης','Yatak odası makyaj masası ve aydınlatmalı ayna'],
+  [55,'bathroom-wide','bathroom','A wider view of the bathroom','Ευρύτερη άποψη του μπάνιου','Banyonun geniş görünümü'],
+  [61,'balcony-wide','outdoors','Front balcony seating','Καθιστικό στο μπροστινό μπαλκόνι','Ön balkon oturma alanı'],
 ];
 const dest = 'public/photography/airbnb';
 await mkdir(dest, {recursive:true});
