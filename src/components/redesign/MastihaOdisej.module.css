@@ -62,16 +62,27 @@
 .roomMain .landscape { aspect-ratio:1.22; }
 .roomAside { margin-top:80px; }
 .roomSecondary { aspect-ratio:1.3; margin-top:36px; }
-.family { width:min(100%,1600px); margin-inline:auto; display:grid; grid-template-columns:1.15fr .85fr; gap:7vw; align-items:center; padding:96px 7vw; border-top:1px solid var(--line); }
-.familyVisuals { display:grid; grid-template-columns:minmax(0,1fr) minmax(130px,.52fr); gap:16px; align-items:end; min-width:0; }
-.familyMain,.familyMiniGrid figure { min-width:0; }
-.familyMainPhoto { aspect-ratio:4/5; }
-.familyMiniGrid { display:grid; gap:16px; padding-bottom:32px; }
-.familyMiniPhoto { aspect-ratio:4/5; }
-.familyCopy { max-width:520px; }
-.familyFacts { list-style:none; padding:0; margin:30px 0 0; border-top:1px solid var(--line); }
-.familyFacts li { display:grid; grid-template-columns:34px 1fr; align-items:center; gap:14px; min-height:58px; border-bottom:1px solid var(--line); font-size:12px; }
-.familyIcon { width:22px; height:22px; }
+.familySection { width:min(100%,1600px); margin-inline:auto; padding:112px 7vw; border-top:1px solid var(--line); background:linear-gradient(180deg,#fff 0%,#fbfaf7 100%); display:grid; grid-template-columns:minmax(280px,.72fr) minmax(0,1.28fr); gap:clamp(56px,7vw,120px); align-items:start; }
+.familyCopy { position:sticky; top:110px; max-width:480px; padding-top:10px; }
+.familyCopy .heading { max-width:10ch; margin-bottom:26px; }
+.familyCopy .body { max-width:42ch; }
+.familyFacts { list-style:none; padding:0; margin:34px 0 0; border-top:1px solid var(--line); }
+.familyFacts li { display:grid; grid-template-columns:30px 1fr; align-items:center; gap:12px; min-height:54px; border-bottom:1px solid var(--line); font-size:12px; }
+.familyIcon { width:20px; height:20px; }
+.familyMedia { min-width:0; display:grid; gap:18px; }
+.familyHero,.familyDetail { position:relative; overflow:hidden; margin:0; background:#eceae5; }
+.familyHero { min-height:0; }
+.familyHeroPhoto { aspect-ratio:1.22/1; }
+.familyDetails { display:grid; grid-template-columns:1fr 1fr; gap:18px; }
+.familyDetailPhoto { aspect-ratio:1.08/1; }
+.familyHero .photo,.familyDetail .photo { background:#eceae5; }
+.familyHero .photoImage,.familyDetail .photoImage { object-fit:cover; }
+.familyHero [data-photo-id="playpen"] .photoImage { object-position:50% 46%; }
+.familyDetail [data-photo-id="kids-corner"] .photoImage { object-position:50% 58%; }
+.familyDetail [data-photo-id="crib"] .photoImage { object-position:50% 52%; }
+.familyMediaLabel { position:absolute; z-index:3; left:14px; right:14px; bottom:14px; display:flex; align-items:flex-end; justify-content:space-between; gap:16px; min-height:34px; padding:9px 11px; background:rgba(255,255,255,.9); color:var(--ink); backdrop-filter:blur(10px); -webkit-backdrop-filter:blur(10px); border:1px solid #ffffffaa; box-shadow:0 8px 24px #15171914; }
+.familyMediaLabel span { flex:none; font-size:9px; letter-spacing:.1em; opacity:.52; }
+.familyMediaLabel strong { margin-left:auto; max-width:24ch; font-size:10px; line-height:1.3; font-weight:500; text-align:right; }
 .terraceScene,.closing { height:78svh; min-height:580px; overflow:hidden; color:var(--paper); background:var(--olive); }
 .sceneMedia { z-index:0; overflow:hidden; }
 .sceneImage { object-fit:cover; object-position:50% 55%; }
@@ -256,10 +267,20 @@
   .galleryGrid[data-filtered=true] .galleryItem,.galleryGrid[data-filtered=true] .galleryItem:last-child { grid-column:1/-1; }
   .caption { gap:10px; font-size:10px; }
   .galleryFooter { margin-top:30px; }
-  .family { grid-template-columns:1fr; gap:42px; padding:64px 20px; }
-  .familyVisuals { grid-template-columns:1.25fr .75fr; gap:10px; }
-  .familyMiniGrid { gap:10px; padding-bottom:18px; }
-  .familyFacts li { min-height:54px; }
+  .familySection { grid-template-columns:1fr; gap:36px; padding:72px 20px 76px; background:#fff; }
+  .familyCopy { position:static; max-width:none; padding-top:0; }
+  .familyCopy .heading { max-width:11ch; margin-bottom:20px; }
+  .familyCopy .body { max-width:none; }
+  .familyFacts { margin-top:26px; }
+  .familyFacts li { min-height:50px; }
+  .familyMedia { gap:10px; }
+  .familyHeroPhoto { aspect-ratio:1.12/1; }
+  .familyDetails { gap:10px; }
+  .familyDetailPhoto { aspect-ratio:1/1; }
+  .familyHero [data-photo-id="playpen"] .photoImage { object-position:50% 48%; }
+  .familyMediaLabel { left:9px; right:9px; bottom:9px; min-height:30px; padding:7px 9px; }
+  .familyMediaLabel strong { max-width:18ch; font-size:9px; }
+  .familyMediaLabel span { font-size:8px; }
   .amenities { padding:64px 20px; gap:38px; }
   .detailPhoto { order:2; }
   .detailPhoto .portrait { aspect-ratio:3/4; }
