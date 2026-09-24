@@ -24,3 +24,19 @@ test('hero, tour and editorial storytelling do not lazily repeat the same photog
   await expect(tour.locator('[data-active=true] img')).toHaveAttribute('alt', /Kitchen and appliances/i);
   expect(staticIds.length).toBeGreaterThan(8);
 });
+
+test('coffee story is unique and the opening gallery uses fresh photographs', async ({ page }) => {
+  await page.goto('/en');
+  const editorialEspresso = page.locator('main > :not(#gallery):not(#film) [data-photo-id="espresso"]');
+  await expect(editorialEspresso).toHaveCount(1);
+
+  const openingAlts = await page.getByTestId('gallery-grid').locator('img').evaluateAll(images =>
+    images.map(image => image.getAttribute('alt') || '')
+  );
+  expect(openingAlts.some(alt => /espresso|coffee/i.test(alt))).toBe(false);
+
+  const openingSources = await page.getByTestId('gallery-grid').locator('img').evaluateAll(images =>
+    images.map(image => (image as HTMLImageElement).src)
+  );
+  expect(new Set(openingSources).size).toBe(openingSources.length);
+});
