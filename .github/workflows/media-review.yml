@@ -1,0 +1,24 @@
+name: Temporary listing media review
+on:
+  workflow_dispatch:
+  push:
+    branches: [design/editorial-mastiha]
+permissions:
+  contents: read
+jobs:
+  audit:
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - run: npm ci
+      - run: node scripts/review-listing-media.mjs
+      - uses: actions/upload-artifact@v4
+        with:
+          name: all-airbnb-listing-media
+          path: media-review/
+          retention-days: 2
