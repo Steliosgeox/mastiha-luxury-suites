@@ -83,7 +83,7 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
             <PhotoButton id="playpen">
               <PropertyPhoto id="playpen" alt={caption("playpen")} className={s.familyHeroPhoto} sizes="(max-width:760px) 100vw, 50vw" />
             </PhotoButton>
-            <figcaption className={s.familyMediaLabel}><span>01</span><strong>{photoCaption("playpen",lang)}</strong></figcaption>
+            <figcaption className={s.familyMediaLabel}><span>01</span><strong>{l.familyMediaLabels[0]}</strong></figcaption>
           </figure>
 
           <div className={s.familyDetails}>
@@ -91,13 +91,13 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
               <PhotoButton id="kids-corner">
                 <PropertyPhoto id="kids-corner" alt={caption("kids-corner")} className={s.familyDetailPhoto} sizes="(max-width:760px) 50vw, 19vw" />
               </PhotoButton>
-              <figcaption className={s.familyMediaLabel}><span>02</span><strong>{photoCaption("kids-corner",lang)}</strong></figcaption>
+              <figcaption className={s.familyMediaLabel}><span>02</span><strong>{l.familyMediaLabels[1]}</strong></figcaption>
             </figure>
             <figure className={s.familyDetail} data-reveal>
               <PhotoButton id="crib">
                 <PropertyPhoto id="crib" alt={caption("crib")} className={s.familyDetailPhoto} sizes="(max-width:760px) 50vw, 19vw" />
               </PhotoButton>
-              <figcaption className={s.familyMediaLabel}><span>03</span><strong>{photoCaption("crib",lang)}</strong></figcaption>
+              <figcaption className={s.familyMediaLabel}><span>03</span><strong>{l.familyMediaLabels[2]}</strong></figcaption>
             </figure>
           </div>
         </div>
