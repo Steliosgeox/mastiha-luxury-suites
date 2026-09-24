@@ -8,7 +8,11 @@ import { StayExperience, BookButton, PhotoButton, MapPanel } from "./StayExperie
 import { listingCopy } from "@/content/listing-copy";
 import { StayFilm } from "./StayFilm";
 import { ImmersiveGallery } from "./ImmersiveGallery";
+import { AirbnbMark, BookingMark, StarMark, StayGlyph, type StayGlyphName } from "./TrustIcons";
 import s from "./MastihaOdisej.module.css";
+
+const amenityGlyphs: StayGlyphName[] = ["parking","wifi","climate","kitchen","laundry","tv","outdoor","soundproof"];
+const familyGlyphs: StayGlyphName[] = ["cot","family","free"];
 
 // Every fill image owns a positioned, size-reserved box. No page-wide absolute posters.
 function PropertyPhoto({ id, alt, className = "", sizes = "(max-width: 760px) 100vw, 65vw", priority = false }: { id: PhotoId; alt: string; className?: string; sizes?: string; priority?: boolean }) {
@@ -64,6 +68,24 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
           <div className={s.roomAside} data-reveal><h3 className={s.subheading}>{c.bedroomTitle}</h3><p className={s.body}>{l.bedroomBody}</p><PhotoButton id="second"><PropertyPhoto id="second" alt={caption("second")} className={s.roomSecondary} sizes="(max-width:760px) 100vw, 32vw" /></PhotoButton><p className={s.caption}>{c.captions.second}</p></div>
         </div>
       </section>
+      <section id="family" className={s.family} aria-labelledby="family-title">
+        <div className={s.familyVisuals}>
+          <figure className={s.familyMain} data-reveal>
+            <PhotoButton id="playpen"><PropertyPhoto id="playpen" alt={caption("playpen")} className={s.familyMainPhoto} sizes="(max-width:760px) 100vw, 52vw" /></PhotoButton>
+            <figcaption className={s.caption}>{photoCaption("playpen",lang)}</figcaption>
+          </figure>
+          <div className={s.familyMiniGrid} data-reveal>
+            <figure><PhotoButton id="crib"><PropertyPhoto id="crib" alt={caption("crib")} className={s.familyMiniPhoto} sizes="(max-width:760px) 48vw, 18vw" /></PhotoButton><figcaption className={s.caption}>{photoCaption("crib",lang)}</figcaption></figure>
+            <figure><PhotoButton id="high-chair"><PropertyPhoto id="high-chair" alt={caption("high-chair")} className={s.familyMiniPhoto} sizes="(max-width:760px) 48vw, 18vw" /></PhotoButton><figcaption className={s.caption}>{photoCaption("high-chair",lang)}</figcaption></figure>
+          </div>
+        </div>
+        <div className={s.familyCopy} data-reveal>
+          <p className={s.eyebrow}>{l.familyEyebrow}</p>
+          <h2 id="family-title" className={s.heading}>{l.familyTitle}</h2>
+          <p className={s.body}>{l.familyBody}</p>
+          <ul className={s.familyFacts}>{l.familyItems.map((item,index)=><li key={item}><StayGlyph name={familyGlyphs[index]} className={s.familyIcon}/><span>{item}</span></li>)}</ul>
+        </div>
+      </section>
       <section className={s.terraceScene} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="terrace-title" data-testid="terrace-scene">
         <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame data-photo-id="balcony"><Image src={stayPhoto("balcony").src} alt={caption("balcony")} fill sizes="(max-width: 760px) 130vh, 100vw" className={s.sceneImage} data-parallax /></div>
         <div className={s.sceneScrim} aria-hidden="true" /><div className={s.sceneCopy} data-reveal><p className={s.eyebrow}>{c.outsideEyebrow}</p><h2 id="terrace-title" className={s.heading}>{c.outsideTitle}</h2><p>{c.outsideBody}</p><PhotoButton id="terrace" className={s.outlineButton}>{c.photoAction}<span aria-hidden="true">↗</span></PhotoButton></div>
@@ -72,14 +94,24 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
       <ImmersiveGallery locale={lang} />
       <section id="amenities" className={s.amenities} aria-labelledby="amenities-title">
         <figure className={s.detailPhoto} data-reveal><PhotoButton id="bathroom"><PropertyPhoto id="bathroom" alt={caption("bathroom")} className={s.portrait} sizes="(max-width:760px) 100vw, 40vw" /></PhotoButton><figcaption className={s.caption}>{c.captions.bathroom}</figcaption></figure>
-        <div data-reveal><p className={s.eyebrow}>{c.amenitiesEyebrow}</p><h2 id="amenities-title" className={s.heading}>{c.amenitiesTitle}</h2><p className={s.body}>{c.amenitiesBody}</p><ul className={s.amenityList}>{c.amenities.map((name) => <li key={name}><span aria-hidden="true">✓</span>{name}</li>)}</ul></div>
+        <div data-reveal><p className={s.eyebrow}>{c.amenitiesEyebrow}</p><h2 id="amenities-title" className={s.heading}>{c.amenitiesTitle}</h2><p className={s.body}>{c.amenitiesBody}</p><ul className={s.amenityList}>{c.amenities.map((name,index) => <li key={name}><StayGlyph name={amenityGlyphs[index]} className={s.amenityIcon}/><span>{name}</span></li>)}</ul></div>
       </section>
       <section id="reviews" className={s.reviews} aria-labelledby="reviews-title">
-        <div><p className={s.eyebrow}>{c.ratingsEyebrow}</p><h2 id="reviews-title" className={s.subheading}>{c.ratingsTitle}</h2></div>
-        <div className={s.ratingLinks}>
-          <a href={property.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" aria-label={`Airbnb: ${c.readReviews}`}><span>Airbnb</span><strong data-testid="review-score">{reviewStats.airbnb.score.toFixed(1)}<small> / 5</small></strong><span>{reviewStats.airbnb.count} {c.reviews} <span aria-hidden="true">↗</span></span></a>
-          <a href={property.bookingLinks.booking} target="_blank" rel="noopener noreferrer" aria-label={`Booking.com: ${c.readReviews}`}><span>Booking.com</span><strong data-testid="review-score">{reviewStats.booking.score.toFixed(1)}<small> / 10</small></strong><span>{reviewStats.booking.count} {c.reviews} <span aria-hidden="true">↗</span></span></a>
-        </div><p className={s.ratingNote}>{fillCopy(c.ratingsNote, { date: reviewStats.lastVerified })}</p>
+        <div className={s.reviewIntro}><p className={s.eyebrow}>{c.ratingsEyebrow}</p><h2 id="reviews-title" className={s.subheading}>{c.ratingsTitle}</h2><p className={s.ratingNote}>{fillCopy(c.ratingsNote, { date: reviewStats.lastVerified })}</p></div>
+        <div className={s.ratingCards}>
+          <a className={s.ratingCard} href={property.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" aria-label={`Airbnb: ${c.readReviews}`}>
+            <div className={s.ratingBrand}><AirbnbMark className={s.airbnbMark}/><span>Airbnb</span><span aria-hidden="true">↗</span></div>
+            <div className={s.ratingValue}><StarMark className={s.ratingStar}/><strong data-testid="review-score">{reviewStats.airbnb.score.toFixed(1)}</strong><small>/ 5</small></div>
+            <p className={s.ratingLabel}>{reviewStats.airbnb.badge}</p>
+            <div className={s.ratingMeta}><span>{reviewStats.airbnb.count} {c.reviews}</span><span>{reviewStats.airbnb.subBadge}</span></div>
+          </a>
+          <a className={s.ratingCard} href={property.bookingLinks.booking} target="_blank" rel="noopener noreferrer" aria-label={`Booking.com: ${c.readReviews}`}>
+            <div className={s.ratingBrand}><BookingMark className={s.bookingMark}/><span>Booking.com</span><span aria-hidden="true">↗</span></div>
+            <div className={s.ratingValue}><StarMark className={s.ratingStar}/><strong data-testid="review-score">{reviewStats.booking.score.toFixed(1)}</strong><small>/ 10</small></div>
+            <p className={s.ratingLabel}>{reviewStats.booking.label}</p>
+            <div className={s.ratingMeta}><span>{reviewStats.booking.count} {c.reviews}</span><span>Location {reviewStats.booking.subScores.location.toFixed(1)}</span></div>
+          </a>
+        </div>
       </section>
       <section id="location" className={s.location} aria-labelledby="location-title">
         <div data-reveal><p className={s.eyebrow}>{c.locationEyebrow}</p><h2 id="location-title" className={s.heading}>{c.locationTitle}</h2><p className={s.body}>{fillCopy(c.locationBody, values)}</p><div className={s.locationLinks}><a href={property.location.googleMapsUrl} target="_blank" rel="noopener noreferrer">{c.maps} ↗</a><a href={property.location.googleDirectionsUrl} target="_blank" rel="noopener noreferrer">{c.directions} ↗</a></div><MapPanel locale={lang} /></div>
