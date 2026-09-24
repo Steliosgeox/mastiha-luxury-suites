@@ -36,7 +36,7 @@ test('a delayed photograph paints when it arrives after scrolling stops',async({
 });
 
 test('all published original photographs match reviewed source hashes',async({request})=>{
- expect(photos).toHaveLength(24);expect(new Set(photos.map(p=>p.source.webpSha256)).size).toBe(24);
+ expect(photos).toHaveLength(33);expect(new Set(photos.map(p=>p.source.webpSha256)).size).toBe(33);
  for(const photo of photos){
   expect(photo.source.listingId).toBe('1368953469779774276');
   const r=await request.get(photo.src);expect(r.ok(),photo.src).toBe(true);expect(r.headers()['content-type']).toContain('image/webp');
@@ -57,8 +57,8 @@ test('localized document language, SEO, photo categories and host information ar
  }
  await page.goto('/en');const gallery=page.locator('#gallery');
  await gallery.getByRole('button',{name:'Around Mastiha',exact:true}).click();await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(4);
- await expect(gallery).toContainText('not views promised from the apartment');
- await gallery.getByRole('button',{name:'All spaces',exact:true}).click();await gallery.getByRole('button',{name:'Show more photographs (24)',exact:true}).click();await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(24);
+ await expect(gallery).toContainText('not views promised from the apartment');\n await gallery.getByRole('button',{name:'Family',exact:true}).click();await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(5);
+ await gallery.getByRole('button',{name:'All spaces',exact:true}).click();await gallery.getByRole('button',{name:'Show more photographs (33)',exact:true}).click();await expect(page.getByTestId('gallery-grid').locator('figure')).toHaveCount(33);
  await page.screenshot({path:info.outputPath('real-gallery-expanded.png'),fullPage:true});
  expect((await request.get('/robots.txt')).status()).toBe(200);expect(await (await request.get('/sitemap.xml')).text()).not.toContain('mastihasuites.gr');
  await page.goto('/el/privacy');await expect(page.locator('h1')).toHaveText('Απόρρητο');await expect(page.locator('html')).toHaveAttribute('lang','el');
