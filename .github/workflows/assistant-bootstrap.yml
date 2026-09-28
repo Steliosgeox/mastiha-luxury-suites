@@ -48,25 +48,25 @@ jobs:
           from pathlib import Path
           p=Path('src/middleware.ts');s=p.read_text();old='(?!_next|_vercel|';assert old in s
           s=s.replace(old,'(?!api|_next|_vercel|');s=s.replace('export const config = {','// API routes are locale-independent JSON endpoints, never localized pages.\nexport const config = {');p.write_text(s)
-          p=Path('tests/neighbourhood-assistant.spec.ts')
-          p.write_text(p.read_text()+'''\n
-test('assistant API is not redirected into the locale router', async ({ request }) => {
-  for (const locale of ['el', 'en', 'tr'] as const) {
-    const response = await request.post('/api/assistant/chat', {
-      maxRedirects: 0,
-      headers: { 'Accept-Language': locale, 'x-forwarded-for': 'route-regression-' + locale },
-      data: { locale, messages: [{ role: 'user', content: 'What is nearby?' }] },
-    });
-    expect(response.status()).toBe(200);
-    expect(response.headers()['location']).toBeUndefined();
-    expect(response.headers()['content-type']).toContain('application/json');
-    expect(response.headers()['cache-control']).toContain('no-store');
-    expect((await response.json()).reply).toContain('Market mou');
-  }
-});
-''')
           p=Path('docs/NEIGHBOURHOOD-ASSISTANT.md');p.write_text(p.read_text()+'\nAPI routing: next-intl middleware excludes /api. The locale stays in the validated JSON request, so POSTs are never redirected to a translated HTML page. Browser tests exercise the actual endpoints in all three languages.\n')
           PY
+          cat >> tests/neighbourhood-assistant.spec.ts <<'TS'
+          
+          test('assistant API is not redirected into the locale router', async ({ request }) => {
+            for (const locale of ['el', 'en', 'tr'] as const) {
+              const response = await request.post('/api/assistant/chat', {
+                maxRedirects: 0,
+                headers: { 'Accept-Language': locale, 'x-forwarded-for': 'route-regression-' + locale },
+                data: { locale, messages: [{ role: 'user', content: 'What is nearby?' }] },
+              });
+              expect(response.status()).toBe(200);
+              expect(response.headers()['location']).toBeUndefined();
+              expect(response.headers()['content-type']).toContain('application/json');
+              expect(response.headers()['cache-control']).toContain('no-store');
+              expect((await response.json()).reply).toContain('Market mou');
+            }
+          });
+          TS
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
