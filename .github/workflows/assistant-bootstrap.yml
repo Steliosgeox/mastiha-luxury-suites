@@ -25,13 +25,13 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mastiha-assistant-integration-evidence
-          run-id: 36465584409
+          run-id: 36466665439
           github-token: ${{ github.token }}
           path: /tmp/mastiha-recovery
-      - name: Recover the already imported source and photographs
+      - name: Recover reviewed source and genuine Booking media
         run: |
           python3 - <<'PY'
-          import tarfile,pathlib,shutil
+          import tarfile,pathlib,shutil,hashlib,json
           allowed={'src','public','messages','scripts','tests','docs','package.json','package-lock.json','next.config.ts','playwright.config.ts','tsconfig.json'}
           with tarfile.open('/tmp/mastiha-recovery/integration-source.tar.gz') as t:
             for member in t.getmembers():
@@ -39,30 +39,33 @@ jobs:
               assert not p.is_absolute() and '..' not in p.parts and p.parts[0] in allowed and not member.issym() and not member.islnk(),member.name
             t.extractall('.',filter='data')
           shutil.copytree('/tmp/mastiha-recovery/media-review/booking','media-review/booking',dirs_exist_ok=True)
-          PY
-      - name: Fix verified brand imports and narrow the HTML inert assertion
-        env:
-          GH_TOKEN: ${{ github.token }}
-        run: |
-          python3 - <<'PY'
-          import pathlib,urllib.request,json,base64,hashlib,xml.etree.ElementTree as ET,re
-          marks=[]
-          sources={'Facebook':'f66767e46165f562134ca2c2e3d4bea8f37fb1ac','Instagram':'c0e86b0bfc7b902c485699953dee878f290f575b'}
-          for name,sha in sources.items():
-            request=urllib.request.Request('https://api.github.com/repos/simple-icons/simple-icons/git/blobs/'+sha,headers={'User-Agent':'Mastiha-owner-authorized-build','Accept':'application/vnd.github+json'})
-            data=json.load(urllib.request.urlopen(request,timeout=25))
-            svg=base64.b64decode(data['content'])
-            assert hashlib.sha1(b'blob '+str(len(svg)).encode()+b'\0'+svg).hexdigest()==sha
-            paths=[p.attrib['d'] for p in ET.fromstring(svg).iter() if p.tag.endswith('path')]
-            assert paths and all(re.fullmatch(r'[a-zA-Z0-9.,\s+\-]+',d) for d in paths)
-            rendered=''.join('<path fill="currentColor" d="'+d+'" />' for d in paths)
-            marks.append('export function '+name+'({size=24,...props}: SVGProps<SVGSVGElement> & {size?:number}) { return <svg viewBox="0 0 24 24" width={size} height={size} aria-hidden="true" {...props}>'+rendered+'</svg>; }')
-          pathlib.Path('src/components/contact/SocialMarks.tsx').write_text('import type { SVGProps } from "react";\n// Verified Simple Icons CC0 paths. Marks identify channels, not sponsorship.\n'+'\n'.join(marks)+'\n')
-          p=pathlib.Path('src/components/contact/SocialChannels.tsx');text=p.read_text();old="import { Facebook, Instagram, MessageCircle } from 'lucide-react';";assert old in text;p.write_text(text.replace(old,"import { MessageCircle } from 'lucide-react';\nimport { Facebook, Instagram } from './SocialMarks';"))
-          p=pathlib.Path('tests/neighbourhood-assistant.spec.ts');text=p.read_text();old='evaluate(el => el.inert)';assert old in text;p.write_text(text.replace(old,'evaluate(el => el instanceof HTMLElement && el.inert)'))
-          p=pathlib.Path('docs/NEIGHBOURHOOD-ASSISTANT.md');p.write_text(p.read_text()+'\nSocial brand paths: Simple Icons CC0, verified Facebook blob f66767e46165f562134ca2c2e3d4bea8f37fb1ac and Instagram blob c0e86b0bfc7b902c485699953dee878f290f575b. Brand marks do not imply endorsement.\n')
           source=json.loads(pathlib.Path('src/components/assistant/PROVENANCE.json').read_text())
           assert hashlib.sha256(pathlib.Path('src/components/assistant/chatbot.css').read_bytes()).hexdigest()==source['stylesheetSha256']
+          PY
+      - name: Fix API locale rewriting and add route-level regression
+        run: |
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('src/middleware.ts');s=p.read_text();old='(?!_next|_vercel|';assert old in s
+          s=s.replace(old,'(?!api|_next|_vercel|');s=s.replace('export const config = {','// API routes are locale-independent JSON endpoints, never localized pages.\nexport const config = {');p.write_text(s)
+          p=Path('tests/neighbourhood-assistant.spec.ts')
+          p.write_text(p.read_text()+'''\n
+test('assistant API is not redirected into the locale router', async ({ request }) => {
+  for (const locale of ['el', 'en', 'tr'] as const) {
+    const response = await request.post('/api/assistant/chat', {
+      maxRedirects: 0,
+      headers: { 'Accept-Language': locale, 'x-forwarded-for': 'route-regression-' + locale },
+      data: { locale, messages: [{ role: 'user', content: 'What is nearby?' }] },
+    });
+    expect(response.status()).toBe(200);
+    expect(response.headers()['location']).toBeUndefined();
+    expect(response.headers()['content-type']).toContain('application/json');
+    expect(response.headers()['cache-control']).toContain('no-store');
+    expect((await response.json()).reply).toContain('Market mou');
+  }
+});
+''')
+          p=Path('docs/NEIGHBOURHOOD-ASSISTANT.md');p.write_text(p.read_text()+'\nAPI routing: next-intl middleware excludes /api. The locale stays in the validated JSON request, so POSTs are never redirected to a translated HTML page. Browser tests exercise the actual endpoints in all three languages.\n')
           PY
       - uses: actions/setup-node@v4
         with:
@@ -77,17 +80,16 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:e2e
-      - name: Publish validated changes to the working branch only
+      - name: Publish validated source to the working branch only
         run: |
           git fetch origin design/editorial-mastiha
           test "$(git rev-parse origin/design/editorial-mastiha)" = "$GITHUB_SHA"
           rm -rf .migration .assistant-source
-          rm .github/workflows/assistant-bootstrap.yml
           git config user.name 'github-actions[bot]'
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
-          git add src public scripts docs tests package.json package-lock.json .migration .github/workflows/assistant-bootstrap.yml
+          git add src public scripts docs tests package.json package-lock.json .migration
           git diff --cached --check
-          git commit -m 'feat: add owner neighbourhood guide, faithful assistant port and Booking family media'
+          git commit -m 'feat: integrate neighbourhood guide, original assistant UI and Booking family media'
           git push origin HEAD:refs/heads/design/editorial-mastiha
           git rev-parse HEAD | tee VERIFIED_COMMIT.txt
       - name: Source and browser evidence
