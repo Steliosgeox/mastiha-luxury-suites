@@ -26,10 +26,10 @@ for (const filename of walk('src').filter(f => /\.tsx?$/.test(f))) {
 const photos=JSON.parse(fs.readFileSync('src/content/stay-media.generated.json','utf8'));
 const hashes=new Set();
 for(const photo of photos){
- if(!photo.source?.originalSha256||photo.source.listingId!=='1368953469779774276')errors.push(`Unverified source: ${photo.id}`);
+ if(!photo.source?.originalSha256||!(photo.source.platform==='Airbnb'&&photo.source.listingId==='1368953469779774276'||photo.source.platform==='Booking.com'&&photo.source.listingId==='mastiha-luxury-suites'))errors.push(`Unverified source: ${photo.id}`);
  if(hashes.has(photo.source.webpSha256))errors.push(`Duplicate photograph: ${photo.id}`);
  hashes.add(photo.source.webpSha256);
- for(const url of [photo.src,photo.thumbnail,...photo.srcSet.map(i=>i.src)])if(!url.startsWith('/photography/airbnb/')||!fs.existsSync('public'+url))errors.push(`Missing true photo: ${url}`);
+ for(const url of [photo.src,photo.thumbnail,...photo.srcSet.map(i=>i.src)])if(!/^\/photography\/(airbnb|booking)\//.test(url)||!fs.existsSync('public'+url))errors.push(`Missing true photo: ${url}`);
 }
 if(errors.length){console.error(errors.join('\n'));process.exit(1);}
 console.log(`CSS references and all variants of ${photos.length} real listing photographs passed.`);

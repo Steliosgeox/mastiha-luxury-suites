@@ -1,4 +1,8 @@
 import Image from "next/image";
+import { NearbyPlaces } from "@/components/neighbourhood/NearbyPlaces";
+import { AssistantMount } from "@/components/assistant/AssistantMount";
+import { SocialChannels } from "@/components/contact/SocialChannels";
+import { getContactChannels } from "@/lib/contact";
 import Link from "next/link";
 import { propertyData as property } from "@/content/property";
 import { reviewStats } from "@/content/reviews";
@@ -27,7 +31,8 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
   const c = getStayCopy(lang); const l = listingCopy(lang);
   const values = { guests: property.maxGuests, bedrooms: property.bedrooms, bathrooms: property.bathrooms, distance: property.distanceToSeaMeters };
   const caption = (id: PhotoId) => `${photoCaption(id, lang)} · Mastiha Luxury Suites`;
-  return <StayExperience locale={lang}>
+  const contact = getContactChannels();
+  return <><StayExperience locale={lang}>
     <a href="#suite" className={s.skip}>{c.skip}</a>
     <main className={s.site}>
       <section id="home" className={s.hero} style={{ position: "relative", isolation: "isolate" }} aria-labelledby="mastiha-title" data-testid="landing-hero">
@@ -133,6 +138,7 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
         <div data-reveal><p className={s.eyebrow}>{c.locationEyebrow}</p><h2 id="location-title" className={s.heading}>{c.locationTitle}</h2><p className={s.body}>{fillCopy(c.locationBody, values)}</p><div className={s.locationLinks}><a href={property.location.googleMapsUrl} target="_blank" rel="noopener noreferrer">{c.maps} ↗</a><a href={property.location.googleDirectionsUrl} target="_blank" rel="noopener noreferrer">{c.directions} ↗</a></div><MapPanel locale={lang} /></div>
         <figure className={s.locationPhoto}><PhotoButton id="coast"><PropertyPhoto id="coast" alt={caption("coast")} className={s.portrait} sizes="(max-width:760px) 100vw, 45vw" /></PhotoButton><figcaption className={s.caption}>{photoCaption("coast",lang)}</figcaption></figure>
       </section>
+      <NearbyPlaces locale={lang}/>
       <section className={s.neighbourhood} aria-labelledby="neighbourhood-title"><div className={s.galleryHeader}><h2 id="neighbourhood-title" className={s.heading}>{l.neighbourhoodTitle}</h2><p className={s.body}>{l.neighbourhoodBody}</p></div><div className={s.destinationGrid}>{(["sunrise","windmills","beach"] as const).map(id=><figure key={id}><PhotoButton id={id}><PropertyPhoto id={id} alt={caption(id)} className={s.destinationPhoto} sizes="(max-width:760px) 90vw, 30vw"/></PhotoButton><figcaption className={s.caption}>{photoCaption(id,lang)}</figcaption></figure>)}</div></section>
       <section className={s.host} aria-labelledby="host-title"><div><p className={s.eyebrow}>{l.hostEyebrow}</p><h2 id="host-title" className={s.subheading}>{l.hostTitle}</h2><p className={s.body}>{l.hostBody}</p><a href={property.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer" className={s.outlineButton}>{l.hostAction} ↗</a></div><PhotoButton id="keys"><PropertyPhoto id="keys" alt={caption("keys")} className={s.portrait} sizes="(max-width:760px) 90vw, 35vw"/></PhotoButton></section>
       <section id="information" className={s.faq} aria-labelledby="faq-title"><div><p className={s.eyebrow}>{c.faqEyebrow}</p><h2 id="faq-title" className={s.heading}>{c.faqTitle}</h2></div><div>{[...c.faqs,...l.faqs].map((item) => <details key={item.q}><summary>{item.q}<span aria-hidden="true">+</span></summary><p>{fillCopy(item.a, values)}</p></details>)}</div></section>
@@ -140,7 +146,7 @@ export function MastihaOdisej({ locale = "en" }: { locale?: string }) {
         <div className={s.sceneMedia} style={{ position: "absolute", inset: 0 }} data-media-frame data-photo-id="table"><Image src={stayPhoto("table").src} alt={caption("table")} fill sizes="(max-width: 760px) 130vh, 100vw" className={s.sceneImage} style={{ objectPosition: stayPhoto("table").position }} /></div><div className={s.sceneScrim} aria-hidden="true" />
         <div className={s.closingContent}><h2 id="closing-title" className={s.heading}>{c.closing}</h2><div><p>{c.closingBody}</p><BookButton source="closing" className={s.solidButton}>{c.bookShort}<span aria-hidden="true">↗</span></BookButton></div></div>
       </section>
-      <footer className={s.footer}><div className={s.footerWordmark}>{property.name}</div><div className={s.footerMeta}><span>{c.place}</span><span>{c.registration} {property.licenseNumber}</span><Link href={`/${lang}/privacy`}>{c.privacy}</Link><a href="#home">{c.top} ↑</a></div></footer>
+      <footer className={s.footer}><div className={s.footerWordmark}>{property.name}</div><SocialChannels locale={lang} contact={contact}/><div className={s.footerMeta}><span>{c.place}</span><span>{c.registration} {property.licenseNumber}</span><Link href={`/${lang}/privacy`}>{c.privacy}</Link><a href="#home">{c.top} ↑</a></div></footer>
     </main>
-  </StayExperience>;
+  </StayExperience><AssistantMount locale={lang} contact={contact}/></>;
 }

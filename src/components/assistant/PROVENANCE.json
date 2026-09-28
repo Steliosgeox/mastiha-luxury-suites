@@ -1,0 +1,9 @@
+{
+  "sourceRepository": "Steliosgeox/elite-memoriz-private",
+  "sourceCommit": "83c7691513fcf3f61d5787fe813046cfb1380931",
+  "component": "frontend/src/components/assistant/FloatingAssistant.tsx",
+  "stylesheet": "frontend/src/styles/chatbot.css",
+  "stylesheetSha256": "237a1481595a34dfc6a55d0ebdef13bcbdd9f794a8e182e8ec9ee487bb7066b5",
+  "importScope": "Only the owner-authorized assistant UI, scoped styles, rich-text renderer and glass lens. No original business identity, provider keys, backend, customer records or instructions copied.",
+  "adaptations": "Next.js routing; Mastiha copy/knowledge; portal/focus/inert/scroll adapters; truthful representative contact capability. Original palette, geometry, icons and styles retained."
+}

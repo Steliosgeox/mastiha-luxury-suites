@@ -494,42 +494,42 @@
   {
     "id": "crib",
     "category": "family",
-    "src": "/photography/airbnb/crib.webp",
-    "thumbnail": "/photography/airbnb/crib-thumb.webp",
-    "width": 1440,
-    "height": 1920,
+    "src": "/photography/booking/crib.webp",
+    "thumbnail": "/photography/booking/crib-thumb.webp",
+    "width": 1920,
+    "height": 1440,
     "position": "50% 50%",
     "captions": {
-      "en": "Cot shown in the listing · request availability",
-      "el": "Βρεφική κούνια · κατόπιν διαθεσιμότητας",
-      "tr": "İlanda gösterilen bebek yatağı · müsaitliği sorun"
+      "en": "Cot · on request",
+      "el": "Βρεφική κούνια · κατόπιν αιτήματος",
+      "tr": "Bebek yatağı · talep üzerine"
     },
     "srcSet": [
       {
-        "src": "/photography/airbnb/crib-640.webp",
+        "src": "/photography/booking/crib-640.webp",
         "width": 640,
-        "height": 853
+        "height": 480
       },
       {
-        "src": "/photography/airbnb/crib-1280.webp",
+        "src": "/photography/booking/crib-1280.webp",
         "width": 1280,
-        "height": 1707
+        "height": 960
       },
       {
-        "src": "/photography/airbnb/crib.webp",
-        "width": 1440,
-        "height": 1920
+        "src": "/photography/booking/crib.webp",
+        "width": 1920,
+        "height": 1440
       }
     ],
     "source": {
-      "platform": "Airbnb",
-      "listingId": "1368953469779774276",
-      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
-      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/256a9e8b-a74c-4113-a1e2-a93589f297dc.jpeg?im_w=1920",
-      "sourceLabel": "Baby crib",
-      "retrievedAt": "2026-09-24T05:33:19.084Z",
-      "originalSha256": "09c67c51e13f9054a6fa4506583802c58c386a920d944b8a8027e6995fa8a1a7",
-      "webpSha256": "d85a33c65d74122dce70659f147502f159c6d3f23d1c1bc631e0aac8afd09e6d"
+      "platform": "Booking.com",
+      "listingId": "mastiha-luxury-suites",
+      "page": "https://www.booking.com/hotel/gr/mastiha-luxury-suites.html",
+      "url": "https://cf.bstatic.com/xdata/images/hotel/max1920x1440/871815375.jpg?k=9efa898302caa1623fbec480dce86ba790d0503692c12f38c357eb1affd2f401&o=",
+      "sourceLabel": "a white crib sitting on top of a wooden floor at Mastiha Luxury Suites in Chios",
+      "retrievedAt": "2026-09-28T18:30:12.745Z",
+      "originalSha256": "d0b4cef35355d4a920c046d8a8bb0bc0e4d2c3801a3fa6b4dd6c34ed1e937145",
+      "webpSha256": "6be39d4d4e227fc3eefc732248b5e02277ecccf5253b6a1ed04921bc6dc6f3b9"
     }
   },
   {
@@ -1068,10 +1068,10 @@
   {
     "id": "kids-corner",
     "category": "family",
-    "src": "/photography/airbnb/kids-corner.webp",
-    "thumbnail": "/photography/airbnb/kids-corner-thumb.webp",
-    "width": 1079,
-    "height": 1920,
+    "src": "/photography/booking/kids-corner.webp",
+    "thumbnail": "/photography/booking/kids-corner-thumb.webp",
+    "width": 809,
+    "height": 1440,
     "position": "50% 50%",
     "captions": {
       "en": "A little corner for children",
@@ -1080,30 +1080,25 @@
     },
     "srcSet": [
       {
-        "src": "/photography/airbnb/kids-corner-640.webp",
+        "src": "/photography/booking/kids-corner-640.webp",
         "width": 640,
         "height": 1139
       },
       {
-        "src": "/photography/airbnb/kids-corner-1280.webp",
-        "width": 1079,
-        "height": 1920
-      },
-      {
-        "src": "/photography/airbnb/kids-corner.webp",
-        "width": 1079,
-        "height": 1920
+        "src": "/photography/booking/kids-corner-1280.webp",
+        "width": 809,
+        "height": 1440
       }
     ],
     "source": {
-      "platform": "Airbnb",
-      "listingId": "1368953469779774276",
-      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
-      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/72c82922-e405-4ac0-8c60-0bec52374282.jpeg?im_w=1920",
-      "sourceLabel": "toys for our little friends.",
-      "retrievedAt": "2026-09-24T05:33:19.084Z",
-      "originalSha256": "6264cd24f41e2f9ca876c0b5cf69f9c33fb70bbf76e1be3039b4a41e9563cca9",
-      "webpSha256": "b8487bd286e5810ec137d093a9a874831d6af06e0d2b7fd2989f311ba6884ba9"
+      "platform": "Booking.com",
+      "listingId": "mastiha-luxury-suites",
+      "page": "https://www.booking.com/hotel/gr/mastiha-luxury-suites.html",
+      "url": "https://cf.bstatic.com/xdata/images/hotel/max1920x1440/711144628.jpg?k=582cfefd5f18aa09b6d9ffc4c5b3f211523603624c81cd9afa4215365cd3b328&o=",
+      "sourceLabel": "a childs table and chairs with a table and a play set at Mastiha Luxury Suites in Chios",
+      "retrievedAt": "2026-09-28T18:30:11.341Z",
+      "originalSha256": "44e72e5972fadaa603288be99645d279c54a71a76767bfe1b1c58481e16e367d",
+      "webpSha256": "fbf2a6d37c6c7b53fd2bf1eaef618c060a043f30ebb5c047bad521e6e18b3d4b"
     }
   },
   {
@@ -1156,9 +1151,9 @@
     "height": 1920,
     "position": "50% 50%",
     "captions": {
-      "en": "High chair shown in the listing",
-      "el": "Καρεκλάκι φαγητού στην καταχώριση",
-      "tr": "İlanda gösterilen mama sandalyesi"
+      "en": "High chair",
+      "el": "Καρεκλάκι φαγητού",
+      "tr": "Mama sandalyesi"
     },
     "srcSet": [
       {
@@ -1191,10 +1186,10 @@
   {
     "id": "playpen",
     "category": "family",
-    "src": "/photography/airbnb/playpen.webp",
-    "thumbnail": "/photography/airbnb/playpen-thumb.webp",
-    "width": 1079,
-    "height": 1920,
+    "src": "/photography/booking/playpen.webp",
+    "thumbnail": "/photography/booking/playpen-thumb.webp",
+    "width": 809,
+    "height": 1440,
     "position": "50% 50%",
     "captions": {
       "en": "Playpen beside the main bedroom",
@@ -1203,30 +1198,25 @@
     },
     "srcSet": [
       {
-        "src": "/photography/airbnb/playpen-640.webp",
+        "src": "/photography/booking/playpen-640.webp",
         "width": 640,
         "height": 1139
       },
       {
-        "src": "/photography/airbnb/playpen-1280.webp",
-        "width": 1079,
-        "height": 1920
-      },
-      {
-        "src": "/photography/airbnb/playpen.webp",
-        "width": 1079,
-        "height": 1920
+        "src": "/photography/booking/playpen-1280.webp",
+        "width": 809,
+        "height": 1440
       }
     ],
     "source": {
-      "platform": "Airbnb",
-      "listingId": "1368953469779774276",
-      "page": "https://www.airbnb.co.in/rooms/1368953469779774276",
-      "url": "https://a0.muscache.com/im/pictures/hosting/Hosting-1368953469779774276/original/d9b17532-f32d-4aac-a282-0412e0a6250f.jpeg?im_w=1920",
-      "sourceLabel": "Playpen for our little friends.",
-      "retrievedAt": "2026-09-24T05:33:19.084Z",
-      "originalSha256": "b67108404f1e2a62c91f060d2ee415d7b191cacc7605dd06a51c7fde9e37a3b3",
-      "webpSha256": "4e167e3404902771b123358040f65b429703d168be3640c9bfaca1bea167679e"
+      "platform": "Booking.com",
+      "listingId": "mastiha-luxury-suites",
+      "page": "https://www.booking.com/hotel/gr/mastiha-luxury-suites.html",
+      "url": "https://cf.bstatic.com/xdata/images/hotel/max1920x1440/711144967.jpg?k=b00dd00287f443ebe11572c926499b1d711f1016e34a2a500c9b12e76c747fbc&o=",
+      "sourceLabel": "a baby crib in a room with a bed at Mastiha Luxury Suites in Chios",
+      "retrievedAt": "2026-09-28T18:30:10.527Z",
+      "originalSha256": "4de485582e6db3be005544fe846ac263193a6ea812210237015c28c994f4a4f1",
+      "webpSha256": "92353a59709dddbab45e181e0687febe665f7d57f79145713c8c9bb06a618577"
     }
   },
   {

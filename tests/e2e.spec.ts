@@ -38,7 +38,11 @@ test('gallery filters, zoom, keyboard navigation and focus restoration',async({p
  const lightbox=page.locator('.yarl__root'); await expect(lightbox).toBeVisible(); await expect(page.locator('.yarl__counter')).toContainText('11 / 33');
  await page.keyboard.press('ArrowRight'); await expect(page.locator('.yarl__counter')).toContainText('12 / 33');
  await expect(lightbox.getByRole('button',{name:'Zoom in',exact:true})).toBeVisible();
- await page.screenshot({path:info.outputPath('lightbox.png')}); await page.keyboard.press('Escape'); await expect(lightbox).toHaveCount(0); await expect(first).toBeFocused();
+ // The headless WebKit screenshot backend crashes on this composited overlay.
+ // Keep ALL navigation, zoom-control, Escape and focus assertions in both engines;
+ // collect this one visual artifact with Chromium, as for other heavy gallery captures.
+ if(info.project.name==='chromium') await page.screenshot({path:info.outputPath('lightbox.png'),animations:'disabled'});
+ await page.keyboard.press('Escape'); await expect(lightbox).toHaveCount(0); await expect(first).toBeFocused();
 });
 
 test('booking is a trapped native dialog with real outbound links',async({page},info)=>{

@@ -273,7 +273,7 @@ export function StayExperience({ locale, children }: { locale: StayLocale; child
   };
 
   return <StayContext.Provider value={{ book: openBook, photo: openPhoto, locale }}>
-    <div ref={root} className={`${s.experience} ${keyboard.root}`} onClick={anchorClick}>
+    <div ref={root} data-stay-page className={`${s.experience} ${keyboard.root}`} onClick={anchorClick}>
       {children}
       <PremiumDock locale={locale} onNavigate={navigate} onBook={() => openBook("dock")} />
       <dialog ref={dialog} className={s.dialog} aria-labelledby="booking-title" aria-describedby="booking-description" onKeyDown={trapBookingFocus} data-lenis-prevent onCancel={(event) => { event.preventDefault(); closeBooking(); }} onClick={(event) => { if (event.target === event.currentTarget) closeBooking(); }}>
