@@ -1,0 +1,106 @@
+name: Integrate and verify Mastiha neighbourhood assistant
+on:
+  push:
+    branches: [design/editorial-mastiha]
+    paths: ['.migration/**', '.github/workflows/assistant-bootstrap.yml']
+permissions:
+  contents: write
+concurrency:
+  group: mastiha-assistant-integration
+  cancel-in-progress: false
+jobs:
+  integrate:
+    runs-on: ubuntu-latest
+    timeout-minutes: 20
+    env:
+      NEXT_TELEMETRY_DISABLED: '1'
+      ESLINT_USE_FLAT_CONFIG: 'false'
+      MASTIHA_HANDOFF_ENABLED: 'false'
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          ref: ${{ github.sha }}
+          fetch-depth: 2
+      - name: Read owner-authorized presentation export only
+        env:
+          SOURCE_URL: 'https://sdmntprdenmarkeast.oaiusercontent.com/files/00000000-f644-8210-b42a-37929858741a/raw?se=2026-09-28T18%3A33%3A36Z&sp=r&sv=2026-02-06&sr=b&scid=28ee85fe-401c-5cf5-8eb9-c40a0712e051&skoid=a0b9f82a-c86e-4064-a822-2aa38890bb37&sktid=a48cca56-e6da-484e-a814-9c849652bcb3&skt=2026-09-28T04%3A14%3A54Z&ske=2026-09-29T04%3A14%3A54Z&sks=b&skv=2026-02-06&sig=3kQ5IDyaMSl1cd8Dn8on8p5WASumwZaj2003YmkDCx4%3D'
+        run: |
+          echo "::add-mask::$SOURCE_URL"
+          curl --fail --silent --show-error --max-time 40 "$SOURCE_URL" -o /tmp/assistant-source.zip
+          echo 'cf53d07491890f4cbf533976d9bfae552951d0b4124a95539d0e1e5bd73ea8d0  /tmp/assistant-source.zip' | sha256sum --check
+          python3 - <<'PY'
+          import zipfile,pathlib
+          with zipfile.ZipFile('/tmp/assistant-source.zip') as z:
+            allowed={'SOURCE_COMMIT','frontend/src/components/assistant/FloatingAssistant.tsx','frontend/src/components/ui/LiquidGlassFilter.tsx','frontend/src/styles/chatbot.css','frontend/src/lib/richText.tsx','frontend/src/lib/glassLens.ts','frontend/public/chat-lens-map.png'}
+            for name in allowed:
+              data=z.read(name); p=pathlib.Path('.assistant-source')/name;p.parent.mkdir(parents=True,exist_ok=True);p.write_bytes(data)
+          assert pathlib.Path('.assistant-source/SOURCE_COMMIT').read_text().strip()=='83c7691513fcf3f61d5787fe813046cfb1380931'
+          PY
+      - uses: actions/setup-node@v4
+        with:
+          node-version: '22'
+          cache: npm
+      - name: Apply hash-checked implementation bundle
+        run: |
+          node --input-type=module <<'JS'
+          import fs from 'node:fs';
+          import {brotliDecompressSync} from 'node:zlib';
+          import {createHash} from 'node:crypto';
+          import {execFileSync} from 'node:child_process';
+          import path from 'node:path';
+          const bytes=Buffer.from(fs.readFileSync('.migration/assistant-a.b64','utf8').trim()+fs.readFileSync('.migration/assistant-b.b64','utf8').trim(),'base64');
+          if(createHash('sha256').update(bytes).digest('hex')!=='732e948e712ccb523540c2e50cfedf1675aca1e158ead89e15487d87183980d4')throw Error('Bundle integrity failure');
+          const bundle=JSON.parse(brotliDecompressSync(bytes).toString('utf8'));
+          for(const file of bundle.files){
+            if(!/^(src|docs|scripts|tests)\//.test(file.path)||file.path.includes('..')||fs.existsSync(file.path))throw Error('Unexpected file '+file.path);
+            fs.mkdirSync(path.dirname(file.path),{recursive:true});fs.writeFileSync(file.path,file.content);
+          }
+          fs.writeFileSync('/tmp/integrate.patch',bundle.patch);execFileSync('git',['apply','--check','/tmp/integrate.patch']);execFileSync('git',['apply','/tmp/integrate.patch']);
+          fs.writeFileSync('/tmp/port-assistant.py',bundle.port);execFileSync('python3',['/tmp/port-assistant.py'],{stdio:'inherit'});
+          fs.writeFileSync('/tmp/richtext.patch',bundle.richpatch);execFileSync('git',['apply','--check','/tmp/richtext.patch']);execFileSync('git',['apply','/tmp/richtext.patch']);
+          const source=JSON.parse(fs.readFileSync('src/components/assistant/PROVENANCE.json','utf8'));
+          if(createHash('sha256').update(fs.readFileSync('src/components/assistant/chatbot.css')).digest('hex')!==source.stylesheetSha256)throw Error('Donor presentation changed');
+          JS
+      - name: Resolve dependency lock and install reproducibly
+        run: |
+          npm install --package-lock-only --ignore-scripts --no-audit --no-fund
+          npm ci
+      - name: Import the three genuine Booking family photographs
+        run: node scripts/import-booking-family.mjs
+      - run: npm run check:ui
+      - run: npm run typecheck
+      - run: npm run lint
+      - run: npm run test:unit
+      - run: npm audit --omit=dev --json > dependency-audit.json
+      - run: npm run build
+      - run: npx playwright install --with-deps chromium webkit
+      - run: npm run test:e2e
+      - name: Publish validated changes to the working branch only
+        run: |
+          git fetch origin design/editorial-mastiha
+          test "$(git rev-parse origin/design/editorial-mastiha)" = "$GITHUB_SHA"
+          rm -rf .migration .assistant-source
+          rm .github/workflows/assistant-bootstrap.yml
+          git config user.name 'github-actions[bot]'
+          git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
+          git add src public scripts docs tests package.json package-lock.json .migration .github/workflows/assistant-bootstrap.yml
+          git diff --cached --check
+          git commit -m 'feat: add owner neighbourhood guide, faithful assistant port and Booking family media'
+          git push origin HEAD:refs/heads/design/editorial-mastiha
+          git rev-parse HEAD | tee VERIFIED_COMMIT.txt
+      - name: Source and browser evidence
+        if: always()
+        run: |
+          tar -czf integration-source.tar.gz src public messages scripts tests docs package.json package-lock.json next.config.ts playwright.config.ts tsconfig.json
+      - uses: actions/upload-artifact@v4
+        if: always()
+        with:
+          name: mastiha-assistant-integration-evidence
+          path: |
+            test-results/
+            playwright-report/
+            media-review/booking/
+            dependency-audit.json
+            integration-source.tar.gz
+            VERIFIED_COMMIT.txt
+          retention-days: 7
