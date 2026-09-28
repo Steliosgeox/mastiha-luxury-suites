@@ -43,7 +43,20 @@ jobs:
           assert hashlib.sha256(pathlib.Path('src/components/assistant/chatbot.css').read_bytes()).hexdigest()==source['stylesheetSha256']
           PY
       - name: Apply explicit source fixes and host copy
-        run: python3 .migration/finish-assistant.py
+        run: |
+          python3 .migration/finish-assistant.py
+          python3 - <<'PY'
+          from pathlib import Path
+          p=Path('src/lib/assistant/guide.ts');s=p.read_text()
+          old='!/cot|crib|baby|μωρ|κουν|bebek/.test(q)'
+          assert old in s
+          s=s.replace(old,'!/cot|crib|baby|child|family|playpen|high chair|μωρ|κουν|παιδ|οικογεν|bebek|cocuk|aile/.test(q)')
+          p.write_text(s)
+          p=Path('src/content/stay-copy.ts');s=p.read_text()
+          s=s.replace('Tesisin olanakları arasında ücretsiz özel otopark bulunur. Geliş talimatları için ev sahibinize danışın.','Ücretsiz özel otoparkımız var. Gelmeden önce yol tarifi için bize yazın.')
+          s=s.replace('Saatleri rezervasyonunuz üzerinden ev sahibiyle doğrulayın. Bu site rezervasyon koşullarının yerine geçmez.','Giriş ve çıkış saatlerini birlikte planlamak için rezervasyonunuz üzerinden bize yazın.')
+          p.write_text(s)
+          PY
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
