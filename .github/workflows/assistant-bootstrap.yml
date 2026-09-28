@@ -8,7 +8,7 @@ permissions:
   actions: read
 concurrency:
   group: mastiha-assistant-integration
-  cancel-in-progress: false
+  cancel-in-progress: true
 jobs:
   integrate:
     runs-on: ubuntu-latest
@@ -25,10 +25,10 @@ jobs:
       - uses: actions/download-artifact@v4
         with:
           name: mastiha-assistant-integration-evidence
-          run-id: 36466665439
+          run-id: 36468264006
           github-token: ${{ github.token }}
           path: /tmp/mastiha-recovery
-      - name: Recover reviewed source and genuine Booking media
+      - name: Recover the existing integration without changing donor styling
         run: |
           python3 - <<'PY'
           import tarfile,pathlib,shutil,hashlib,json
@@ -42,31 +42,8 @@ jobs:
           source=json.loads(pathlib.Path('src/components/assistant/PROVENANCE.json').read_text())
           assert hashlib.sha256(pathlib.Path('src/components/assistant/chatbot.css').read_bytes()).hexdigest()==source['stylesheetSha256']
           PY
-      - name: Fix API locale rewriting and add route-level regression
-        run: |
-          python3 - <<'PY'
-          from pathlib import Path
-          p=Path('src/middleware.ts');s=p.read_text();old='(?!_next|_vercel|';assert old in s
-          s=s.replace(old,'(?!api|_next|_vercel|');s=s.replace('export const config = {','// API routes are locale-independent JSON endpoints, never localized pages.\nexport const config = {');p.write_text(s)
-          p=Path('docs/NEIGHBOURHOOD-ASSISTANT.md');p.write_text(p.read_text()+'\nAPI routing: next-intl middleware excludes /api. The locale stays in the validated JSON request, so POSTs are never redirected to a translated HTML page. Browser tests exercise the actual endpoints in all three languages.\n')
-          PY
-          cat >> tests/neighbourhood-assistant.spec.ts <<'TS'
-          
-          test('assistant API is not redirected into the locale router', async ({ request }) => {
-            for (const locale of ['el', 'en', 'tr'] as const) {
-              const response = await request.post('/api/assistant/chat', {
-                maxRedirects: 0,
-                headers: { 'Accept-Language': locale, 'x-forwarded-for': 'route-regression-' + locale },
-                data: { locale, messages: [{ role: 'user', content: 'What is nearby?' }] },
-              });
-              expect(response.status()).toBe(200);
-              expect(response.headers()['location']).toBeUndefined();
-              expect(response.headers()['content-type']).toContain('application/json');
-              expect(response.headers()['cache-control']).toContain('no-store');
-              expect((await response.json()).reply).toContain('Market mou');
-            }
-          });
-          TS
+      - name: Apply explicit source fixes and host copy
+        run: python3 .migration/finish-assistant.py
       - uses: actions/setup-node@v4
         with:
           node-version: '22'
@@ -80,7 +57,7 @@ jobs:
       - run: npm run build
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:e2e
-      - name: Publish validated source to the working branch only
+      - name: Publish the tested source to the working branch
         run: |
           git fetch origin design/editorial-mastiha
           test "$(git rev-parse origin/design/editorial-mastiha)" = "$GITHUB_SHA"
@@ -89,13 +66,12 @@ jobs:
           git config user.email '41898282+github-actions[bot]@users.noreply.github.com'
           git add src public scripts docs tests package.json package-lock.json .migration
           git diff --cached --check
-          git commit -m 'feat: integrate neighbourhood guide, original assistant UI and Booking family media'
+          git commit -m 'feat: publish working chat, neighbourhood guide, Booking photos and host-voice copy'
           git push origin HEAD:refs/heads/design/editorial-mastiha
           git rev-parse HEAD | tee VERIFIED_COMMIT.txt
       - name: Source and browser evidence
         if: always()
-        run: |
-          tar -czf integration-source.tar.gz src public messages scripts tests docs package.json package-lock.json next.config.ts playwright.config.ts tsconfig.json
+        run: tar -czf integration-source.tar.gz src public messages scripts tests docs package.json package-lock.json next.config.ts playwright.config.ts tsconfig.json
       - uses: actions/upload-artifact@v4
         if: always()
         with:
