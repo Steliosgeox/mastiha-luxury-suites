@@ -10,7 +10,7 @@ export function Closing({ locale }: { locale: StayLocale }) {
   const photo = stayPhoto("windmills");
   return <section id="book" className={`${s.scene} ${s.closing}`} aria-labelledby="closing-title">
     <div className={s.media} data-photo-id="windmills">
-      <Image src={photo.src} alt={photoCaption("windmills", locale)} fill sizes="100vw" className={s.image} data-parallax />
+      <Image src={photo.src} alt={photoCaption("windmills", locale)} fill sizes="100vw" className={s.image} style={{ objectPosition: "24% 55%" }} data-parallax />
     </div>
     <div className={s.scrim} aria-hidden="true" />
     <div className={s.closingCopy}>

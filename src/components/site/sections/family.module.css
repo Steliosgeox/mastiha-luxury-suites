@@ -34,6 +34,9 @@
   min-width: 0;
   overflow: hidden;
   padding-right: var(--gutter);
+  /* Cards fade out as they slide past the copy column. */
+  -webkit-mask-image: linear-gradient(90deg, transparent 0, #000 48px);
+  mask-image: linear-gradient(90deg, transparent 0, #000 48px);
 }
 .card { flex: 0 0 clamp(250px, 26vw, 400px); }
 .cardPhoto { aspect-ratio: 3 / 4; border-radius: 10px; background: #e9e7e1; }
@@ -57,6 +60,8 @@
   }
   .copy { padding-right: var(--gutter); }
   .track {
+    -webkit-mask-image: none;
+    mask-image: none;
     overflow-x: auto;
     scroll-snap-type: x mandatory;
     scrollbar-width: none;
