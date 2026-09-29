@@ -1,55 +1,511 @@
+// Site copy. Greek is written first and is the reference; English and Turkish follow it.
+// Keep it plain and factual, in the host's own voice: no slogans, no invented claims.
+// Facts (sizes, distances, beds) come from property.ts and are interpolated where possible.
+
 export type StayLocale = "en" | "el" | "tr";
-const en = {
-  skip: "Skip to the suite", nav: "Explore the property", home: "Home", suite: "The suite", gallery: "Photographs", location: "Location", language: "Language", book: "Check availability", bookShort: "Book your stay", close: "Close", all: "All spaces", bedrooms: "Bedrooms", outdoors: "Outdoors", details: "Details", previous: "Previous photograph", next: "Next photograph",
-  place: "Vrontados, Chios, Greece", heroLine: "A quieter side of Chios.", heroSmall: "Your own place on the island.", discover: "Discover Mastiha", filmEyebrow: "A walk through the apartment", filmTitle: "Come inside.", filmHint: "Scroll to explore", skipFilm: "Skip the film", filmFallback: "A glimpse inside the apartment", filmSteps: ["The living space", "A closer look", "Make yourself at home"],
-  introEyebrow: "An entire home, entirely yours", introTitle: "Space for the way\nyou like to stay.", introBody: "A private home in Vrontados, with two bedrooms, a living room and space to settle into your own routine. Open the doors, make a coffee, and take Chios at your own pace.", areaLabel: "private space", guestsLabel: "guests", bedroomsLabel: "bedrooms", photoAction: "View photograph",
-  roomsEyebrow: "The spaces", roomsTitle: "From morning light\nto lights out.", livingTitle: "A place to come together.", livingBody: "Coffee at the table. A quiet afternoon on the sofa. A living space to return to between days out on the island.", bedroomTitle: "Close the door on the day.", bedroomBody: "Two bedrooms, soft finishes and room to unpack. Take a closer look at each space before you arrive.",
-  captions: { living: "Living room", master: "Main bedroom", second: "Second bedroom", bathroom: "Bathroom", terrace: "Terrace" },
-  galleryEyebrow: "A closer look", galleryTitle: "Explore every space.", galleryBody: "The rooms, the terrace and the details. Open a photograph to browse the full collection.", galleryOpen: "Open the full gallery", galleryCount: "photographs", zoom: "Zoom in", zoomOut: "Zoom out", fullscreen: "Enter fullscreen", exitFullscreen: "Exit fullscreen", hideThumbs: "Hide thumbnails", showThumbs: "Show thumbnails",
-  amenitiesEyebrow: "Part of the stay", amenitiesTitle: "The everyday,\ntaken care of.", amenitiesBody: "Wi-Fi, air conditioning, a washing machine and a well-equipped kitchen for a comfortable stay.", amenities: ["Private parking", "Wi-Fi", "Air conditioning", "Equipped kitchen", "Washing machine", "Smart TVs", "Outdoor seating", "Soundproof space"],
-  outsideEyebrow: "Outside, a different pace", outsideTitle: "Step out\nand slow down.", outsideBody: "A terrace for a slow start or a pause at the end of the day.",
-  ratingsEyebrow: "Guest reviews", ratingsTitle: "Read it from our guests.", reviews: "reviews", ratingsNote: "Scores recorded {date}. See the booking platforms for current reviews.", readReviews: "Read reviews",
-  locationEyebrow: "Vrontados, Chios", locationTitle: "The island starts\nat your doorstep.", locationBody: "The shoreline is approximately {distance} metres away. Use the map for directions, and message us before arriving if you need a hand.", maps: "Open Google Maps", directions: "Get directions", mapLoad: "Open the Google Map", mapNote: "Google Maps loads when you open the map.", mapTitle: "Mastiha Luxury Suites on Google Maps",
-  faqEyebrow: "Before you arrive", faqTitle: "A few useful details.", faqs: [
-    { q: "How many people can stay?", a: "The private home accommodates up to {guests} guests, with {bedrooms} bedrooms and {bathrooms} bathroom." },
-    { q: "How do I make a reservation?", a: "Choose Airbnb or Booking.com. Your dates, final price, payment and cancellation terms are confirmed on the booking platform." },
-    { q: "What are the arrival and departure times?", a: "Please confirm your arrival and departure times with us through your reservation." },
-    { q: "Is parking available?", a: "We offer free private parking. Message us before you arrive for directions." }
-  ], closing: "Make room\nfor Chios.", closingBody: "Find your dates on Airbnb or Booking.com.", bookingTitle: "Your stay starts here.", bookingBody: "Choose your booking platform to see live availability, prices and reservation terms.", privacy: "Privacy", registration: "Registration", top: "Back to top"
+
+const el = {
+  // Used by the dock (PremiumDock) and the top navigation.
+  home: "Αρχή",
+  suite: "Το διαμέρισμα",
+  gallery: "Φωτογραφίες",
+  location: "Τοποθεσία",
+  bookShort: "Κράτηση",
+
+  common: {
+    skip: "Μετάβαση στο περιεχόμενο",
+    nav: "Κύρια πλοήγηση",
+    language: "Γλώσσα",
+    openPhoto: "Άνοιγμα φωτογραφίας",
+    close: "Κλείσιμο",
+    loading: "Φόρτωση…",
+  },
+  hero: {
+    place: "Βροντάδος · Χίος",
+    toSea: "{distance} μ. από τη θάλασσα",
+    kicker: "Ολόκληρο διαμέρισμα στον Βροντάδο Χίου",
+    facts: "{area} τ.μ. · {bedrooms} υπνοδωμάτια · έως {guests} άτομα",
+    cta: "Διαθεσιμότητα",
+    scroll: "Δείτε το σπίτι",
+  },
+  tour: {
+    label: "Περιήγηση στο σπίτι",
+    skip: "Παράλειψη",
+  },
+  intro: {
+    eyebrow: "Το διαμέρισμα",
+    title: "Καλώς ήρθατε στο Mastiha",
+    body: "Ένα διαμέρισμα {area} τ.μ. στον Βροντάδο, {distance} μέτρα από τη θάλασσα. Έχει δύο υπνοδωμάτια, σαλόνι με τραπεζαρία, κουζίνα με όλα τα απαραίτητα, μπάνιο και μπαλκόνι. Χωράει έως τέσσερα άτομα και το έχετε ολόκληρο δικό σας.",
+    area: "τ.μ.",
+    bedrooms: "υπνοδωμάτια",
+    guests: "άτομα",
+    toSea: "μ. από τη θάλασσα",
+  },
+  bedrooms: {
+    eyebrow: "Υπνοδωμάτια",
+    title: "Δύο υπνοδωμάτια και καναπές-κρεβάτι",
+    body: "Στο κύριο υπνοδωμάτιο υπάρχει διπλό κρεβάτι king size, τηλεόραση και μπουντουάρ. Στο δεύτερο υπάρχει μονό κρεβάτι και ντουλάπα. Ο καναπές στο σαλόνι ανοίγει σε κρεβάτι για τέταρτο άτομο.",
+  },
+  family: {
+    eyebrow: "Για οικογένειες",
+    title: "Ταξιδεύετε με παιδιά;",
+    body: "Τα παιδιά κάθε ηλικίας είναι ευπρόσδεκτα. Για τα μωρά έχουμε κούνια (δωρεάν, για 0–3 ετών), παρκοκρέβατο και καρεκλάκι φαγητού. Για τα μεγαλύτερα υπάρχει παιδικό τραπεζάκι με παζλ και παιχνίδια. Πείτε μας τι θα χρειαστείτε όταν κάνετε την κράτηση, για να τα έχουμε έτοιμα.",
+    items: ["Κούνια μωρού · δωρεάν, 0–3 ετών", "Παρκοκρέβατο", "Καρεκλάκι φαγητού", "Παιχνίδια και παζλ"],
+    drag: "Σύρετε για περισσότερες",
+  },
+  balcony: {
+    eyebrow: "Μπαλκόνι",
+    title: "Το μπαλκόνι",
+    body: "Με τραπέζι και καρέκλες, για τον πρωινό καφέ ή για να κάτσετε λίγο το βράδυ.",
+    action: "Δείτε φωτογραφίες",
+  },
+  kitchen: {
+    eyebrow: "Κουζίνα",
+    title: "Κουζίνα με όλα τα απαραίτητα",
+    body: "Φούρνος, εστίες, ψυγείο, μηχανή espresso, ηλεκτρικό μπρίκι για ελληνικό καφέ, βραστήρας και τοστιέρα, μαζί με όλα τα σκεύη για να μαγειρέψετε. Στο σαλόνι υπάρχει και γραφείο, αν χρειαστεί να δουλέψετε.",
+  },
+  photos: {
+    eyebrow: "Φωτογραφίες",
+    title: "Δείτε όλο το σπίτι",
+    body: "Όλες οι φωτογραφίες είναι από το σπίτι και τη γειτονιά μας.",
+    filters: { all: "Όλες", living: "Σαλόνι", kitchen: "Κουζίνα", bedrooms: "Υπνοδωμάτια", family: "Για παιδιά", bathroom: "Μπάνιο", outdoors: "Εξωτερικά", neighbourhood: "Περιοχή" },
+    count: "φωτογραφίες",
+    more: "Περισσότερες φωτογραφίες",
+    less: "Λιγότερες φωτογραφίες",
+    viewAll: "Προβολή όλων",
+  },
+  amenities: {
+    eyebrow: "Παροχές",
+    title: "Τι θα βρείτε στο σπίτι",
+    items: {
+      parking: "Δωρεάν ιδιωτικό πάρκινγκ",
+      wifi: "Wi-Fi",
+      climate: "Κλιματισμός και θέρμανση",
+      kitchen: "Κουζίνα με φούρνο και εστίες",
+      laundry: "Πλυντήριο ρούχων",
+      tv: "Smart TV 55\" με Netflix και Prime Video",
+      iron: "Σίδερο, πιστολάκι και πρέσα μαλλιών",
+      balcony: "Μπαλκόνι με τραπέζι",
+      desk: "Γραφείο για δουλειά",
+      quiet: "Ηχομόνωση",
+    },
+  },
+  reviews: {
+    eyebrow: "Κριτικές",
+    title: "Τι λένε οι επισκέπτες μας",
+    note: "Βαθμολογίες στις {date}. Τις πιο πρόσφατες κριτικές θα τις βρείτε στο Airbnb και στο Booking.com.",
+    reviews: "κριτικές",
+    read: "Διαβάστε τις κριτικές",
+    airbnbBadge: "Αγαπημένο επισκεπτών",
+    airbnbDetail: "Στο κορυφαίο 1% των καταλυμάτων",
+    bookingLabel: "Εξαιρετικό",
+    bookingLocation: "Τοποθεσία",
+  },
+  where: {
+    eyebrow: "Τοποθεσία",
+    title: "Πού θα μας βρείτε",
+    body: "Στον Βροντάδο, {distance} μέτρα από τη θάλασσα και περίπου 4,5 χλμ. από το λιμάνι της Χίου. Πριν έρθετε, στείλτε μας μήνυμα και θα σας πούμε πώς να μας βρείτε.",
+    maps: "Άνοιγμα στο Google Maps",
+    directions: "Οδηγίες διαδρομής",
+    mapShow: "Εμφάνιση χάρτη",
+    mapHide: "Κλείσιμο χάρτη",
+    mapNote: "Ο χάρτης της Google φορτώνει μόνο όταν τον ανοίξετε.",
+    mapTitle: "Το Mastiha Luxury Suites στον χάρτη",
+  },
+  vrontados: {
+    eyebrow: "Βροντάδος",
+    title: "Τι άλλο έχει ο Βροντάδος",
+    body: "Με τα πόδια φτάνετε στους ανεμόμυλους και στο άγαλμα του Άγνωστου Ναύτη. Λίγο πιο πέρα είναι η Δασκαλόπετρα, και το Πάσχα γίνεται ο γνωστός ρουκετοπόλεμος. Για μπάνιο, το Μερσινίδι είναι λίγο πιο βόρεια.",
+  },
+  host: {
+    eyebrow: "Η οικοδέσποινά σας",
+    title: "Γεια σας, είμαι η Αθηνά",
+    body: "Είμαι εδώ για ό,τι χρειαστείτε, πριν έρθετε και όσο μένετε στο σπίτι. Για οποιαδήποτε ερώτηση, γράψτε μου εδώ στο chat ή στείλτε μου μήνυμα στο Airbnb.",
+    chat: "Στείλτε μου μήνυμα",
+    airbnb: "Το προφίλ μου στο Airbnb",
+  },
+  faq: {
+    title: "Συχνές ερωτήσεις",
+    items: [
+      { q: "Πόσα άτομα χωράει το σπίτι;", a: "Έως {guests} άτομα: διπλό κρεβάτι king size στο κύριο υπνοδωμάτιο, μονό κρεβάτι στο δεύτερο και καναπές-κρεβάτι στο σαλόνι. Υπάρχει ένα μπάνιο." },
+      { q: "Πώς κάνω κράτηση;", a: "Μέσω Airbnb ή Booking.com. Εκεί θα δείτε τις ελεύθερες ημερομηνίες, την τελική τιμή και τους όρους ακύρωσης." },
+      { q: "Τι ώρα είναι το check-in και το check-out;", a: "Οι ώρες αναγράφονται στην κράτησή σας. Αν χρειάζεστε κάτι διαφορετικό, στείλτε μας μήνυμα και θα το κανονίσουμε αν γίνεται." },
+      { q: "Υπάρχει πάρκινγκ;", a: "Ναι, δωρεάν ιδιωτικό πάρκινγκ. Υπάρχει και δημόσιο πάρκινγκ περίπου 90 μέτρα μακριά." },
+      { q: "Τι υπάρχει για παιδιά;", a: "Κούνια μωρού (δωρεάν, για 0–3 ετών), παρκοκρέβατο, καρεκλάκι φαγητού και παιχνίδια. Πείτε μας τι χρειάζεστε όταν κάνετε την κράτηση." },
+      { q: "Μπορώ να δουλέψω από το σπίτι;", a: "Ναι, υπάρχει Wi-Fi και γραφείο στο σαλόνι." },
+      { q: "Πόσο απέχει η θάλασσα;", a: "Περίπου {distance} μέτρα. Σούπερ μάρκετ, φούρνοι, καφέ και φαρμακεία είναι επίσης σε κοντινή απόσταση." },
+      { q: "Επιτρέπονται κατοικίδια;", a: "Δυστυχώς όχι." },
+    ],
+  },
+  closing: {
+    title: "Σας περιμένουμε στη Χίο",
+    body: "Δείτε διαθεσιμότητα και τιμές στο Airbnb ή στο Booking.com.",
+    action: "Κράτηση",
+  },
+  booking: {
+    title: "Κράτηση",
+    body: "Επιλέξτε πλατφόρμα. Εκεί θα δείτε τις ελεύθερες ημερομηνίες, την τελική τιμή και τους όρους ακύρωσης.",
+  },
+  footer: {
+    place: "Βροντάδος, Χίος",
+    registration: "ΑΜΑ",
+    privacy: "Απόρρητο",
+    contact: "Επικοινωνία",
+    top: "Επιστροφή επάνω",
+  },
+  lightbox: {
+    previous: "Προηγούμενη φωτογραφία",
+    next: "Επόμενη φωτογραφία",
+    zoomIn: "Μεγέθυνση",
+    zoomOut: "Σμίκρυνση",
+    fullscreen: "Πλήρης οθόνη",
+    exitFullscreen: "Έξοδος από πλήρη οθόνη",
+    hideThumbs: "Απόκρυψη μικρογραφιών",
+    showThumbs: "Εμφάνιση μικρογραφιών",
+  },
 };
-export type StayCopy = typeof en;
-const el: StayCopy = {
-  skip: "Μετάβαση στη διαμονή", nav: "Γνωρίστε το κατάλυμα", home: "Αρχική", suite: "Η διαμονή", gallery: "Φωτογραφίες", location: "Τοποθεσία", language: "Γλώσσα", book: "Διαθεσιμότητα", bookShort: "Κλείστε τη διαμονή σας", close: "Κλείσιμο", all: "Όλοι οι χώροι", bedrooms: "Υπνοδωμάτια", outdoors: "Εξωτερικά", details: "Λεπτομέρειες", previous: "Προηγούμενη φωτογραφία", next: "Επόμενη φωτογραφία",
-  place: "Βροντάδος, Χίος, Ελλάδα", heroLine: "Μια πιο ήρεμη πλευρά της Χίου.", heroSmall: "Ο δικός σας χώρος στο νησί.", discover: "Γνωρίστε το Mastiha", filmEyebrow: "Μια βόλτα στο διαμέρισμα", filmTitle: "Περάστε μέσα.", filmHint: "Κυλήστε για περιήγηση", skipFilm: "Παράλειψη περιήγησης", filmFallback: "Μια ματιά στο διαμέρισμα", filmSteps: ["Το καθιστικό", "Μια πιο κοντινή ματιά", "Νιώστε σαν στο σπίτι σας"],
-  introEyebrow: "Ένα σπίτι, αποκλειστικά δικό σας", introTitle: "Χώρος για τη διαμονή\nπου σας ταιριάζει.", introBody: "Ένα ιδιωτικό σπίτι στον Βροντάδο, με δύο υπνοδωμάτια, καθιστικό και χώρο για τον δικό σας ρυθμό. Ανοίξτε τις πόρτες, φτιάξτε έναν καφέ και γνωρίστε τη Χίο χωρίς βιασύνη.", areaLabel: "ιδιωτικός χώρος", guestsLabel: "επισκέπτες", bedroomsLabel: "υπνοδωμάτια", photoAction: "Προβολή φωτογραφίας",
-  roomsEyebrow: "Οι χώροι", roomsTitle: "Από το πρωινό φως\nμέχρι την ξεκούραση.", livingTitle: "Χώρος για να βρεθείτε μαζί.", livingBody: "Καφές στο τραπέζι. Ένα ήσυχο απόγευμα στον καναπέ. Ένας χώρος για να επιστρέφετε ανάμεσα στις εξορμήσεις στο νησί.", bedroomTitle: "Αφήστε τη μέρα απέξω.", bedroomBody: "Δύο υπνοδωμάτια και χώρος για να τακτοποιηθείτε. Δείτε κάθε δωμάτιο πριν από την άφιξή σας.", captions: { living: "Καθιστικό", master: "Κύριο υπνοδωμάτιο", second: "Δεύτερο υπνοδωμάτιο", bathroom: "Μπάνιο", terrace: "Βεράντα" },
-  galleryEyebrow: "Μια πιο κοντινή ματιά", galleryTitle: "Γνωρίστε κάθε χώρο.", galleryBody: "Τα δωμάτια, η βεράντα και οι λεπτομέρειες. Ανοίξτε μια φωτογραφία για να δείτε ολόκληρη τη συλλογή.", galleryOpen: "Δείτε όλες τις φωτογραφίες", galleryCount: "φωτογραφίες", zoom: "Μεγέθυνση", zoomOut: "Σμίκρυνση", fullscreen: "Πλήρης οθόνη", exitFullscreen: "Έξοδος πλήρους οθόνης", hideThumbs: "Απόκρυψη μικρογραφιών", showThumbs: "Εμφάνιση μικρογραφιών",
-  amenitiesEyebrow: "Μέρος της διαμονής", amenitiesTitle: "Τα καθημερινά,\nφροντισμένα.", amenitiesBody: "Wi-Fi, κλιματισμός, πλυντήριο ρούχων και εξοπλισμένη κουζίνα για μια άνετη διαμονή.", amenities: ["Ιδιωτικό πάρκινγκ", "Wi-Fi", "Κλιματισμός", "Εξοπλισμένη κουζίνα", "Πλυντήριο ρούχων", "Smart TV", "Εξωτερικό καθιστικό", "Ηχομόνωση"],
-  outsideEyebrow: "Έξω, ένας άλλος ρυθμός", outsideTitle: "Λίγη ξεκούραση\nστη βεράντα.", outsideBody: "Για ένα ήρεμο ξεκίνημα ή μια παύση στο τέλος της ημέρας.", ratingsEyebrow: "Αξιολογήσεις επισκεπτών", ratingsTitle: "Διαβάστε τις εμπειρίες τους.", reviews: "αξιολογήσεις", ratingsNote: "Βαθμολογίες που καταγράφηκαν στις {date}. Δείτε τις τρέχουσες αξιολογήσεις στις πλατφόρμες.", readReviews: "Δείτε τις αξιολογήσεις",
-  locationEyebrow: "Βροντάδος, Χίος", locationTitle: "Το νησί ξεκινά\nστην πόρτα σας.", locationBody: "Η ακτή απέχει περίπου {distance} μέτρα. Δείτε τη διαδρομή στον χάρτη και στείλτε μας μήνυμα αν χρειάζεστε βοήθεια με την άφιξή σας.", maps: "Άνοιγμα Google Maps", directions: "Οδηγίες διαδρομής", mapLoad: "Άνοιγμα Google Map", mapNote: "Ο χάρτης Google Maps φορτώνεται όταν τον ανοίξετε.", mapTitle: "Mastiha Luxury Suites στο Google Maps",
-  faqEyebrow: "Πριν από την άφιξη", faqTitle: "Μερικές χρήσιμες λεπτομέρειες.", faqs: [
-    { q: "Πόσα άτομα μπορούν να μείνουν;", a: "Το σπίτι φιλοξενεί έως {guests} επισκέπτες, με {bedrooms} υπνοδωμάτια και {bathrooms} μπάνιο." },
-    { q: "Πώς κάνω κράτηση;", a: "Επιλέξτε Airbnb ή Booking.com. Οι ημερομηνίες, η τελική τιμή, η πληρωμή και οι όροι ακύρωσης επιβεβαιώνονται στην πλατφόρμα κράτησης." },
-    { q: "Ποιες είναι οι ώρες άφιξης και αναχώρησης;", a: "Επικοινωνήστε μαζί μας από την κράτησή σας για να συνεννοηθούμε για τις ώρες άφιξης και αναχώρησης." },
-    { q: "Υπάρχει πάρκινγκ;", a: "Διαθέτουμε δωρεάν ιδιωτικό πάρκινγκ. Στείλτε μας μήνυμα πριν φτάσετε για οδηγίες." }
-  ], closing: "Κάντε χώρο\nγια τη Χίο.", closingBody: "Βρείτε ημερομηνίες στο Airbnb ή στο Booking.com.", bookingTitle: "Η διαμονή σας ξεκινά εδώ.", bookingBody: "Επιλέξτε πλατφόρμα για την τρέχουσα διαθεσιμότητα, τις τιμές και τους όρους κράτησης.", privacy: "Απόρρητο", registration: "Αριθμός μητρώου", top: "Στην αρχή"
+
+export type StayCopy = typeof el;
+
+const en: StayCopy = {
+  home: "Home",
+  suite: "The apartment",
+  gallery: "Photos",
+  location: "Location",
+  bookShort: "Book your stay",
+
+  common: {
+    skip: "Skip to content",
+    nav: "Main navigation",
+    language: "Language",
+    openPhoto: "Open photo",
+    close: "Close",
+    loading: "Loading…",
+  },
+  hero: {
+    place: "Vrontados · Chios",
+    toSea: "{distance} m from the sea",
+    kicker: "A whole apartment in Vrontados, Chios",
+    facts: "{area} m² · {bedrooms} bedrooms · sleeps {guests}",
+    cta: "Availability",
+    scroll: "See the apartment",
+  },
+  tour: {
+    label: "Around the apartment",
+    skip: "Skip",
+  },
+  intro: {
+    eyebrow: "The apartment",
+    title: "Welcome to Mastiha",
+    body: "A {area} m² apartment in Vrontados, {distance} metres from the sea. Two bedrooms, a living room with a dining table, a well-equipped kitchen, a bathroom and a balcony. It sleeps up to four, and the whole place is yours.",
+    area: "m²",
+    bedrooms: "bedrooms",
+    guests: "guests",
+    toSea: "m to the sea",
+  },
+  bedrooms: {
+    eyebrow: "Bedrooms",
+    title: "Two bedrooms and a sofa bed",
+    body: "The main bedroom has a king-size bed, a TV and a dressing table. The second has a single bed and a wardrobe. The living-room sofa opens into a bed for a fourth guest.",
+  },
+  family: {
+    eyebrow: "Families",
+    title: "Travelling with children?",
+    body: "Children of all ages are welcome. For babies we have a cot (free, ages 0–3), a travel cot and a booster seat. For older children there’s a small table with puzzles and toys. Tell us what you need when you book and we’ll have it ready.",
+    items: ["Baby cot · free, ages 0–3", "Travel cot", "Booster seat", "Toys and puzzles"],
+    drag: "Swipe for more",
+  },
+  balcony: {
+    eyebrow: "Balcony",
+    title: "The balcony",
+    body: "A table and chairs for your morning coffee or a quiet evening outside.",
+    action: "See photos",
+  },
+  kitchen: {
+    eyebrow: "Kitchen",
+    title: "A kitchen with everything you need",
+    body: "Oven, hob, fridge, an espresso machine, an electric pot for Greek coffee, a kettle and a sandwich toaster, plus all the cookware you need. There’s also a desk in the living room if you need to work.",
+  },
+  photos: {
+    eyebrow: "Photos",
+    title: "See the whole apartment",
+    body: "Every photo here is of our apartment and our neighbourhood.",
+    filters: { all: "All", living: "Living room", kitchen: "Kitchen", bedrooms: "Bedrooms", family: "For children", bathroom: "Bathroom", outdoors: "Outside", neighbourhood: "The area" },
+    count: "photos",
+    more: "More photos",
+    less: "Fewer photos",
+    viewAll: "View all",
+  },
+  amenities: {
+    eyebrow: "Amenities",
+    title: "What you’ll find",
+    items: {
+      parking: "Free private parking",
+      wifi: "Wi-Fi",
+      climate: "Air conditioning and heating",
+      kitchen: "Kitchen with oven and hob",
+      laundry: "Washing machine",
+      tv: "55\" smart TV with Netflix and Prime Video",
+      iron: "Iron, hair dryer and straightener",
+      balcony: "Balcony with a table",
+      desk: "Desk for work",
+      quiet: "Soundproofing",
+    },
+  },
+  reviews: {
+    eyebrow: "Reviews",
+    title: "What our guests say",
+    note: "Scores as of {date}. For the latest reviews, see Airbnb and Booking.com.",
+    reviews: "reviews",
+    read: "Read reviews",
+    airbnbBadge: "Guest favourite",
+    airbnbDetail: "Top 1% of homes",
+    bookingLabel: "Exceptional",
+    bookingLocation: "Location",
+  },
+  where: {
+    eyebrow: "Location",
+    title: "Where to find us",
+    body: "In Vrontados, {distance} metres from the sea and about 4.5 km from Chios port. Message us before you arrive and we’ll tell you how to find us.",
+    maps: "Open in Google Maps",
+    directions: "Directions",
+    mapShow: "Show map",
+    mapHide: "Hide map",
+    mapNote: "The Google map only loads when you open it.",
+    mapTitle: "Mastiha Luxury Suites on the map",
+  },
+  vrontados: {
+    eyebrow: "Vrontados",
+    title: "More of Vrontados",
+    body: "The windmills and the Unknown Sailor statue are a short walk away. A little further is Daskalopetra, and at Easter the village holds its famous rocket war. For a swim, Mersinidi beach is a short way north.",
+  },
+  host: {
+    eyebrow: "Your host",
+    title: "Hi, I’m Athina",
+    body: "I’m here for anything you need, before you arrive and while you stay. If you have a question, write to me here in the chat or message me on Airbnb.",
+    chat: "Message me",
+    airbnb: "My Airbnb profile",
+  },
+  faq: {
+    title: "Questions",
+    items: [
+      { q: "How many people can stay?", a: "Up to {guests}: a king-size bed in the main bedroom, a single bed in the second and a sofa bed in the living room. There is one bathroom." },
+      { q: "How do I book?", a: "Through Airbnb or Booking.com. You’ll see available dates, the final price and cancellation terms there." },
+      { q: "What are the check-in and check-out times?", a: "They’re shown in your booking. If you need a different time, message us and we’ll arrange it if we can." },
+      { q: "Is there parking?", a: "Yes, free private parking. There’s also a public car park about 90 metres away." },
+      { q: "What do you have for children?", a: "A baby cot (free, ages 0–3), a travel cot, a booster seat and toys. Let us know what you need when you book." },
+      { q: "Can I work from the apartment?", a: "Yes, there’s Wi-Fi and a desk in the living room." },
+      { q: "How far is the sea?", a: "About {distance} metres. Supermarkets, bakeries, cafés and pharmacies are close by too." },
+      { q: "Are pets allowed?", a: "Sorry, no." },
+    ],
+  },
+  closing: {
+    title: "See you in Chios",
+    body: "Check dates and prices on Airbnb or Booking.com.",
+    action: "Book",
+  },
+  booking: {
+    title: "Book your stay",
+    body: "Choose a platform to see available dates, the final price and cancellation terms.",
+  },
+  footer: {
+    place: "Vrontados, Chios, Greece",
+    registration: "Registration no.",
+    privacy: "Privacy",
+    contact: "Contact",
+    top: "Back to top",
+  },
+  lightbox: {
+    previous: "Previous photo",
+    next: "Next photo",
+    zoomIn: "Zoom in",
+    zoomOut: "Zoom out",
+    fullscreen: "Full screen",
+    exitFullscreen: "Exit full screen",
+    hideThumbs: "Hide thumbnails",
+    showThumbs: "Show thumbnails",
+  },
 };
+
 const tr: StayCopy = {
-  skip: "Konaklamaya geç", nav: "Evi keşfedin", home: "Ana sayfa", suite: "Konaklama", gallery: "Fotoğraflar", location: "Konum", language: "Dil", book: "Müsaitlik", bookShort: "Konaklamanızı ayırtın", close: "Kapat", all: "Tüm alanlar", bedrooms: "Yatak odaları", outdoors: "Dış alan", details: "Ayrıntılar", previous: "Önceki fotoğraf", next: "Sonraki fotoğraf",
-  place: "Vrontados, Sakız Adası, Yunanistan", heroLine: "Sakız Adası'nın daha sakin bir yüzü.", heroSmall: "Adada size ait bir yer.", discover: "Mastiha'yı keşfedin", filmEyebrow: "Dairede bir gezinti", filmTitle: "İçeri buyurun.", filmHint: "Keşfetmek için kaydırın", skipFilm: "Gezintiyi atla", filmFallback: "Daireye bir bakış", filmSteps: ["Yaşam alanı", "Daha yakından", "Kendinizi evinizde hissedin"],
-  introEyebrow: "Tamamen size ait bir ev", introTitle: "Kendi ritminizde\nkonaklayın.", introBody: "Vrontados'ta iki yatak odası ve bir oturma odası bulunan özel bir ev. Kapıları açın, kahvenizi hazırlayın ve Sakız Adası'nı kendi ritminizde keşfedin.", areaLabel: "özel alan", guestsLabel: "misafir", bedroomsLabel: "yatak odası", photoAction: "Fotoğrafı görüntüle",
-  roomsEyebrow: "Alanlar", roomsTitle: "Sabah ışığından\ngece huzuruna.", livingTitle: "Bir araya gelmek için.", livingBody: "Masada kahve, kanepede sakin bir öğleden sonra. Adadaki gezileriniz arasında dönebileceğiniz bir yaşam alanı.", bedroomTitle: "Günü geride bırakın.", bedroomBody: "İki yatak odası ve yerleşmek için alan. Gelmeden önce her odaya daha yakından bakın.", captions: { living: "Oturma odası", master: "Ana yatak odası", second: "İkinci yatak odası", bathroom: "Banyo", terrace: "Teras" },
-  galleryEyebrow: "Daha yakından", galleryTitle: "Her alanı keşfedin.", galleryBody: "Odalar, teras ve ayrıntılar. Tüm koleksiyonu görmek için bir fotoğrafı açın.", galleryOpen: "Tüm fotoğrafları görüntüle", galleryCount: "fotoğraf", zoom: "Yakınlaştır", zoomOut: "Uzaklaştır", fullscreen: "Tam ekrana geç", exitFullscreen: "Tam ekrandan çık", hideThumbs: "Küçük resimleri gizle", showThumbs: "Küçük resimleri göster",
-  amenitiesEyebrow: "Konaklamaya dahil", amenitiesTitle: "Günlük ihtiyaçlar,\ndüşünülmüş.", amenitiesBody: "Rahat bir konaklama için Wi-Fi, klima, çamaşır makinesi ve donanımlı bir mutfak.", amenities: ["Özel otopark", "Wi-Fi", "Klima", "Donanımlı mutfak", "Çamaşır makinesi", "Smart TV", "Dış mekan oturma alanı", "Ses yalıtımı"],
-  outsideEyebrow: "Dışarıda başka bir ritim", outsideTitle: "Dışarı çıkın,\nsoluklanın.", outsideBody: "Güne sakin başlamak veya akşam bir mola vermek için.", ratingsEyebrow: "Misafir yorumları", ratingsTitle: "Misafirlerimizden okuyun.", reviews: "yorum", ratingsNote: "Puanlar {date} tarihinde kaydedildi. Güncel yorumlar için rezervasyon platformlarını ziyaret edin.", readReviews: "Yorumları okuyun",
-  locationEyebrow: "Vrontados, Sakız Adası", locationTitle: "Ada kapınızın\nönünde başlar.", locationBody: "Sahil yaklaşık {distance} metre uzaklıkta. Yol tarifi için haritayı kullanın; varışınız için yardıma ihtiyacınız varsa bize yazın.", maps: "Google Maps'i aç", directions: "Yol tarifi", mapLoad: "Google haritasını aç", mapNote: "Google Maps, haritayı açtığınızda yüklenir.", mapTitle: "Google Maps'te Mastiha Luxury Suites",
-  faqEyebrow: "Gelmeden önce", faqTitle: "Birkaç yararlı bilgi.", faqs: [
-    { q: "Kaç kişi kalabilir?", a: "Ev en fazla {guests} misafir ağırlayabilir; {bedrooms} yatak odası ve {bathrooms} banyo bulunur." },
-    { q: "Nasıl rezervasyon yapabilirim?", a: "Airbnb veya Booking.com'u seçin. Tarihler, toplam fiyat, ödeme ve iptal koşulları rezervasyon platformunda onaylanır." },
-    { q: "Giriş ve çıkış saatleri nedir?", a: "Giriş ve çıkış saatlerini birlikte planlamak için rezervasyonunuz üzerinden bize yazın." },
-    { q: "Otopark var mı?", a: "Ücretsiz özel otoparkımız var. Gelmeden önce yol tarifi için bize yazın." }
-  ], closing: "Sakız Adası'na\nyer açın.", closingBody: "Airbnb veya Booking.com'da tarihlerinizi bulun.", bookingTitle: "Konaklamanız burada başlıyor.", bookingBody: "Güncel müsaitlik, fiyatlar ve koşullar için rezervasyon platformunuzu seçin.", privacy: "Gizlilik", registration: "Kayıt", top: "Başa dön"
+  home: "Ana sayfa",
+  suite: "Daire",
+  gallery: "Fotoğraflar",
+  location: "Konum",
+  bookShort: "Rezervasyon yapın",
+
+  common: {
+    skip: "İçeriğe geç",
+    nav: "Ana menü",
+    language: "Dil",
+    openPhoto: "Fotoğrafı aç",
+    close: "Kapat",
+    loading: "Yükleniyor…",
+  },
+  hero: {
+    place: "Vrontados · Sakız Adası",
+    toSea: "Denize {distance} m",
+    kicker: "Vrontados’ta, Sakız Adası’nda bir dairenin tamamı",
+    facts: "{area} m² · {bedrooms} yatak odası · {guests} kişiye kadar",
+    cta: "Müsaitlik",
+    scroll: "Daireyi görün",
+  },
+  tour: {
+    label: "Dairede bir tur",
+    skip: "Geç",
+  },
+  intro: {
+    eyebrow: "Daire",
+    title: "Mastiha’ya hoş geldiniz",
+    body: "Vrontados’ta, denize {distance} metre mesafede {area} m² bir daire. İki yatak odası, yemek masalı oturma odası, donanımlı mutfak, banyo ve balkon. Dört kişiye kadar konaklama; dairenin tamamı sizin.",
+    area: "m²",
+    bedrooms: "yatak odası",
+    guests: "kişi",
+    toSea: "m denize",
+  },
+  bedrooms: {
+    eyebrow: "Yatak odaları",
+    title: "İki yatak odası ve bir çekyat",
+    body: "Ana yatak odasında king yatak, televizyon ve makyaj masası var. İkinci odada tek kişilik yatak ve gardırop bulunur. Oturma odasındaki kanepe dördüncü misafir için yatağa dönüşür.",
+  },
+  family: {
+    eyebrow: "Aileler",
+    title: "Çocuklarla mı geliyorsunuz?",
+    body: "Her yaştan çocuk ağırlıyoruz. Bebekler için bebek yatağı (ücretsiz, 0–3 yaş), park yatak ve mama sandalyesi var. Büyük çocuklar için yapboz ve oyuncaklı küçük bir masa bulunur. Rezervasyon sırasında neye ihtiyacınız olduğunu yazın, hazır edelim.",
+    items: ["Bebek yatağı · ücretsiz, 0–3 yaş", "Park yatak", "Mama sandalyesi", "Oyuncaklar ve yapbozlar"],
+    drag: "Daha fazlası için kaydırın",
+  },
+  balcony: {
+    eyebrow: "Balkon",
+    title: "Balkon",
+    body: "Sabah kahvesi ya da akşam oturmak için masa ve sandalyeler.",
+    action: "Fotoğraflara bakın",
+  },
+  kitchen: {
+    eyebrow: "Mutfak",
+    title: "İhtiyacınız olan her şey mutfakta",
+    body: "Fırın, ocak, buzdolabı, espresso makinesi, Türk kahvesi makinesi, su ısıtıcı ve tost makinesi; yemek pişirmek için tüm mutfak gereçleri. Çalışmanız gerekirse oturma odasında bir çalışma masası da var.",
+  },
+  photos: {
+    eyebrow: "Fotoğraflar",
+    title: "Dairenin tamamını görün",
+    body: "Buradaki tüm fotoğraflar dairemizden ve mahallemizden.",
+    filters: { all: "Tümü", living: "Oturma odası", kitchen: "Mutfak", bedrooms: "Yatak odaları", family: "Çocuklar için", bathroom: "Banyo", outdoors: "Dış mekân", neighbourhood: "Çevre" },
+    count: "fotoğraf",
+    more: "Daha fazla fotoğraf",
+    less: "Daha az fotoğraf",
+    viewAll: "Tümünü görüntüle",
+  },
+  amenities: {
+    eyebrow: "Olanaklar",
+    title: "Dairede neler var",
+    items: {
+      parking: "Ücretsiz özel otopark",
+      wifi: "Wi-Fi",
+      climate: "Klima ve ısıtma",
+      kitchen: "Fırınlı ve ocaklı mutfak",
+      laundry: "Çamaşır makinesi",
+      tv: "Netflix ve Prime Video’lu 55\" Smart TV",
+      iron: "Ütü, saç kurutma makinesi ve düzleştirici",
+      balcony: "Masalı balkon",
+      desk: "Çalışma masası",
+      quiet: "Ses yalıtımı",
+    },
+  },
+  reviews: {
+    eyebrow: "Yorumlar",
+    title: "Misafirlerimiz ne diyor",
+    note: "Puanlar {date} tarihli. En güncel yorumlar için Airbnb ve Booking.com’a bakın.",
+    reviews: "yorum",
+    read: "Yorumları okuyun",
+    airbnbBadge: "Misafirlerin favorisi",
+    airbnbDetail: "Evlerin en iyi %1’i",
+    bookingLabel: "Olağanüstü",
+    bookingLocation: "Konum",
+  },
+  where: {
+    eyebrow: "Konum",
+    title: "Bizi nerede bulursunuz",
+    body: "Vrontados’ta, denize {distance} metre ve Sakız limanına yaklaşık 4,5 km mesafedeyiz. Gelmeden önce bize yazın, nasıl bulacağınızı anlatalım.",
+    maps: "Google Maps’te aç",
+    directions: "Yol tarifi",
+    mapShow: "Haritayı göster",
+    mapHide: "Haritayı kapat",
+    mapNote: "Google haritası yalnızca açtığınızda yüklenir.",
+    mapTitle: "Haritada Mastiha Luxury Suites",
+  },
+  vrontados: {
+    eyebrow: "Vrontados",
+    title: "Vrontados’ta başka neler var",
+    body: "Yel değirmenleri ve Meçhul Denizci heykeli yürüme mesafesinde. Biraz ileride Daskalopetra var; Paskalya’da ise ünlü roket savaşı yapılır. Denize girmek için Mersinidi plajı biraz kuzeyde.",
+  },
+  host: {
+    eyebrow: "Ev sahibiniz",
+    title: "Merhaba, ben Athina",
+    body: "Gelmeden önce de, konaklamanız boyunca da ihtiyacınız olan her şey için buradayım. Sorunuz varsa bana buradan sohbetle ya da Airbnb üzerinden yazın.",
+    chat: "Bana yazın",
+    airbnb: "Airbnb profilim",
+  },
+  faq: {
+    title: "Sık sorulan sorular",
+    items: [
+      { q: "Kaç kişi kalabilir?", a: "{guests} kişiye kadar: ana yatak odasında king yatak, ikinci odada tek kişilik yatak ve oturma odasında çekyat. Bir banyo vardır." },
+      { q: "Nasıl rezervasyon yaparım?", a: "Airbnb veya Booking.com üzerinden. Müsait tarihleri, toplam fiyatı ve iptal koşullarını orada görürsünüz." },
+      { q: "Giriş ve çıkış saatleri nedir?", a: "Saatler rezervasyonunuzda yazar. Farklı bir saate ihtiyacınız olursa bize yazın, mümkünse ayarlayalım." },
+      { q: "Otopark var mı?", a: "Evet, ücretsiz özel otopark. Yaklaşık 90 metre uzakta halka açık bir otopark da var." },
+      { q: "Çocuklar için neler var?", a: "Bebek yatağı (ücretsiz, 0–3 yaş), park yatak, mama sandalyesi ve oyuncaklar. Rezervasyon sırasında ihtiyacınızı bize bildirin." },
+      { q: "Daireden çalışabilir miyim?", a: "Evet, Wi-Fi ve oturma odasında bir çalışma masası var." },
+      { q: "Deniz ne kadar uzakta?", a: "Yaklaşık {distance} metre. Market, fırın, kafe ve eczaneler de yakında." },
+      { q: "Evcil hayvan kabul ediyor musunuz?", a: "Maalesef hayır." },
+    ],
+  },
+  closing: {
+    title: "Sakız’da görüşmek üzere",
+    body: "Tarihleri ve fiyatları Airbnb veya Booking.com’da görün.",
+    action: "Rezervasyon",
+  },
+  booking: {
+    title: "Rezervasyon",
+    body: "Müsait tarihleri, toplam fiyatı ve iptal koşullarını görmek için bir platform seçin.",
+  },
+  footer: {
+    place: "Vrontados, Sakız Adası, Yunanistan",
+    registration: "Kayıt no.",
+    privacy: "Gizlilik",
+    contact: "İletişim",
+    top: "Başa dön",
+  },
+  lightbox: {
+    previous: "Önceki fotoğraf",
+    next: "Sonraki fotoğraf",
+    zoomIn: "Yakınlaştır",
+    zoomOut: "Uzaklaştır",
+    fullscreen: "Tam ekran",
+    exitFullscreen: "Tam ekrandan çık",
+    hideThumbs: "Küçük resimleri gizle",
+    showThumbs: "Küçük resimleri göster",
+  },
 };
-export function getStayCopy(locale: string): StayCopy { return ({ en, el, tr } as Record<string, StayCopy>)[locale] ?? en; }
-export function normalizeStayLocale(locale: string): StayLocale { return locale === "el" || locale === "tr" ? locale : "en"; }
-export function fillCopy(value: string, values: Record<string, string | number>): string { return value.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? `{${key}}`)); }
+
+const copies: Record<StayLocale, StayCopy> = { el, en, tr };
+
+export function getStayCopy(locale: string): StayCopy {
+  return copies[normalizeStayLocale(locale)];
+}
+
+export function normalizeStayLocale(locale: string): StayLocale {
+  return locale === "el" || locale === "tr" ? locale : "en";
+}
+
+export function fillCopy(value: string, values: Record<string, string | number>): string {
+  return value.replace(/\{(\w+)\}/g, (_, key: string) => String(values[key] ?? `{${key}}`));
+}
+
+/** Locale-aware decimals: Greek and Turkish use a decimal comma (9,9 not 9.9). */
+export function formatScore(value: number, locale: StayLocale): string {
+  return value.toLocaleString({ el: "el-GR", en: "en-GB", tr: "tr-TR" }[locale], { minimumFractionDigits: 1, maximumFractionDigits: 1 });
+}
+
+export function formatDate(isoDate: string, locale: StayLocale): string {
+  return new Date(`${isoDate}T12:00:00Z`).toLocaleDateString({ el: "el-GR", en: "en-GB", tr: "tr-TR" }[locale], { day: "numeric", month: "long", year: "numeric", timeZone: "UTC" });
+}

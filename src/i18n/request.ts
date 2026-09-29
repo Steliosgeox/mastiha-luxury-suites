@@ -1,14 +1,9 @@
 import { getRequestConfig } from "next-intl/server";
 import { routing } from "./routing";
 
+// next-intl handles locale routing only. Copy lives in typed modules under src/content.
 export default getRequestConfig(async ({ requestLocale }) => {
-  let locale = await requestLocale;
-  if (!locale || !routing.locales.includes(locale as "en" | "el" | "tr")) {
-    locale = routing.defaultLocale;
-  }
-
-  return {
-    locale,
-    messages: (await import(`../../messages/${locale}.json`)).default,
-  };
+  const requested = await requestLocale;
+  const locale = routing.locales.includes(requested as (typeof routing.locales)[number]) ? requested! : routing.defaultLocale;
+  return { locale, messages: {} };
 });

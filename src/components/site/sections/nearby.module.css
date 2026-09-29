@@ -1,0 +1,66 @@
+.nearby { padding-block: 0 var(--section-y); }
+.header {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 24px clamp(40px, 6vw, 100px);
+  align-items: end;
+  padding-top: 48px;
+  border-top: 1px solid var(--line);
+}
+.filters { display: flex; flex-wrap: wrap; gap: 4px 6px; margin-top: 28px; }
+.filters button {
+  min-height: 40px;
+  padding: 0 14px;
+  border: 1px solid transparent;
+  border-radius: 999px;
+  background: none;
+  color: var(--muted);
+  font-size: 13px;
+  cursor: pointer;
+  transition: color 180ms ease, background-color 180ms ease, border-color 180ms ease;
+}
+.filters button[aria-pressed="true"] { color: var(--ink); border-color: var(--ink); }
+.count { margin: 18px 0 4px; font-size: 12px; color: var(--muted); }
+
+.list {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0 44px;
+  margin: 0;
+  padding: 0;
+  list-style: none;
+}
+.list li { min-width: 0; border-bottom: 1px solid var(--line); }
+.row {
+  display: grid;
+  grid-template-columns: 26px minmax(0, 1fr) auto 18px;
+  align-items: center;
+  gap: 16px;
+  min-height: 88px;
+  padding: 18px 0;
+}
+.icon { width: 24px; height: 24px; color: var(--accent); }
+.identity { display: grid; gap: 6px; min-width: 0; }
+.identity small { font-size: 11px; color: var(--muted); }
+.identity strong {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: 16px;
+  font-weight: 420;
+  letter-spacing: -.02em;
+  line-height: 1.4;
+  overflow-wrap: anywhere;
+}
+.distance { font-size: 15px; white-space: nowrap; font-variant-numeric: tabular-nums; }
+.distance small { font-size: 12px; color: var(--muted); }
+.arrow { width: 18px; height: 18px; transition: transform 180ms ease; }
+.note { max-width: 90ch; margin: 24px 0 0; font-size: 12px; line-height: 1.7; color: var(--muted); }
+
+@media (hover: hover) and (pointer: fine) {
+  .filters button:hover { color: var(--ink); background: var(--surface); }
+  a.row:hover .arrow { transform: translate(2px, -2px); }
+  a.row:hover strong { text-decoration: underline; text-underline-offset: 4px; }
+}
+@media (max-width: 860px) {
+  .header,
+  .list { grid-template-columns: 1fr; }
+}

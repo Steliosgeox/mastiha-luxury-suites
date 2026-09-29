@@ -1,0 +1,54 @@
+/* Full-bleed photograph sections: the balcony and the closing call to action. */
+.scene {
+  position: relative;
+  isolation: isolate;
+  overflow: hidden;
+  height: 86svh;
+  min-height: 560px;
+  color: #fff;
+  background: #2a2c2e;
+}
+.media { position: absolute; inset: 0; z-index: 0; overflow: hidden; }
+.image { object-fit: cover; }
+.scrim {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+  pointer-events: none;
+  background: linear-gradient(90deg, #121416b8 0%, #12141640 55%, #12141600 80%);
+}
+.copy {
+  position: absolute;
+  z-index: 2;
+  top: 50%;
+  left: var(--gutter);
+  max-width: 480px;
+  transform: translateY(-50%);
+}
+.copy > p:not(:first-child) { max-width: 36ch; font-size: 16px; line-height: 1.7; }
+.copy > button { margin-top: 12px; }
+.copy [data-rule] { color: #ffffffcc; }
+
+.closing { height: 74svh; min-height: 520px; }
+.closing .scrim { background: linear-gradient(0deg, #121416d9 0%, #12141626 60%, #12141600 90%); }
+.closingCopy {
+  position: absolute;
+  z-index: 2;
+  left: var(--gutter);
+  right: var(--gutter);
+  bottom: clamp(48px, 8vh, 88px);
+  display: flex;
+  align-items: end;
+  justify-content: space-between;
+  gap: 32px;
+}
+.closingCopy h2 { margin: 0; font-size: clamp(42px, 6vw, 96px); }
+.closingCopy p { margin: 0 0 20px; font-size: 15px; }
+
+@media (max-width: 760px) {
+  .scene { height: 78svh; min-height: 480px; }
+  .scrim { background: linear-gradient(90deg, #121416c7, #12141633); }
+  .copy { right: var(--gutter); }
+  .closing { height: 70svh; }
+  .closingCopy { flex-direction: column; align-items: start; bottom: 110px; }
+}

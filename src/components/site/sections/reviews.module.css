@@ -1,0 +1,55 @@
+.reviews { background: var(--surface); border-block: 1px solid var(--line); }
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 5fr) minmax(0, 7fr);
+  gap: 40px clamp(40px, 6vw, 100px);
+  align-items: center;
+  padding-block: clamp(64px, 8vw, 110px);
+}
+.note { max-width: 44ch; margin: 0; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.cards { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
+.card {
+  display: flex;
+  flex-direction: column;
+  padding: 26px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  background: var(--paper);
+  transition: transform 300ms var(--ease-out), box-shadow 300ms ease, border-color 200ms ease;
+}
+.brand { display: flex; align-items: center; gap: 10px; font-size: 14px; }
+.brand > span { margin-left: auto; color: var(--muted); }
+.mark { width: 22px; height: 22px; flex: none; }
+.score { display: flex; align-items: baseline; gap: 8px; margin: 34px 0 8px; }
+.star { width: 20px; height: 20px; color: var(--accent); align-self: center; }
+.score strong {
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: 46px;
+  font-weight: 330;
+  line-height: 1;
+  letter-spacing: -.045em;
+  font-variant-numeric: tabular-nums;
+}
+.score small { font-size: 13px; color: var(--muted); }
+.label { margin-bottom: 24px; font-size: 14px; font-weight: 500; }
+.meta {
+  display: flex;
+  justify-content: space-between;
+  gap: 12px;
+  margin-top: auto;
+  padding-top: 14px;
+  border-top: 1px solid var(--line);
+  font-size: 12px;
+  color: var(--muted);
+}
+.meta > span:last-child { text-align: right; }
+
+@media (hover: hover) and (pointer: fine) {
+  .card:hover { transform: translateY(-4px); border-color: #c9c9c5; box-shadow: 0 18px 40px #1d1f210f; }
+}
+@media (max-width: 900px) {
+  .inner { grid-template-columns: 1fr; }
+}
+@media (max-width: 520px) {
+  .cards { grid-template-columns: 1fr; }
+}
