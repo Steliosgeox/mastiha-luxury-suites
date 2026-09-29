@@ -11,6 +11,7 @@ import { SplitText } from "gsap/SplitText";
 
     data-hero / data-hero-media / data-hero-title / data-hero-fade   hero entrance and exit
     data-split          heading: lines rise from a mask when scrolled into view
+    data-split-chars    display word: letters rise one by one
     data-reveal         block fades up
     data-stagger        direct children fade up one after another
     data-photo-reveal   photo frame opens from a clipped inset
@@ -46,6 +47,20 @@ export function useSiteMotion(root: RefObject<HTMLElement | null>) {
             stagger: .09,
             ease: "expo.out",
             scrollTrigger: { trigger: heading, start: "top 88%", once: true },
+          }),
+        });
+      }
+
+      for (const word of all("[data-split-chars]")) {
+        SplitText.create(word, {
+          type: "chars",
+          mask: "chars",
+          onSplit: self => gsap.from(self.chars, {
+            yPercent: 100,
+            duration: 1.4,
+            stagger: .05,
+            ease: "expo.out",
+            scrollTrigger: { trigger: word, start: "top 95%", once: true },
           }),
         });
       }
