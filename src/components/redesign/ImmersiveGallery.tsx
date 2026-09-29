@@ -12,7 +12,7 @@ export function ImmersiveGallery({ locale = 'en' }: { locale?: StayLocale }) {
   const [expanded, setExpanded] = useState(false);
   const c = getStayCopy(locale), l = listingCopy(locale);
   const categories: {id:'all'|PhotoCategory;label:string}[] = [{id:'all',label:c.all},{id:'living',label:l.living},{id:'kitchen',label:l.kitchen},{id:'bedrooms',label:c.bedrooms},{id:'family',label:l.familyFilter},{id:'bathroom',label:l.bathroom},{id:'outdoors',label:c.outdoors},{id:'neighbourhood',label:l.neighbourhood}];
-  const featured = ['desk','sofa-bed','smart-tv','vanity','bathroom-wide','arrival'] as const;
+  const featured = ['kids-corner','sofa-bed','cookware','vanity','balcony-wide','arrival'] as const;
   const photos = filter === 'all'
     ? [...featured.map(id => stayPhotos.find(photo => photo.id === id)!).filter(Boolean), ...stayPhotos.filter(photo => !featured.includes(photo.id as typeof featured[number]))]
     : stayPhotos.filter(photo => photo.category === filter);

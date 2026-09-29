@@ -26,7 +26,10 @@ for (const filename of walk('src').filter(f => /\.tsx?$/.test(f))) {
 const photos=JSON.parse(fs.readFileSync('src/content/stay-media.generated.json','utf8'));
 const hashes=new Set();
 for(const photo of photos){
- if(!photo.source?.originalSha256||!(photo.source.platform==='Airbnb'&&photo.source.listingId==='1368953469779774276'||photo.source.platform==='Booking.com'&&photo.source.listingId==='mastiha-luxury-suites'))errors.push(`Unverified source: ${photo.id}`);
+ // Only Mastiha Luxury Suites' own listings: Airbnb 1368953469779774276 and Booking.com /hotel/gr/mastiha-luxury-suites.
+ const ownAirbnb=photo.source?.platform==='Airbnb'&&photo.source.listingId==='1368953469779774276'&&/^https:\/\/a0\.muscache\.com\/im\/pictures\/(hosting|miso)\/Hosting-(1368953469779774276|U3RheVN1cHBseUxpc3Rpbmc6MTM2ODk1MzQ2OTc3OTc3NDI3Ng==)\/original\//.test(photo.source.url);
+ const ownBooking=photo.source?.platform==='Booking.com'&&photo.source.listingId==='mastiha-luxury-suites'&&/^https:\/\/www\.booking\.com\/hotel\/gr\/mastiha-luxury-suites\.html$/.test(photo.source.page)&&/^https:\/\/cf\.bstatic\.com\/xdata\/images\/hotel\//.test(photo.source.url);
+ if(!photo.source?.originalSha256||!(ownAirbnb||ownBooking))errors.push(`Photograph not from our own listing: ${photo.id}`);
  if(hashes.has(photo.source.webpSha256))errors.push(`Duplicate photograph: ${photo.id}`);
  hashes.add(photo.source.webpSha256);
  for(const url of [photo.src,photo.thumbnail,...photo.srcSet.map(i=>i.src)])if(!/^\/photography\/(airbnb|booking)\//.test(url)||!fs.existsSync('public'+url))errors.push(`Missing true photo: ${url}`);
