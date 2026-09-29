@@ -32,7 +32,8 @@ for(const photo of photos){
  if(!photo.source?.originalSha256||!(ownAirbnb||ownBooking))errors.push(`Photograph not from our own listing: ${photo.id}`);
  if(hashes.has(photo.source.webpSha256))errors.push(`Duplicate photograph: ${photo.id}`);
  hashes.add(photo.source.webpSha256);
- for(const url of [photo.src,photo.thumbnail,...photo.srcSet.map(i=>i.src)])if(!/^\/photography\/(airbnb|booking)\//.test(url)||!fs.existsSync('public'+url))errors.push(`Missing true photo: ${url}`);
+ // src/lib/image-loader.ts serves the -640 and -1280 files for smaller widths.
+ for(const url of [photo.src,photo.thumbnail,...photo.srcSet.map(i=>i.src),photo.src.replace(/\.webp$/,'-640.webp'),photo.src.replace(/\.webp$/,'-1280.webp')])if(!/^\/photography\/(airbnb|booking)\//.test(url)||!fs.existsSync('public'+url))errors.push(`Missing true photo: ${url}`);
 }
 if(errors.length){console.error(errors.join('\n'));process.exit(1);}
 console.log(`CSS references and all variants of ${photos.length} real listing photographs passed.`);
