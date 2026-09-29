@@ -92,7 +92,7 @@ const topics: [Topic, RegExp][] = [
 const categories: [NearbyCategory, RegExp][] = [
   ["groceries", /super ?market|grocer\w*|shop\w*|σουπερ|μαρκετ|ψωνι|market/],
   ["bakery", /baker\w*|bread|φουρνο|αρτοποι|ψωμι|firin|ekmek/],
-  ["coffee", /\bcafe\b|cafes|coffee shop|beach bar|καφετερ|καφε\b|kafe/],
+  ["coffee", /\bcafes?\b|coffee shop|beach bar|καφετερ|καφε(?=\s|$)|kafe/],
   ["food", /restaurant|\beat\b|food|dinner|lunch|taverna|grill|φαγητ|φαι|εστιατορ|ταβερν|ψητοπωλ|σουβλακ|restoran|yemek/],
   ["pharmacy", /pharmac\w*|chemist|medicine|φαρμακ|eczane|ilac/],
   ["transport", /rent\w*|car hire|petrol|fuel|gas station|ενοικιασ|βενζιν|καυσιμ|kiralik|benzin/],
@@ -132,7 +132,8 @@ export const propertyGuide: AssistantProvider = {
     };
     const say = (topic: Topic | "unknown") => fillCopy(answers[locale][topic], values);
 
-    if (/^(hi|hello|hey|good (morning|evening)|γεια|γεια σας|καλημερα|καλησπερα|merhaba|selam|iyi gunler)\b/.test(question) && question.split(" ").length <= 3) {
+    // Note: \b only knows Latin letters, so Greek words end with a lookahead instead.
+    if (/^(hi|hello|hey|good (morning|evening)|γεια|καλημερα|καλησπερα|merhaba|selam|iyi gunler)(?=\s|$)/.test(question) && question.split(" ").length <= 3) {
       return { reply: say("greeting"), mode: "guide", sources: [] };
     }
     const nearby = nearbyAnswer(locale, question);

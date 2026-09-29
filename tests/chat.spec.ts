@@ -14,6 +14,8 @@ test.describe("automated guide", () => {
     expect((await ask("el", "Έχετε κούνια για μωρό;")).reply).toContain("κούνια");
     expect((await ask("en", "Where can I buy bread?")).reply).toContain("Bakery");
     expect((await ask("tr", "Evcil hayvan kabul ediyor musunuz?")).reply).toContain("Maalesef");
+    expect((await ask("el", "Γεια σας!")).reply).toContain("Γεια σας! Είμαι ο αυτόματος βοηθός");
+    expect((await ask("el", "Πού μπορώ να πιω καφέ;")).reply).toContain("ZEFYROS");
     const unknown = await ask("el", "Πόσο απέχει το αεροδρόμιο;");
     expect(unknown.suggestHost).toBe(true);
     expect(unknown.reply).toContain("Αθηνά");
