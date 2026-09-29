@@ -1,5 +1,6 @@
-import { AssistantMount } from "@/components/assistant/AssistantMount";
+import { ChatMount } from "@/components/chat/ChatMount";
 import { getStayCopy, type StayLocale } from "@/content/stay-copy";
+import { liveChatEnabled } from "@/lib/chat/service";
 import { getContactChannels } from "@/lib/contact";
 import { SiteShell } from "./SiteShell";
 import { Amenities } from "./sections/Amenities";
@@ -46,6 +47,6 @@ export function SitePage({ locale }: { locale: StayLocale }) {
       </main>
       <Footer locale={locale} contact={contact} />
     </SiteShell>
-    <AssistantMount locale={locale} contact={contact} />
+    <ChatMount locale={locale} liveEnabled={liveChatEnabled()} fallback={{ whatsapp: contact.whatsapp, email: contact.email }} />
   </>;
 }
