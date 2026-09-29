@@ -17,7 +17,7 @@ export async function POST(request: Request) {
     const session = createSession();
     (await cookies()).set(ADMIN_COOKIE, session.value, {
       httpOnly: true,
-      secure: process.env.NODE_ENV === "production",
+      secure: process.env.VERCEL === "1" || new URL(request.url).protocol === "https:",
       sameSite: "strict",
       path: "/",
       maxAge: session.maxAge,

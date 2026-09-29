@@ -19,6 +19,6 @@ export const viewport: Viewport = { themeColor: "#f6f5f1", viewportFit: "cover" 
 /** The host's inbox. A separate root layout: no public site chrome, never indexed. */
 export default function AdminLayout({ children }: { children: ReactNode }) {
   return <html lang="el" className={`${display.variable} ${sans.variable}`}>
-    <body className="antialiased">{children}</body>
+    <body>{children}</body>
   </html>;
 }

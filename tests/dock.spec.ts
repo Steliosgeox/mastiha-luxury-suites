@@ -1,5 +1,14 @@
 import { test, expect } from "@playwright/test";
 import { createHash } from "node:crypto";
+import { readFileSync } from "node:fs";
+import preserved from "./dock-preserved.json";
+
+// The dock is a finished, approved component: its source and images must not change.
+test("dock source and images are unchanged", () => {
+  for (const [file, hash] of Object.entries(preserved)) {
+    expect(createHash("sha256").update(readFileSync(file)).digest("hex"), file).toBe(hash);
+  }
+});
 
 for (const width of [320, 390, 768, 1440]) {
   test(`dock contains every icon and booking label at ${width}px`, async ({ page }, testInfo) => {
@@ -35,12 +44,12 @@ for (const width of [320, 390, 768, 1440]) {
     const book = dock.getByRole("button", { name: "Book your stay" });
     await expect(book.getByText("Book", { exact: true })).toBeVisible();
     await expect(book.locator("img")).toHaveAttribute("src", "/ui/dock/booking.webp");
-    await expect(dock.getByRole("button", { name: "The suite" }).locator("img")).toHaveAttribute("src", "/ui/dock/suite-repaired.webp");
+    await expect(dock.getByRole("button", { name: "The apartment" }).locator("img")).toHaveAttribute("src", "/ui/dock/suite-repaired.webp");
     await dock.screenshot({ path: testInfo.outputPath(`dock-${width}.png`) });
     await page.screenshot({ path: testInfo.outputPath(`page-${width}.png`) });
     await book.focus();
     await page.keyboard.press("Enter");
-    const modal = page.getByRole("dialog", { name: "Your stay starts here." });
+    const modal = page.getByRole("dialog", { name: "Book your stay" });
     await expect(modal).toBeVisible();
     await expect(modal.locator('a[href="https://www.airbnb.com/rooms/1368953469779774276"]')).toBeVisible();
     await expect(modal.locator('a[href="https://www.booking.com/hotel/gr/mastiha-luxury-suites.html"]')).toBeVisible();

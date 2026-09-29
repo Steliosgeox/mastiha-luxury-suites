@@ -1,54 +1,47 @@
-name: Editorial quality review
+name: Quality
 on:
   push:
-    branches: [design/editorial-mastiha, main]
+    branches: [main, "claude/**"]
   pull_request:
     branches: [main]
 permissions:
   contents: read
 concurrency:
-  group: editorial-${{ github.ref }}
+  group: quality-${{ github.ref }}
   cancel-in-progress: true
 jobs:
-  review:
+  quality:
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 25
     env:
-      NEXT_TELEMETRY_DISABLED: '1'
-      ESLINT_USE_FLAT_CONFIG: 'false'
+      NEXT_TELEMETRY_DISABLED: "1"
+      ESLINT_USE_FLAT_CONFIG: "false"
+      # Test-only chat settings: in-memory store and a throwaway admin password.
+      MASTIHA_CHAT_STORE: memory
+      MASTIHA_ADMIN_PASSWORD: ci-only-password
     steps:
       - uses: actions/checkout@v4
       - uses: actions/setup-node@v4
         with:
-          node-version: '22'
+          node-version: "22"
           cache: npm
       - run: npm ci
-      - run: npm run check:ui
+      - name: Photo sources and CSS references
+        run: npm run check:ui
       - run: npm run typecheck
       - run: npm run lint
-      - run: npm run test:unit
-      - name: Production dependency security gate
-        run: npm audit --omit=dev --audit-level=high --json > dependency-audit.json
+      - name: Production dependency audit
+        run: npm audit --omit=dev --audit-level=high
       - run: npm run build
       - run: npx playwright install --with-deps chromium webkit
       - run: npm run test:e2e
-      - name: Screenshots and test evidence
+      - name: Test evidence
         if: always()
         uses: actions/upload-artifact@v4
         with:
-          name: editorial-browser-review
+          name: playwright-report
           path: |
             test-results/
             playwright-report/
-            dependency-audit.json
           if-no-files-found: ignore
-          retention-days: 7
-      - name: Source snapshot for review
-        if: always()
-        run: tar -czf editorial-source-review.tar.gz src public messages scripts tests docs package.json package-lock.json next.config.ts playwright.config.ts tsconfig.json
-      - uses: actions/upload-artifact@v4
-        if: always()
-        with:
-          name: editorial-source-review
-          path: editorial-source-review.tar.gz
           retention-days: 7

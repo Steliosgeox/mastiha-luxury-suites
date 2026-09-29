@@ -25,7 +25,7 @@ export default async function LocaleLayout({ children, params }: Props) {
   if (!routing.locales.includes(locale as (typeof routing.locales)[number])) notFound();
   setRequestLocale(locale);
   return <html lang={locale} className={`${display.variable} ${sans.variable}`}>
-    <body className="font-sans antialiased">
+    <body>
       <SmoothScrollProvider>{children}</SmoothScrollProvider>
     </body>
   </html>;
