@@ -7,11 +7,6 @@ import { notifyHost } from "./push";
 import { chatStore, type ChatStore } from "./store";
 import { LIMITS, type ChatEntry, type Conversation, type StoredConversation } from "./types";
 
-/** Conversations are stored, and Athina can answer, whenever the chat database is connected. */
-export function liveChatEnabled(): boolean {
-  return chatStore() !== null;
-}
-
 export function requireStore(): ChatStore {
   const store = chatStore();
   if (!store) throw new RequestFailure(503, "Live chat is not connected.");

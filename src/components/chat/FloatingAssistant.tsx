@@ -43,14 +43,14 @@ const Loader = () => (
   </svg>
 );
 
-type Props = { locale: StayLocale; stored: boolean; initiallyOpen?: boolean; initialHandoff?: boolean };
+type Props = { locale: StayLocale; initiallyOpen?: boolean; initialHandoff?: boolean };
 
-export default function FloatingAssistant({ locale, stored, initiallyOpen = false, initialHandoff = false }: Props) {
+export default function FloatingAssistant({ locale, initiallyOpen = false, initialHandoff = false }: Props) {
   const copy = CHAT_COPY[locale];
   const [isOpen, setIsOpen] = useState(initiallyOpen);
   const [input, setInput] = useState("");
   const [detailsState, setDetailsState] = useState<"ask" | "saved" | "dismissed">("ask");
-  const chat = useConcierge({ locale, open: isOpen, stored });
+  const chat = useConcierge({ locale, open: isOpen });
   const { lenis } = useSmoothScroll();
 
   const chatScrollerRef = useRef<HTMLDivElement>(null);
@@ -182,7 +182,7 @@ export default function FloatingAssistant({ locale, stored, initiallyOpen = fals
     type="button"
     className={`chatbot__quick-action${withHost ? " chatbot__quick-action--success" : ""}${chat.handingOff ? " chatbot__quick-action--loading" : ""}`}
     onClick={() => void handoff()}
-    disabled={!stored || chat.handingOff || (withHost && chat.status === "open")}
+    disabled={chat.handingOff || (withHost && chat.status === "open")}
     data-testid="assistant-handoff"
   >
     {chat.handingOff ? <span className="chatbot__quick-action-spinner" aria-hidden="true" />
@@ -194,7 +194,9 @@ export default function FloatingAssistant({ locale, stored, initiallyOpen = fals
   const renderItem = (message: ChatItem, index: number) => {
     if (message.kind === "system") {
       return <div key={message.id} className="chatbot__message chatbot__message--system">
-        <p className="chatbot__system-pill">{copy.system[message.text as keyof typeof copy.system] ?? message.text}</p>
+        {message.text === "unavailable"
+          ? <p className="chatbot__system-pill">{copy.unavailable} <a href={property.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer">Airbnb</a> · <a href={property.bookingLinks.booking} target="_blank" rel="noopener noreferrer">Booking.com</a></p>
+          : <p className="chatbot__system-pill">{copy.system[message.text as keyof typeof copy.system] ?? message.text}</p>}
       </div>;
     }
     if (message.kind === "guest") {
@@ -217,7 +219,7 @@ export default function FloatingAssistant({ locale, stored, initiallyOpen = fals
       <div className="chatbot__message-content">
         {host && <p className="chatbot__message-sender">{copy.names.host}</p>}
         <MessageBody content={message.text} />
-        {message.offersHost && !withHost && stored && index === chat.items.length - 1 && <div className="chatbot__message-actions">{hostAction}</div>}
+        {message.offersHost && !withHost && index === chat.items.length - 1 && <div className="chatbot__message-actions">{hostAction}</div>}
       </div>
     </div>;
   };
@@ -267,7 +269,7 @@ export default function FloatingAssistant({ locale, stored, initiallyOpen = fals
             <MapPin className="chatbot__quick-action-icon" aria-hidden="true" />
             <span>{copy.quick.directions}</span>
           </a>
-          {stored && hostAction}
+          {hostAction}
         </div>
 
         {/* ── MAIN CONTAINER ── */}

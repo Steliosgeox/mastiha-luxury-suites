@@ -15,7 +15,7 @@ import { readSession } from "./useConcierge";
 */
 const FloatingAssistant = dynamic(() => import("./FloatingAssistant"), { ssr: false });
 
-export function ChatMount({ locale, stored }: { locale: StayLocale; stored: boolean }) {
+export function ChatMount({ locale }: { locale: StayLocale }) {
   const [load, setLoad] = useState(false);
   const [openOnLoad, setOpenOnLoad] = useState(false);
   const [hostOnLoad, setHostOnLoad] = useState(false);
@@ -29,16 +29,16 @@ export function ChatMount({ locale, stored }: { locale: StayLocale; stored: bool
     };
     window.addEventListener("mastiha:assistant-open", onOpen);
     // A returning guest with a conversation loads straight away, so Athina's replies show.
-    if (stored && readSession()) start();
+    if (readSession()) start();
     // Safari has no requestIdleCallback; a timer stands in for it.
     const idle = typeof requestIdleCallback === "function" ? requestIdleCallback(start, { timeout: 4000 }) : setTimeout(start, 2500);
     return () => {
       window.removeEventListener("mastiha:assistant-open", onOpen);
       if (typeof cancelIdleCallback === "function") cancelIdleCallback(idle as number); else clearTimeout(idle);
     };
-  }, [stored]);
+  }, []);
 
-  if (load) return <FloatingAssistant locale={locale} stored={stored} initiallyOpen={openOnLoad} initialHandoff={hostOnLoad} />;
+  if (load) return <FloatingAssistant locale={locale} initiallyOpen={openOnLoad} initialHandoff={hostOnLoad} />;
   return <button type="button" className="chatbot-toggle" aria-label={CHAT_COPY[locale].open} onClick={() => { setOpenOnLoad(true); setLoad(true); }} data-testid="assistant-toggle">
     <MessageCircle />
   </button>;

@@ -8,7 +8,9 @@ import type { ChatEntry, ConversationStatus, Handler } from "@/lib/chat/types";
   The guest's side of a conversation. With the chat database connected, every message is
   stored on the server (for Athina's inbox, 30 days) and the assistant answers there; the
   conversation id and its secret token stay in this browser so a reload continues it.
-  Without the database the assistant still answers, statelessly, and nothing is kept.
+  If the server says the database is not connected (503), the chat carries on without it:
+  the assistant still answers, statelessly, and nothing is kept. Deciding this at run time
+  rather than at build time means connecting the database needs no special deploy order.
 */
 
 export const SESSION_KEY = "mastiha.chat.v2";
@@ -40,11 +42,16 @@ const toItem = (entry: ChatEntry): ChatItem => ({ id: `e-${entry.seq}`, kind: en
 let localId = 0;
 const nextId = () => `local-${Date.now()}-${localId++}`;
 
+/** The chat database is not connected on this deployment. */
+class Unavailable extends Error {}
+
 type Poll = { status: ConversationStatus; handler: Handler; entries: ChatEntry[]; hostOnline: boolean; hostTyping: boolean; unread: number };
 type Written = { id?: string; token?: string; entries: ChatEntry[]; status: ConversationStatus; handler: Handler };
 
-export function useConcierge({ locale, open, stored }: { locale: StayLocale; open: boolean; stored: boolean }) {
+export function useConcierge({ locale, open }: { locale: StayLocale; open: boolean }) {
   const [items, setItems] = useState<ChatItem[]>([]);
+  const [stored, setStored] = useState(true);
+  const storedRef = useRef(true);
   const [handler, setHandler] = useState<Handler>("bot");
   const [status, setStatus] = useState<ConversationStatus>("open");
   const [thinking, setThinking] = useState(false);
@@ -94,6 +101,7 @@ export function useConcierge({ locale, open, stored }: { locale: StayLocale; ope
       cache: "no-store",
     });
     if (response.status === 404) { reset(); return; }
+    if (response.status === 503) { storedRef.current = false; setStored(false); return; }
     if (!response.ok) return;
     const data = await response.json() as Poll;
     merge(data.entries);
@@ -105,12 +113,11 @@ export function useConcierge({ locale, open, stored }: { locale: StayLocale; ope
 
   // Continue the conversation from an earlier visit.
   useEffect(() => {
-    if (!stored) return;
     const saved = readSession();
     if (!saved) return;
     session.current = saved;
     void poll(false);
-  }, [stored, poll]);
+  }, [poll]);
 
   // Athina's replies arrive by polling, only while she has the conversation: every 3 s with
   // the chat open, every 25 s in the background, never in a hidden tab.
@@ -136,6 +143,7 @@ export function useConcierge({ locale, open, stored }: { locale: StayLocale; ope
       body: JSON.stringify({ locale, ...body }),
       signal: AbortSignal.timeout(35_000),
     });
+    if (response.status === 503) throw new Unavailable();
     if (!response.ok) throw new Error(String(response.status));
     const data = await response.json() as Written;
     session.current = { id: data.id!, token: data.token! };
@@ -153,6 +161,7 @@ export function useConcierge({ locale, open, stored }: { locale: StayLocale; ope
       signal: AbortSignal.timeout(35_000),
     });
     if (response.status === 404) return null;
+    if (response.status === 503) throw new Unavailable();
     if (!response.ok) throw new Error(String(response.status));
     return await response.json() as Written;
   }, []);
@@ -184,27 +193,39 @@ export function useConcierge({ locale, open, stored }: { locale: StayLocale; ope
     const answeredByBot = handler === "bot";
     if (answeredByBot) setThinking(true);
     try {
-      if (!stored) {
-        const data = await askStateless(text);
-        setItems(list => [...list.map(item => item.id === id ? { ...item, state: undefined } : item), { id: nextId(), kind: "bot", text: data.reply!, at: Date.now(), offersHost: data.offersHost }]);
-        return;
+      if (storedRef.current) {
+        try {
+          let data = session.current ? await post("/messages", { text }) : null;
+          // No conversation yet, or it expired after 30 days: start a new one with this message.
+          if (!data) { if (session.current) reset(); data = await start({ text }); }
+          merge(data.entries, id);
+          apply(data);
+          return;
+        } catch (error) {
+          if (!(error instanceof Unavailable)) throw error;
+          storedRef.current = false;
+          setStored(false);
+        }
       }
-      let data = session.current ? await post("/messages", { text }) : null;
-      // No conversation yet, or it expired after 30 days: start a new one with this message.
-      if (!data) { if (session.current) reset(); data = await start({ text }); }
-      merge(data.entries, id);
-      apply(data);
+      const data = await askStateless(text);
+      setItems(list => [...list.map(item => item.id === id ? { ...item, state: undefined } : item), { id: nextId(), kind: "bot", text: data.reply!, at: Date.now(), offersHost: data.offersHost }]);
     } catch {
       setItems(list => list.map(item => item.id === id ? { ...item, state: "failed" } : item));
       setFailed(true);
     } finally {
       setThinking(false);
     }
-  }, [stored, handler, askStateless, post, start, merge, apply, reset]);
+  }, [handler, askStateless, post, start, merge, apply, reset]);
+
+  /** Without the database there is no inbox: say where Athina answers instead. */
+  const noInbox = useCallback(() => {
+    setItems(list => list.some(item => item.kind === "system" && item.text === "unavailable") ? list
+      : [...list, { id: nextId(), kind: "system", text: "unavailable", at: Date.now() }]);
+  }, []);
 
   /** "Talk to Athina": the conversation goes to her inbox and her phone. */
   const handoff = useCallback(async (): Promise<boolean> => {
-    if (!stored) return false;
+    if (!storedRef.current) { noInbox(); return false; }
     if (handler === "host" && status === "open") return true;
     setHandingOff(true);
     try {
@@ -213,9 +234,12 @@ export function useConcierge({ locale, open, stored }: { locale: StayLocale; ope
       merge(data.entries);
       apply(data);
       return true;
-    } catch { setFailed(true); return false; }
-    finally { setHandingOff(false); }
-  }, [stored, handler, status, post, start, merge, apply, reset]);
+    } catch (error) {
+      if (error instanceof Unavailable) { storedRef.current = false; setStored(false); noInbox(); }
+      else setFailed(true);
+      return false;
+    } finally { setHandingOff(false); }
+  }, [handler, status, post, start, merge, apply, reset, noInbox]);
 
   const saveDetails = useCallback(async (details: { name: string; email: string }) => {
     const current = session.current;
@@ -228,5 +252,5 @@ export function useConcierge({ locale, open, stored }: { locale: StayLocale; ope
     return Boolean(response?.ok);
   }, []);
 
-  return { items, handler, status, thinking, failed, hostOnline, hostTyping, unread, handingOff, send, handoff, saveDetails, reset };
+  return { items, stored, handler, status, thinking, failed, hostOnline, hostTyping, unread, handingOff, send, handoff, saveDetails, reset };
 }
