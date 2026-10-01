@@ -6,7 +6,7 @@ import { formatScore, normalizeStayLocale, type StayLocale } from "@/content/sta
 import { photoCaption } from "@/content/stay-media";
 import { guide } from "./guides";
 
-export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://mastiha-luxury-suites.vercel.app").replace(/\/$/, "");
+export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://mastihaluxurysuites.com").replace(/\/$/, "");
 
 export const descriptions: Record<StayLocale, string> = {
   el: "Διαμέρισμα 75 τ.μ. για έως τέσσερα άτομα στον Βροντάδο Χίου, 40 μέτρα από τη θάλασσα. Δύο υπνοδωμάτια, κουζίνα, μπαλκόνι και δωρεάν ιδιωτικό πάρκινγκ.",

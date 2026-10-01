@@ -9,7 +9,7 @@
 */
 import { readdirSync } from "node:fs";
 
-const site = (process.env.NEXT_PUBLIC_SITE_URL || "https://mastiha-luxury-suites.vercel.app").replace(/\/$/, "");
+const site = (process.env.NEXT_PUBLIC_SITE_URL || "https://mastihaluxurysuites.com").replace(/\/$/, "");
 const keyFile = readdirSync(new URL("../public/", import.meta.url)).find(name => /^[0-9a-f]{32}\.txt$/.test(name));
 if (!keyFile) throw new Error("No IndexNow key file in public/");
 const key = keyFile.slice(0, -4);
