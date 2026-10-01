@@ -32,11 +32,18 @@ export function useSiteMotion(root: RefObject<HTMLElement | null>) {
     const media = gsap.matchMedia();
     const all = <T extends HTMLElement = HTMLElement>(selector: string) => gsap.utils.toArray<T>(selector, scope);
 
-    media.add("(prefers-reduced-motion: no-preference)", () => {
+    media.add("(prefers-reduced-motion: no-preference)", context => {
       heroEntrance(scope);
       heroExit(scope);
 
-      for (const heading of all("[data-split]")) {
+      // Everything below the hero is set up in small slices with the browser free in between,
+      // so a phone can paint and respond while the page's motion is being prepared.
+      const steps: (() => void)[] = [];
+      const queue = <T extends HTMLElement>(selector: string, setup: (element: T) => void) => {
+        for (const element of all<T>(selector)) steps.push(() => setup(element));
+      };
+
+      queue("[data-split]", heading => {
         SplitText.create(heading, {
           type: "lines",
           mask: "lines",
@@ -49,9 +56,9 @@ export function useSiteMotion(root: RefObject<HTMLElement | null>) {
             scrollTrigger: { trigger: heading, start: "top 88%", once: true },
           }),
         });
-      }
+      });
 
-      for (const word of all("[data-split-chars]")) {
+      queue("[data-split-chars]", word => {
         SplitText.create(word, {
           type: "chars",
           mask: "chars",
@@ -63,57 +70,60 @@ export function useSiteMotion(root: RefObject<HTMLElement | null>) {
             scrollTrigger: { trigger: word, start: "top 95%", once: true },
           }),
         });
-      }
+      });
 
-      for (const rule of all("[data-rule]")) {
+      queue("[data-rule]", rule => {
         gsap.fromTo(rule, { "--rule": 0 }, { "--rule": 1, duration: .9, ease: "power3.inOut", scrollTrigger: { trigger: rule, start: "top 90%", once: true } });
-      }
+      });
 
-      for (const block of all("[data-reveal]")) {
+      queue("[data-reveal]", block => {
         gsap.from(block, { y: 32, autoAlpha: 0, duration: .9, ease: "power3.out", scrollTrigger: { trigger: block, start: "top 88%", once: true } });
-      }
+      });
 
-      for (const group of all("[data-stagger]")) {
+      queue("[data-stagger]", group => {
         gsap.from(group.children, { y: 24, autoAlpha: 0, duration: .7, stagger: .06, ease: "power3.out", scrollTrigger: { trigger: group, start: "top 85%", once: true } });
-      }
+      });
 
-      for (const frame of all("[data-photo-reveal]")) {
+      queue("[data-photo-reveal]", frame => {
         const image = frame.querySelector("img");
         const reveal = gsap.timeline({ scrollTrigger: { trigger: frame, start: "top 90%", once: true } });
         reveal.fromTo(frame, { clipPath: "inset(8% 6% 8% 6%)" }, { clipPath: "inset(0% 0% 0% 0%)", duration: 1.2, ease: "expo.out" });
         if (image) reveal.fromTo(image, { scale: 1.14 }, { scale: 1, duration: 1.6, ease: "expo.out" }, 0);
-      }
+      });
 
-      for (const image of all("[data-parallax]")) {
+      queue("[data-parallax]", image => {
         gsap.fromTo(image, { yPercent: -6, scale: 1.14 }, {
           yPercent: 6,
           scale: 1.14,
           ease: "none",
           scrollTrigger: { trigger: image.parentElement, start: "top bottom", end: "bottom top", scrub: true },
         });
-      }
+      });
 
-      for (const layer of all("[data-speed]")) {
+      queue("[data-speed]", layer => {
         const speed = Number(layer.dataset.speed) || 0;
         gsap.to(layer, { yPercent: -speed * 100, ease: "none", scrollTrigger: { trigger: layer, start: "top bottom", end: "bottom top", scrub: true } });
-      }
+      });
 
-      for (const counter of all("[data-count]")) countUp(counter);
-    });
+      queue("[data-count]", countUp);
 
-    // The family photographs travel sideways while the section is pinned (wide screens only;
-    // phones get a native swipe carousel from CSS scroll snapping).
-    media.add("(min-width: 900px) and (prefers-reduced-motion: no-preference)", () => {
-      for (const section of all("[data-horizontal]")) {
-        const track = section.querySelector<HTMLElement>("[data-track]");
-        if (!track) continue;
-        const distance = () => Math.max(0, track.scrollWidth - track.clientWidth);
-        gsap.to(track.children, {
-          x: () => -distance(),
-          ease: "none",
-          scrollTrigger: { trigger: section, start: "top top", end: () => `+=${distance()}`, pin: true, scrub: .6, invalidateOnRefresh: true },
-        });
-      }
+      let cancelled = false;
+      let wide: gsap.MatchMedia | undefined;
+      void (async () => {
+        while (steps.length) {
+          await yieldToBrowser();
+          if (cancelled) return;
+          // Work for a few milliseconds per slice; the context records the animations so they revert with it.
+          const until = performance.now() + 12;
+          context.add(() => { while (steps.length && performance.now() < until) steps.shift()!(); });
+        }
+        // The pinned family track comes last, as it always has: ScrollTrigger measures in the order
+        // things are created, and a pin made before the sections above it would land in the wrong place.
+        wide = gsap.matchMedia();
+        wide.add("(min-width: 900px)", () => horizontal(all("[data-horizontal]")));
+        ScrollTrigger.refresh();
+      })();
+      return () => { cancelled = true; wide?.revert(); };
     });
 
     media.add("(hover: hover) and (pointer: fine) and (prefers-reduced-motion: no-preference)", () => {
@@ -121,12 +131,43 @@ export function useSiteMotion(root: RefObject<HTMLElement | null>) {
       return () => cleanups.forEach(cleanup => cleanup());
     });
 
-    // Late images and fonts change section heights; re-measure once everything settled.
+    // Anything that changes the page's height after the triggers were measured (the photo tour
+    // switching on, late images, fonts) moves every section below it, and a pin measured before
+    // that would start in the wrong place. Re-measure whenever the height really changes.
+    let height = scope.offsetHeight;
+    let pending = 0;
+    const heightChanged = new ResizeObserver(() => {
+      if (Math.abs(scope.offsetHeight - height) < 2) return;
+      height = scope.offsetHeight;
+      clearTimeout(pending);
+      pending = window.setTimeout(() => { ScrollTrigger.refresh(); height = scope.offsetHeight; }, 120);
+    });
+    heightChanged.observe(scope);
     const refresh = () => ScrollTrigger.refresh();
-    window.addEventListener("load", refresh);
     document.fonts?.ready.then(refresh);
-    return () => { window.removeEventListener("load", refresh); media.revert(); };
+    return () => { heightChanged.disconnect(); clearTimeout(pending); media.revert(); };
   }, [root]);
+}
+
+// The family photographs travel sideways while the section is pinned (wide screens only;
+// phones get a native swipe carousel from CSS scroll snapping).
+function horizontal(sections: HTMLElement[]) {
+  for (const section of sections) {
+    const track = section.querySelector<HTMLElement>("[data-track]");
+    if (!track) continue;
+    const distance = () => Math.max(0, track.scrollWidth - track.clientWidth);
+    gsap.to(track.children, {
+      x: () => -distance(),
+      ease: "none",
+      scrollTrigger: { trigger: section, start: "top top", end: () => `+=${distance()}`, pin: true, scrub: .6, invalidateOnRefresh: true },
+    });
+  }
+}
+
+/** Lets the browser paint and handle input before the next slice of work. */
+function yieldToBrowser(): Promise<void> {
+  const scheduler = (globalThis as { scheduler?: { yield?: () => Promise<void> } }).scheduler;
+  return scheduler?.yield ? scheduler.yield() : new Promise(resolve => setTimeout(resolve, 0));
 }
 
 function heroEntrance(scope: HTMLElement) {
