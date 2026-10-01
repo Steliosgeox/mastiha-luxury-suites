@@ -12,7 +12,8 @@
     "test:e2e": "playwright test",
     "photos:import": "node scripts/import-listing-photos.mjs",
     "chat:password": "node scripts/chat-password.mjs",
-    "ai:eval": "npx -y tsx scripts/ai-eval.mts"
+    "ai:eval": "npx -y tsx scripts/ai-eval.mts",
+    "indexnow": "node scripts/indexnow.mjs"
   },
   "dependencies": {
     "@assistant-ui/react": "^0.15.22",
