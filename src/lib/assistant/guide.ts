@@ -72,7 +72,6 @@ const answers: Record<StayLocale, Record<Topic | "unknown", string>> = {
 
 // Keywords are matched after lower-casing and stripping accents, so "κούνια" matches "κουνια".
 const topics: [Topic, RegExp][] = [
-  ["host", /\b(human|person|representative|agent|host|athina|owner)\b|ανθρωπ|εκπροσωπ|αθην|οικοδεσπ|ιδιοκτητ|temsilci|insan|ev sahib|athina/],
   ["family", /\b(baby|babies|child|children|kid|kids|cot|crib|playpen|high ?chair|booster|toys?|family)\b|μωρ|παιδ|κουνι|παρκοκρεβ|καρεκλακ|παιχνιδ|οικογεν|bebek|cocuk|aile|oyuncak|mama sandal/],
   ["booking", /\b(price|prices|cost|availab\w*|book|booking|reserv\w*|dates?|cancel\w*)\b|τιμ|κοστ|διαθεσιμ|κρατησ|ημερομην|ακυρω|fiyat|rezerv|musait|iptal|tarih/],
   ["parking", /\bpark\w*|\bcar\b|παρκ|σταθμευ|αυτοκινητ|otopark|park yeri|araba/],
@@ -97,6 +96,22 @@ const categories: [NearbyCategory, RegExp][] = [
   ["pharmacy", /pharmac\w*|chemist|medicine|φαρμακ|eczane|ilac/],
   ["transport", /rent\w*|car hire|petrol|fuel|gas station|ενοικιασ|βενζιν|καυσιμ|kiralik|benzin/],
 ];
+
+/*
+  An explicit request for a person. Precise on purpose: "Αθηνά" (the host) and "Αθήνα"
+  (Athens) are the same letters once accents are stripped, so the name only counts after
+  a verb like "talk to". Greek and Turkish words end with a lookahead: \b is Latin-only.
+*/
+const HOST_REQUEST = new RegExp([
+  "\\b(human|real person|representative|live agent|customer service)\\b",
+  "\\b(talk|speak|chat|write|message) (to|with) (the |a |your )?(host|owner|athina|someone|somebody|person|manager)\\b",
+  "εκπροσωπ", "οικοδεσποιν", "ιδιοκτητ",
+  "(μιλησ|μιλαω|μιλαμε|μιλαει|επικοινων|γραψ|στειλ|συνδεσ)\\p{L}* ((σε|με|στην|στον|την|τον|στη|στο|με την|με τον) )*(αθηνα|ανθρωπ|καποιον|καποια)",
+  "θελω (εναν )?ανθρωπο(?=\\s|$)",
+  "temsilci", "ev sahib", "insan(la|\\s+ile)", "athina\\s*(ile|ya)",
+].join("|"), "u");
+
+export const asksForHost = (text: string) => HOST_REQUEST.test(normalize(text));
 
 const normalize = (text: string) => text
   .normalize("NFD").replace(/\p{M}/gu, "")
@@ -136,13 +151,13 @@ export const propertyGuide: AssistantProvider = {
     if (/^(hi|hello|hey|good (morning|evening)|γεια|καλημερα|καλησπερα|merhaba|selam|iyi gunler)(?=\s|$)/.test(question) && question.split(" ").length <= 3) {
       return { reply: say("greeting"), mode: "guide", sources: [] };
     }
+    if (asksForHost(question)) return { reply: say("host"), mode: "guide", sources: [], suggestHost: true };
     const nearby = nearbyAnswer(locale, question);
     const topic = topics.find(([, pattern]) => pattern.test(question))?.[0];
     // Neighbourhood questions win over generic words like "coffee" or "car".
     if (nearby && (!topic || ["kitchen", "parking", "sea", "location"].includes(topic) && categories.some(([, pattern]) => pattern.test(question)))) {
       return { reply: nearby.reply, mode: "guide", sources: nearby.sources };
     }
-    if (topic === "host") return { reply: say("host"), mode: "guide", sources: [], suggestHost: true };
     if (topic === "booking") {
       return { reply: `${say("booking")}\n\n[Airbnb](${property.bookingLinks.airbnb}) · [Booking.com](${property.bookingLinks.booking})`, mode: "guide", sources: ["booking-platforms"] };
     }

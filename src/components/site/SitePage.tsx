@@ -47,6 +47,6 @@ export function SitePage({ locale }: { locale: StayLocale }) {
       </main>
       <Footer locale={locale} contact={contact} />
     </SiteShell>
-    <ChatMount locale={locale} liveEnabled={liveChatEnabled()} fallback={{ whatsapp: contact.whatsapp, email: contact.email }} />
+    <ChatMount locale={locale} stored={liveChatEnabled()} />
   </>;
 }

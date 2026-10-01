@@ -69,6 +69,13 @@ export function SiteShell({ locale, children }: { locale: StayLocale; children: 
 
   const closeGallery = useCallback(() => { setPhotoIndex(null); restoreFocus(); }, [restoreFocus]);
 
+  // The chat's "Book" action, from outside this context.
+  useEffect(() => {
+    const onBook = () => book("chat");
+    window.addEventListener("mastiha:book-open", onBook);
+    return () => window.removeEventListener("mastiha:book-open", onBook);
+  }, [book]);
+
   useEffect(() => {
     const element = dialog.current;
     if (!element) return;

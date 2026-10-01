@@ -1,24 +1,25 @@
 import type { Metadata, Viewport } from "next";
 import type { ReactNode } from "react";
-import { Geologica, Inter } from "next/font/google";
+import { Commissioner } from "next/font/google";
 import "../globals.css";
+import "@/components/admin/workroom.css";
 
-const display = Geologica({ subsets: ["latin", "greek"], variable: "--font-display", display: "swap" });
-const sans = Inter({ subsets: ["latin", "greek"], variable: "--font-sans", display: "swap" });
+// Elite Memoriz's workroom typeface.
+const admin = Commissioner({ subsets: ["latin", "greek"], variable: "--font-admin", display: "swap" });
 
 export const metadata: Metadata = {
-  title: "Συνομιλίες · Mastiha",
+  title: "Συζητήσεις · Mastiha",
   robots: { index: false, follow: false },
   manifest: "/admin/manifest.webmanifest",
   appleWebApp: { capable: true, title: "Mastiha", statusBarStyle: "default" },
   icons: { icon: "/icon.svg", apple: "/apple-icon.png" },
 };
 
-export const viewport: Viewport = { themeColor: "#f6f5f1", viewportFit: "cover" };
+export const viewport: Viewport = { themeColor: "#f2f5f8", viewportFit: "cover" };
 
-/** The host's inbox. A separate root layout: no public site chrome, never indexed. */
+/** The host's portal. A separate root layout: no public site chrome, never indexed. */
 export default function AdminLayout({ children }: { children: ReactNode }) {
-  return <html lang="el" className={`${display.variable} ${sans.variable}`}>
-    <body>{children}</body>
+  return <html lang="el" className={admin.variable}>
+    <body className="mls-admin-body">{children}</body>
   </html>;
 }

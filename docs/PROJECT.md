@@ -16,7 +16,7 @@ Lenis smooth scrolling, next-intl for `/el`, `/en` and `/tr` routing.
 | Page sections | `src/components/site/sections/*` (one component and stylesheet each) |
 | Scroll animations | `src/components/site/motion.ts` (enabled per element with data attributes) |
 | The dock | `src/components/site/dock` (approved design; the tests check its hash) |
-| Live chat | `docs/LIVE-CHAT.md` |
+| Chat, assistant and admin portal | `docs/CHAT.md` |
 
 ## Writing copy
 
@@ -47,8 +47,11 @@ npm run check:ui     # photo sources and CSS module references
 npm run typecheck
 npm run lint
 npm run test:e2e     # Playwright, Chromium and WebKit, against a production build
-npm run chat:keys    # secrets for the live chat
+npm run ai:eval      # the assistant's answers to real questions, live (needs the AI keys)
+npm run chat:password # a new admin password and its hash
 ```
 
-To try the live chat locally, run
+To try the chat locally, run
 `MASTIHA_CHAT_STORE=memory MASTIHA_ADMIN_PASSWORD=choose-one npm run dev` and open `/admin`.
+Add `OPENROUTER_API_KEY` (and the Cloudflare pair) for model answers; without them the
+property guide answers.

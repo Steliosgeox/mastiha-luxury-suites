@@ -13,8 +13,8 @@ export async function POST(request: Request) {
     const store = requireStore();
     await limit(store, request, "login", 8, 15 * 60);
     const body = await readJson(request, 1024) as { password?: unknown } | null;
-    if (typeof body?.password !== "string" || !passwordMatches(body.password)) throw new RequestFailure(401, "Wrong password.");
-    const session = createSession();
+    if (typeof body?.password !== "string" || !(await passwordMatches(body.password))) throw new RequestFailure(401, "Wrong password.");
+    const session = await createSession(store);
     (await cookies()).set(ADMIN_COOKIE, session.value, {
       httpOnly: true,
       secure: process.env.VERCEL === "1" || new URL(request.url).protocol === "https:",

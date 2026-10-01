@@ -1,3 +1,4 @@
+import "./rich-text.css";
 import { Fragment, type ReactNode } from 'react';
 
 /**

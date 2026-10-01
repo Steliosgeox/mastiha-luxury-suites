@@ -2,20 +2,21 @@ import { AdminApp } from "@/components/admin/AdminApp";
 import { Login } from "@/components/admin/Login";
 import { ADMIN_COPY } from "@/content/admin-copy";
 import { isAdmin } from "@/lib/chat/auth";
-import { liveChatEnabled } from "@/lib/chat/service";
+import { chatStore } from "@/lib/chat/store";
 
 export const dynamic = "force-dynamic";
 
 export default async function AdminPage() {
-  if (!liveChatEnabled()) {
+  const store = chatStore();
+  if (!store) {
     const c = ADMIN_COPY.el.setup;
-    return <main style={{ display: "grid", placeItems: "center", minHeight: "100dvh", padding: 24, fontFamily: "var(--font-sans), sans-serif", color: "#1f2123" }}>
-      <div style={{ maxWidth: 460 }}>
-        <h1 style={{ fontFamily: "var(--font-display), sans-serif", fontWeight: 350, letterSpacing: "-.03em" }}>{c.title}</h1>
-        <p style={{ lineHeight: 1.6, color: "#6b6f72" }}>{c.body}</p>
-        <p style={{ lineHeight: 1.6, color: "#6b6f72" }}>{ADMIN_COPY.en.setup.title}. See docs/LIVE-CHAT.md.</p>
+    return <main className="admin-gate">
+      <div className="admin-gate__card">
+        <h1>{c.title}</h1>
+        <p>{c.body}</p>
+        <p lang="en">{ADMIN_COPY.en.setup.title}. See docs/CHAT.md.</p>
       </div>
     </main>;
   }
-  return (await isAdmin()) ? <AdminApp /> : <Login />;
+  return (await isAdmin(store)) ? <AdminApp /> : <Login />;
 }

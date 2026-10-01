@@ -2,17 +2,18 @@ import type { ChatStore, ConversationPatch, NewConversation } from "./store";
 import { RETENTION_SECONDS, type ChatEntry, type Conversation, type NewEntry, type StoredConversation } from "./types";
 
 /*
-  Chat storage on Upstash Redis through its REST API (no client library needed). Vercel KV
-  exposes the same API. Layout, all under the "mls:" prefix:
+  Chat storage on Upstash Redis through its REST API (no client library needed). Vercel's
+  Upstash integration exposes the same API. Layout, all under the "mls:" prefix:
 
-    mls:conv:{id}     hash    conversation fields
-    mls:log:{id}      list    JSON entries; an entry's seq is its index
-    mls:inbox         zset    conversation ids scored by last activity
+    mls:conv:{id}     hash    conversation fields                      expires 30 days after the last message
+    mls:log:{id}      list    JSON entries; an entry's seq is its index  expires with its conversation
+    mls:inbox         zset    conversation ids scored by last activity  trimmed to 30 days on every read
     mls:inbox:v       counter bumped on every change (cheap inbox polling)
     mls:host:seen     string  set while the admin portal is open (expires)
     mls:typing:{id}   string  set while the host types (expires)
     mls:push          hash    endpoint -> push subscription JSON
     mls:rl:{key}      counter rate-limit windows
+    mls:kv:{name}     any     router counters, answer cache, server-generated secrets
 */
 
 type Command = (string | number)[];
@@ -25,6 +26,7 @@ const key = {
   hostSeen: "mls:host:seen",
   push: "mls:push",
   limit: (name: string) => `mls:rl:${name}`,
+  kv: (name: string) => `mls:kv:${name}`,
 };
 
 function client(url: string, token: string) {
@@ -64,6 +66,8 @@ function toConversation(record: Record<string, string>): StoredConversation | nu
     id: record.id,
     tokenHash: record.tokenHash ?? "",
     status: record.status === "closed" ? "closed" : "open",
+    handler: record.handler === "host" ? "host" : "bot",
+    escalatedAt: number("escalatedAt"),
     locale: record.locale === "el" || record.locale === "tr" ? record.locale : "en",
     name: record.name ?? "",
     email: record.email ?? "",
@@ -78,14 +82,11 @@ function toConversation(record: Record<string, string>): StoredConversation | nu
   };
 }
 
-const publicConversation = ({ tokenHash: _tokenHash, ...conversation }: StoredConversation): Conversation => conversation;
+export const publicConversation = ({ tokenHash: _tokenHash, ...conversation }: StoredConversation): Conversation => conversation;
 
 function toEntries(raw: unknown, firstSeq: number): ChatEntry[] {
   if (!Array.isArray(raw)) return [];
-  return raw.map((item, index) => {
-    const parsed = JSON.parse(String(item)) as Omit<ChatEntry, "seq">;
-    return { seq: firstSeq + index, author: parsed.author, text: parsed.text, at: parsed.at };
-  });
+  return raw.map((item, index) => ({ ...JSON.parse(String(item)) as Omit<ChatEntry, "seq">, seq: firstSeq + index }));
 }
 
 export function createRedisStore(url: string, token: string): ChatStore {
@@ -97,6 +98,7 @@ export function createRedisStore(url: string, token: string): ChatStore {
       : entry.author === "host" ? [["HINCRBY", key.conv(id), "guestUnread", 1]]
         : [];
 
+  /** Every write restarts the retention clock of the conversation and its log. */
   const touch = (id: string, entry: NewEntry, now: number): Command[] => [
     ["HSET", key.conv(id), "updatedAt", now, "lastText", entry.text.slice(0, 200), "lastAuthor", entry.author],
     ["HINCRBY", key.conv(id), "messageCount", 1],
@@ -110,18 +112,19 @@ export function createRedisStore(url: string, token: string): ChatStore {
   return {
     kind: "redis",
 
-    async createConversation(input: NewConversation, entries: NewEntry[]) {
+    async createConversation(input: NewConversation) {
       const now = Date.now();
       const conversation: StoredConversation = {
-        ...input, status: "open", createdAt: now, updatedAt: now, lastText: "", lastAuthor: "system",
-        messageCount: 0, hostUnread: 0, guestUnread: 0, guestSeenAt: now,
+        ...input, status: "open", handler: "bot", escalatedAt: 0, name: "", email: "", createdAt: now, updatedAt: now,
+        lastText: "", lastAuthor: "system", messageCount: 0, hostUnread: 0, guestUnread: 0, guestSeenAt: now,
       };
-      const commands: Command[] = [["HSET", key.conv(input.id), ...Object.entries(conversation).flat()]];
-      for (const entry of entries) {
-        commands.push(["RPUSH", key.log(input.id), JSON.stringify({ ...entry, at: now })], ...touch(input.id, entry, now));
-      }
-      await redis.transaction(commands);
-      return publicConversation((await this.getConversation(input.id))!);
+      await redis.transaction([
+        ["HSET", key.conv(input.id), ...Object.entries(conversation).flat()],
+        ["EXPIRE", key.conv(input.id), RETENTION_SECONDS],
+        ["ZADD", key.inbox, now, input.id],
+        ["INCR", key.version],
+      ]);
+      return publicConversation(conversation);
     },
 
     async getConversation(id) {
@@ -141,7 +144,7 @@ export function createRedisStore(url: string, token: string): ChatStore {
     async appendEntry(id, entry) {
       const now = Date.now();
       const [length] = await redis.transaction([["RPUSH", key.log(id), JSON.stringify({ ...entry, at: now })], ...touch(id, entry, now)]);
-      return { seq: Number(length) - 1, author: entry.author, text: entry.text, at: now };
+      return { ...entry, seq: Number(length) - 1, at: now };
     },
 
     async listEntries(id, afterSeq) {
@@ -155,7 +158,16 @@ export function createRedisStore(url: string, token: string): ChatStore {
       const [, ids] = await redis.pipeline([["ZREMRANGEBYSCORE", key.inbox, "-inf", cutoff], ["ZREVRANGE", key.inbox, 0, limit - 1]]);
       if (!Array.isArray(ids) || !ids.length) return [];
       const records = await redis.pipeline(ids.map(id => ["HGETALL", key.conv(String(id))]));
-      return records.map(raw => toConversation(toRecord(raw))).filter((item): item is StoredConversation => item !== null).map(publicConversation);
+      const conversations = records.map(raw => toConversation(toRecord(raw)));
+      // An id whose hash has already expired is removed from the index as well.
+      const gone = ids.filter((_, index) => conversations[index] === null).map(String);
+      if (gone.length) await redis.pipeline([["ZREM", key.inbox, ...gone]]);
+      return conversations.filter((item): item is StoredConversation => item !== null).map(publicConversation);
+    },
+
+    async countConversations() {
+      const [count] = await redis.pipeline([["ZCARD", key.inbox]]);
+      return Number(count ?? 0) || 0;
     },
 
     async inboxVersion() {
@@ -193,6 +205,34 @@ export function createRedisStore(url: string, token: string): ChatStore {
     async allow(name, limit, windowSeconds) {
       const [, count] = await redis.pipeline([["SET", key.limit(name), 0, "EX", windowSeconds, "NX"], ["INCR", key.limit(name)]]);
       return Number(count) <= limit;
+    },
+
+    async bump(name, ttlSeconds, by = 1) {
+      const [, count] = await redis.pipeline([["SET", key.kv(name), 0, "EX", ttlSeconds, "NX"], ["INCRBY", key.kv(name), by]]);
+      return Number(count) || 0;
+    },
+
+    async read(names) {
+      if (!names.length) return [];
+      const [values] = await redis.pipeline([["MGET", ...names.map(key.kv)]]);
+      return Array.isArray(values) ? values.map(value => (value === null || value === undefined ? null : String(value))) : names.map(() => null);
+    },
+
+    async put(name, value, ttlSeconds, onlyIfMissing = false) {
+      const command: Command = ["SET", key.kv(name), value, ...(ttlSeconds ? ["EX", ttlSeconds] : []), ...(onlyIfMissing ? ["NX"] : [])];
+      const [result] = await redis.pipeline([command]);
+      return result === "OK";
+    },
+
+    async tally(name, fields, ttlSeconds) {
+      const entries = Object.entries(fields).filter(([, by]) => by);
+      if (!entries.length) return;
+      await redis.pipeline([...entries.map(([field, by]) => ["HINCRBY", key.kv(name), field, by]), ["EXPIRE", key.kv(name), ttlSeconds]]);
+    },
+
+    async tallies(name) {
+      const [raw] = await redis.pipeline([["HGETALL", key.kv(name)]]);
+      return Object.fromEntries(Object.entries(toRecord(raw)).map(([field, value]) => [field, Number(value) || 0]));
     },
   };
 }

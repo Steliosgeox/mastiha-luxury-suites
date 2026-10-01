@@ -9,8 +9,8 @@ type Subscription = { endpoint?: unknown; keys?: { p256dh?: unknown; auth?: unkn
 
 export async function GET() {
   try {
-    await requireAdmin();
-    return json({ publicKey: vapidPublicKey() });
+    const store = await requireAdmin();
+    return json({ publicKey: await vapidPublicKey(store) });
   } catch (error) { return failure(error); }
 }
 

@@ -112,7 +112,7 @@ test.describe("page", () => {
   test("privacy page and 404 are localised", async ({ page }) => {
     await page.goto("/el/privacy");
     await expect(page.getByRole("heading", { level: 1, name: "Απόρρητο" })).toBeVisible();
-    await expect(page.getByRole("heading", { name: "Συνομιλία με την Αθηνά" })).toBeVisible();
+    await expect(page.getByRole("heading", { name: "Συνομιλίες" })).toBeVisible();
     const missing = await page.goto("/el/does-not-exist");
     expect(missing?.status()).toBe(404);
     await expect(page.getByText("Η σελίδα δεν βρέθηκε")).toBeVisible();
