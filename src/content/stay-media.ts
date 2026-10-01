@@ -1,7 +1,7 @@
 import catalogue from './stay-media.generated.json';
 import type { StayLocale } from './stay-copy';
 
-export type PhotoId = 'living' | 'master' | 'second' | 'bathroom' | 'terrace' | 'kitchen' | 'lounge' | 'table' | 'kitchen-wide' | 'espresso' | 'desk' | 'master-wide' | 'crib' | 'second-wide' | 'basin' | 'shower' | 'laundry' | 'balcony' | 'arrival' | 'coast' | 'sunrise' | 'windmills' | 'beach' | 'keys' | 'sofa-bed' | 'smart-tv' | 'kids-corner' | 'toys' | 'high-chair' | 'playpen' | 'vanity' | 'bathroom-wide' | 'balcony-wide';
+export type PhotoId = 'living' | 'lounge' | 'sofa-bed' | 'desk' | 'kitchen' | 'kitchen-wide' | 'cookware' | 'appliances' | 'master' | 'master-wide' | 'vanity' | 'second' | 'second-wide' | 'bathroom-wide' | 'shower' | 'basin' | 'hairdryer' | 'laundry' | 'kids-corner' | 'toys' | 'playpen' | 'cot' | 'high-chair' | 'terrace' | 'balcony-wide' | 'balcony' | 'arrival' | 'keys' | 'coast' | 'sunrise' | 'windmills' | 'sailor' | 'rocket-war' | 'beach' | 'crib';
 export type PhotoCategory = 'living' | 'kitchen' | 'bedrooms' | 'bathroom' | 'outdoors' | 'neighbourhood' | 'family';
 export type StayMedia = Omit<(typeof catalogue)[number], 'id' | 'category'> & { id: PhotoId; category: PhotoCategory };
 // Local files are reviewed exports of the owner's public Airbnb and Booking.com listings.
@@ -15,4 +15,4 @@ export function stayPhoto(id: PhotoId): StayMedia {
 export function photoCaption(id: PhotoId, locale: StayLocale): string {
   return stayPhoto(id).captions[locale];
 }
-export const tourPhotos = (['kitchen-wide','master-wide','second-wide','shower','terrace'] as const).map(stayPhoto);
+export const tourPhotos = (['kitchen-wide','master','second-wide','bathroom-wide','balcony-wide'] as const).map(stayPhoto);

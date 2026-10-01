@@ -1,47 +1,167 @@
-import type { AssistantProvider, AssistantRequest } from './contracts';
-import { nearbyPlaces, neighbourhoodCopy, type NearbyCategory } from '@/content/neighbourhood';
-import { propertyData } from '@/content/property';
-import { listingCopy } from '@/content/listing-copy';
-import { getContactChannels } from '@/lib/contact';
+import type { AssistantProvider, AssistantRequest } from "./contracts";
+import { nearbyPlaces, neighbourhoodCopy, type NearbyCategory } from "@/content/neighbourhood";
+import { propertyData as property } from "@/content/property";
+import { fillCopy, getStayCopy, type StayLocale } from "@/content/stay-copy";
 
-const normalize = (value: string) => value.normalize('NFD').replace(/\p{M}/gu, '').toLocaleLowerCase('en').replace(/ı/g, 'i').replace(/[^\p{L}\p{N}\s]/gu, ' ').replace(/\s+/g, ' ').trim();
-const copy = {
-  en: { intro: "Welcome to Mastiha. I’m the automated property guide. Ask me about the apartment, staying with children, nearby places or how to book.", booking: 'Live availability, prices and booking changes are handled by the booking platforms. I cannot confirm a reservation or a rate.', home: 'Mastiha Luxury Suites is a private 75 m² home in Vrontados, Chios, for up to four guests, with two bedrooms and one bathroom. There is a king bed, a single bed and a sofa bed.', human: 'To reach the host now, use your Airbnb or Booking.com reservation conversation. The Representative button shows the available contact options. Nothing has been sent by this chat.', unknown: 'I don’t have confirmed information for that question. Please ask the host through your booking platform, or choose Representative. I cannot check live availability, make bookings or promise an answer time.', parking: "We offer private parking. There is also a separate public parking area approximately 90 m away. Ask us for directions; spaces cannot be reserved through this guide.", social: 'The property’s direct social accounts and WhatsApp number have not been connected yet. Please use the Airbnb or Booking.com listing to contact the host.', end: "Approximate distances from Mastiha. Check opening hours before you visit." },
-  el: { intro: "Καλώς ήρθατε στο Mastiha. Είμαι ο αυτόματος οδηγός διαμονής. Ρωτήστε με για το διαμέρισμα, τις παροχές για παιδιά, τη γειτονιά ή την κράτησή σας.", booking: 'Η διαθεσιμότητα, οι τιμές και οι αλλαγές κρατήσεων επιβεβαιώνονται στις πλατφόρμες κράτησης. Δεν μπορώ να επιβεβαιώσω κράτηση ή τιμή.', home: 'Το Mastiha Luxury Suites είναι ιδιωτικό σπίτι 75 τ.μ. στον Βροντάδο της Χίου για έως τέσσερις επισκέπτες, με δύο υπνοδωμάτια και ένα μπάνιο. Διαθέτει king-size κρεβάτι, μονό κρεβάτι και καναπέ-κρεβάτι.', human: 'Για επικοινωνία με την οικοδέσποινα τώρα, χρησιμοποιήστε τη συνομιλία της κράτησής σας στο Airbnb ή το Booking.com. Το κουμπί Εκπρόσωπος εμφανίζει τους διαθέσιμους τρόπους επικοινωνίας. Δεν έχει σταλεί κάποιο μήνυμα από αυτή τη συνομιλία.', unknown: 'Δεν έχω επιβεβαιωμένη πληροφορία γι’ αυτή την ερώτηση. Ρωτήστε την οικοδέσποινα από την πλατφόρμα κράτησης ή επιλέξτε Εκπρόσωπος. Δεν ελέγχω ζωντανή διαθεσιμότητα, δεν κάνω κρατήσεις και δεν υπόσχομαι χρόνο απάντησης.', parking: "Διαθέτουμε ιδιωτικό πάρκινγκ. Υπάρχει επίσης ξεχωριστός δημόσιος χώρος στάθμευσης περίπου 90 μ. μακριά. Ρωτήστε μας για οδηγίες. Δεν γίνεται κράτηση θέσης από τον οδηγό.", social: 'Δεν έχουν συνδεθεί ακόμη τα επίσημα social accounts και το WhatsApp του καταλύματος. Επικοινωνήστε με την οικοδέσποινα από το Airbnb ή το Booking.com.', end: "Ενδεικτικές αποστάσεις από το Mastiha. Ελέγξτε το ωράριο πριν από την επίσκεψή σας." },
-  tr: { intro: "Mastiha’ya hoş geldiniz. Otomatik konaklama rehberiyim. Daire, çocuklarla konaklama, yakındaki yerler veya rezervasyon hakkında sorabilirsiniz.", booking: 'Güncel müsaitlik, fiyatlar ve rezervasyon değişiklikleri rezervasyon platformlarında doğrulanır. Rezervasyon veya fiyat onaylayamam.', home: 'Mastiha Luxury Suites, Sakız adasının Vrontados bölgesinde, en fazla dört misafir için iki yatak odası ve bir banyosu olan 75 m² özel bir evdir. King yatak, tek kişilik yatak ve çekyat bulunur.', human: 'Ev sahibine şimdi ulaşmak için Airbnb veya Booking.com rezervasyon görüşmenizi kullanın. Temsilci düğmesi mevcut iletişim seçeneklerini gösterir. Bu sohbetten hiçbir mesaj gönderilmedi.', unknown: 'Bu soru için doğrulanmış bilgim yok. Ev sahibine rezervasyon platformundan sorun veya Temsilci’yi seçin. Güncel müsaitliği kontrol edemem, rezervasyon yapamam veya yanıt süresi vaat edemem.', parking: "Özel otoparkımız var. Yaklaşık 90 m uzakta ayrı bir halka açık otopark da bulunur. Yol tarifi için bize sorun; bu rehberden park yeri ayırtılamaz.", social: 'Tesisin resmi sosyal hesapları ve WhatsApp numarası henüz bağlanmadı. Ev sahibiyle Airbnb veya Booking.com üzerinden iletişime geçin.', end: "Mastiha’dan yaklaşık mesafeler. Gitmeden önce çalışma saatlerini kontrol edin." },
+/*
+  The automated guide. It answers only from the property and neighbourhood data on this
+  site: no model, no guessing. Anything it cannot answer is handed to the host.
+*/
+
+type Topic = "greeting" | "host" | "booking" | "family" | "parking" | "wifi" | "times" | "pets" | "smoking" | "sea" | "kitchen" | "climate" | "laundry" | "tv" | "home" | "location";
+
+const answers: Record<StayLocale, Record<Topic | "unknown", string>> = {
+  el: {
+    greeting: "Γεια σας! Είμαι ο αυτόματος βοηθός του Mastiha. Ρωτήστε με για το σπίτι, τα παιδιά, τη γειτονιά ή την κράτηση. Αν θέλετε να μιλήσετε με την Αθηνά, πατήστε «Μιλήστε με την Αθηνά».",
+    host: "Φυσικά. Πατήστε «Μιλήστε με την Αθηνά» και η συζήτηση θα πάει απευθείας σε εκείνη.",
+    booking: "Κρατήσεις γίνονται μέσω Airbnb ή Booking.com. Εκεί θα δείτε τις ελεύθερες ημερομηνίες και τις τιμές, γιατί εγώ δεν βλέπω τη διαθεσιμότητα.",
+    family: "{family}\n\nΘέλετε να κρατήσει η Αθηνά κάτι από αυτά για τις ημερομηνίες σας; Γράψτε της απευθείας.",
+    parking: "Ναι, υπάρχει δωρεάν ιδιωτικό πάρκινγκ. Υπάρχει και δημόσιο πάρκινγκ περίπου 90 μέτρα μακριά.",
+    wifi: "Ναι, υπάρχει Wi-Fi και γραφείο στο σαλόνι, αν χρειαστεί να δουλέψετε.",
+    times: "Οι ώρες check-in και check-out αναγράφονται στην κράτησή σας. Αν χρειάζεστε κάτι διαφορετικό, πείτε το στην Αθηνά και θα το κανονίσει αν γίνεται.",
+    pets: "Δυστυχώς δεν επιτρέπονται κατοικίδια.",
+    smoking: "Δεν επιτρέπεται το κάπνισμα στο σπίτι.",
+    sea: "Η θάλασσα είναι περίπου {distance} μέτρα από το σπίτι. Για μπάνιο, το Μερσινίδι είναι λίγο πιο βόρεια.",
+    kitchen: "{kitchen}",
+    climate: "Ναι, υπάρχει κλιματισμός και θέρμανση.",
+    laundry: "Ναι, υπάρχει πλυντήριο ρούχων, σίδερο και σιδερώστρα.",
+    tv: "Στο σαλόνι υπάρχει Smart TV 55 ιντσών με Netflix και Prime Video, και στο κύριο υπνοδωμάτιο μια τηλεόραση 32 ιντσών.",
+    home: "Είναι διαμέρισμα {area} τ.μ. για έως {guests} άτομα: διπλό κρεβάτι king size στο κύριο υπνοδωμάτιο, μονό στο δεύτερο και καναπές-κρεβάτι στο σαλόνι. Υπάρχει ένα μπάνιο, κουζίνα και μπαλκόνι.",
+    location: "Είμαστε στον Βροντάδο, {distance} μέτρα από τη θάλασσα και περίπου 4,5 χλμ. από το λιμάνι της Χίου.\n\n[Άνοιγμα στο Google Maps]({maps})",
+    unknown: "Δεν έχω σίγουρη απάντηση γι’ αυτό. Η Αθηνά μπορεί να σας απαντήσει. Θέλετε να της γράψετε;",
+  },
+  en: {
+    greeting: "Hello! I’m Mastiha’s automated assistant. Ask me about the apartment, children, the neighbourhood or booking. To talk to Athina, tap “Talk to Athina”.",
+    host: "Of course. Tap “Talk to Athina” and the conversation goes straight to her.",
+    booking: "Bookings are made through Airbnb or Booking.com. You’ll see available dates and prices there, since I can’t see availability myself.",
+    family: "{family}\n\nWould you like Athina to set any of this aside for your dates? Write to her directly.",
+    parking: "Yes, there’s free private parking. There’s also a public car park about 90 metres away.",
+    wifi: "Yes, there’s Wi-Fi and a desk in the living room if you need to work.",
+    times: "Check-in and check-out times are shown in your booking. If you need something different, ask Athina and she’ll arrange it if she can.",
+    pets: "Sorry, pets aren’t allowed.",
+    smoking: "Smoking isn’t allowed in the apartment.",
+    sea: "The sea is about {distance} metres from the apartment. For a swim, Mersinidi beach is a short way north.",
+    kitchen: "{kitchen}",
+    climate: "Yes, there’s air conditioning and heating.",
+    laundry: "Yes, there’s a washing machine, an iron and an ironing board.",
+    tv: "There’s a 55-inch smart TV with Netflix and Prime Video in the living room, and a 32-inch TV in the main bedroom.",
+    home: "It’s a {area} m² apartment for up to {guests}: a king-size bed in the main bedroom, a single bed in the second and a sofa bed in the living room. There’s one bathroom, a kitchen and a balcony.",
+    location: "We’re in Vrontados, {distance} metres from the sea and about 4.5 km from Chios port.\n\n[Open in Google Maps]({maps})",
+    unknown: "I don’t have a reliable answer for that. Athina can help. Would you like to write to her?",
+  },
+  tr: {
+    greeting: "Merhaba! Ben Mastiha’nın otomatik asistanıyım. Daire, çocuklar, mahalle veya rezervasyon hakkında sorabilirsiniz. Athina ile konuşmak için “Athina ile konuşun”a dokunun.",
+    host: "Elbette. “Athina ile konuşun”a dokunun, sohbet doğrudan ona gider.",
+    booking: "Rezervasyonlar Airbnb veya Booking.com üzerinden yapılır. Müsait tarihleri ve fiyatları orada görürsünüz; ben müsaitliği göremiyorum.",
+    family: "{family}\n\nBunlardan birini tarihleriniz için ayırmasını ister misiniz? Athina’ya doğrudan yazın.",
+    parking: "Evet, ücretsiz özel otopark var. Yaklaşık 90 metre uzakta halka açık bir otopark da bulunur.",
+    wifi: "Evet, Wi-Fi ve oturma odasında bir çalışma masası var.",
+    times: "Giriş ve çıkış saatleri rezervasyonunuzda yazar. Farklı bir saate ihtiyacınız olursa Athina’ya sorun, mümkünse ayarlar.",
+    pets: "Maalesef evcil hayvan kabul edilmiyor.",
+    smoking: "Dairede sigara içilmez.",
+    sea: "Deniz daireden yaklaşık {distance} metre uzakta. Denize girmek için Mersinidi plajı biraz kuzeyde.",
+    kitchen: "{kitchen}",
+    climate: "Evet, klima ve ısıtma var.",
+    laundry: "Evet, çamaşır makinesi, ütü ve ütü masası var.",
+    tv: "Oturma odasında Netflix ve Prime Video’lu 55 inç Smart TV, ana yatak odasında ise 32 inç bir televizyon var.",
+    home: "{area} m², {guests} kişiye kadar bir daire: ana yatak odasında king yatak, ikincisinde tek kişilik yatak ve oturma odasında çekyat. Bir banyo, mutfak ve balkon var.",
+    location: "Vrontados’tayız; denize {distance} metre, Sakız limanına yaklaşık 4,5 km mesafede.\n\n[Google Maps’te aç]({maps})",
+    unknown: "Bu konuda kesin bir cevabım yok. Athina yardımcı olabilir. Ona yazmak ister misiniz?",
+  },
 };
-const categories: Array<[NearbyCategory, RegExp]> = [
-  ['groceries', /market|supermarket|grocer|σουπερ|μαρκετ|ψων|αγορε/], ['coffee', /coffee|cafe|καφε|kahve|beach bar/],
-  ['bakery', /baker|bread|αρτοποι|ψωμι|φουρν|fırın|firin/], ['food', /food|grill|eat|φαγη|ψητο|σουβλ|yemek/],
-  ['pharmacy', /pharmac|φαρμακ|eczane/], ['transport', /rent|fuel|petrol|βενζιν|ενοικια|araba|benzin/],
+
+// Keywords are matched after lower-casing and stripping accents, so "κούνια" matches "κουνια".
+const topics: [Topic, RegExp][] = [
+  ["family", /\b(baby|babies|child|children|kid|kids|cot|crib|playpen|high ?chair|booster|toys?|family)\b|μωρ|παιδ|κουνι|παρκοκρεβ|καρεκλακ|παιχνιδ|οικογεν|bebek|cocuk|aile|oyuncak|mama sandal/],
+  ["booking", /\b(price|prices|cost|availab\w*|book|booking|reserv\w*|dates?|cancel\w*)\b|τιμ|κοστ|διαθεσιμ|κρατησ|ημερομην|ακυρω|fiyat|rezerv|musait|iptal|tarih/],
+  ["parking", /\bpark\w*|\bcar\b|παρκ|σταθμευ|αυτοκινητ|otopark|park yeri|araba/],
+  ["wifi", /wi.?fi|internet|\bwork\b|desk|laptop|ιντερνετ|γραφει|δουλει|δουλεψ|calis|masa/],
+  ["times", /check.?in|check.?out|arriv\w*|depart\w*|\btime\b|αφιξ|αναχωρ|τι ωρα|ωρες|giris|cikis|saat/],
+  ["pets", /\b(pets?|dogs?|cats?)\b|κατοικιδ|σκυλ|γατ|evcil|kopek|kedi/],
+  ["smoking", /smok\w*|καπνι|τσιγαρ|sigara/],
+  ["sea", /\b(sea|beach\w*|swim\w*)\b|θαλασσ|παραλ|μπανιο|κολυμπ|deniz|plaj|yuz/],
+  ["kitchen", /kitchen|cook\w*|coffee|espresso|oven|fridge|κουζιν|μαγειρ|καφε|φουρν|ψυγει|mutfak|kahve|firin|yemek pis/],
+  ["climate", /air ?con\w*|\bac\b|heating|κλιματισ|θερμανσ|κλιμα|klima|isitma/],
+  ["laundry", /wash\w*|laundry|\biron\w*|πλυντηρ|σιδερ|camasir|utu/],
+  ["tv", /\btv\b|television|netflix|prime|τηλεορασ|televizyon/],
+  ["home", /bed\w*|sleep\w*|guests?|people|rooms?|bathroom|sofa|size|m2|υπνοδωμ|κρεβατ|ατομα|επισκεπτ|μπανιο|καναπ|τετραγων|yatak|kisi|misafir|oda|banyo/],
+  ["location", /where|address|location|directions?|map|port|how (do i|to) get|που ειστε|διευθυνσ|τοποθεσ|χαρτη|λιμαν|πως θα ερθ|nerede|adres|konum|harita|liman/],
 ];
-/** No model, external tools or inferred facts. A future provider must retain this source contract. */
+
+const categories: [NearbyCategory, RegExp][] = [
+  ["groceries", /super ?market|grocer\w*|shop\w*|σουπερ|μαρκετ|ψωνι|market/],
+  ["bakery", /baker\w*|bread|φουρνο|αρτοποι|ψωμι|firin|ekmek/],
+  ["coffee", /\bcafes?\b|coffee shop|beach bar|καφετερ|καφε(?=\s|$)|kafe/],
+  ["food", /restaurant|\beat\b|food|dinner|lunch|taverna|grill|φαγητ|φαι|εστιατορ|ταβερν|ψητοπωλ|σουβλακ|restoran|yemek/],
+  ["pharmacy", /pharmac\w*|chemist|medicine|φαρμακ|eczane|ilac/],
+  ["transport", /rent\w*|car hire|petrol|fuel|gas station|ενοικιασ|βενζιν|καυσιμ|kiralik|benzin/],
+];
+
+/*
+  An explicit request for a person. Precise on purpose: "Αθηνά" (the host) and "Αθήνα"
+  (Athens) are the same letters once accents are stripped, so the name only counts after
+  a verb like "talk to". Greek and Turkish words end with a lookahead: \b is Latin-only.
+*/
+const HOST_REQUEST = new RegExp([
+  "\\b(human|real person|representative|live agent|customer service)\\b",
+  "\\b(talk|speak|chat|write|message) (to|with) (the |a |your )?(host|owner|athina|someone|somebody|person|manager)\\b",
+  "εκπροσωπ", "οικοδεσποιν", "ιδιοκτητ",
+  "(μιλησ|μιλαω|μιλαμε|μιλαει|επικοινων|γραψ|στειλ|συνδεσ)\\p{L}* ((σε|με|στην|στον|την|τον|στη|στο|με την|με τον) )*(αθηνα|ανθρωπ|καποιον|καποια)",
+  "θελω (εναν )?ανθρωπο(?=\\s|$)",
+  "temsilci", "ev sahib", "insan(la|\\s+ile)", "athina\\s*(ile|ya)",
+].join("|"), "u");
+
+export const asksForHost = (text: string) => HOST_REQUEST.test(normalize(text));
+
+const normalize = (text: string) => text
+  .normalize("NFD").replace(/\p{M}/gu, "")
+  .toLocaleLowerCase("en").replace(/ı/g, "i")
+  .replace(/[^\p{L}\p{N}\s-]/gu, " ").replace(/\s+/g, " ").trim();
+
+function nearbyAnswer(locale: StayLocale, question: string) {
+  const category = categories.find(([, pattern]) => pattern.test(question))?.[0];
+  const general = /nearby|neighbou?rhood|around|close|γειτον|κοντα|γυρω|yakin|mahalle|cevre/.test(question);
+  if (!category && !general) return null;
+  const c = neighbourhoodCopy[locale];
+  const places = nearbyPlaces
+    .filter(place => !category || place.category === category)
+    .toSorted((a, b) => a.distanceMeters - b.distanceMeters);
+  const list = places.map(place => {
+    const name = place.id === "public-parking" ? c.publicParking : place.name;
+    return `- ${place.mapsUrl ? `[${name}](${place.mapsUrl})` : name} · ≈ ${place.distanceMeters} m`;
+  }).join("\n");
+  return { reply: `${list}\n\n${c.note}`, sources: places.map(place => `neighbourhood:${place.id}`) };
+}
+
 export const propertyGuide: AssistantProvider = {
-  async answer(input: AssistantRequest) {
-    const lang = input.locale; const c = copy[lang]; const q = normalize(input.messages.at(-1)!.content);
-    const links = `[Airbnb](${propertyData.bookingLinks.airbnb}) · [Booking.com](${propertyData.bookingLinks.booking})`;
-    let reply = c.unknown; let sources = ['property:owner-confirmed'];
-    if (/representative|human|host|contact|εκπροσωπ|ανθρωπ|επικοινων|οικοδεσπ|temsilci|iletisim/.test(q)) reply = `${c.human}\n\n${links}`;
-    else if (/facebook|instagram|whatsapp|social/.test(q)) {
-      const channels = getContactChannels();
-      const active = [['Facebook', channels.facebook], ['Instagram', channels.instagram], ['WhatsApp', channels.whatsapp]].filter(([, url]) => url);
-      reply = active.length ? active.map(([label, url]) => `[${label}](${url})`).join(' · ') : `${c.social}\n\n${links}`;
-    } else if (/price|availability|available|book|reserv|τιμ|διαθεσ|κρατησ|fiyat|rezerv|musait/.test(q) && !/cot|crib|baby|child|family|playpen|high chair|μωρ|κουν|παιδ|οικογεν|bebek|cocuk|aile/.test(q)) reply = `${c.booking}\n\n${links}`;
-    else if (/baby|child|cot|crib|playpen|high chair|family|μωρ|παιδ|κουν|παρκοκρεβ|οικογεν|bebek|cocuk|aile/.test(q)) {
-      reply = `${listingCopy(lang).familyBody}\n\n${listingCopy(lang).faqs.find(f => /children|παιδιά|Çocuklar/.test(f.q))?.a ?? ''}`;
-      sources = ['booking:family-policy', 'listing:family-photographs'];
-    } else if (/parking|park|παρκ|σταθμε/.test(q)) reply = c.parking;
-    else {
-      const exact = nearbyPlaces.filter(p => normalize(p.name).split(' ').some(word => word.length > 4 && !['coffee','market','bakery','point','beach'].includes(word) && q.includes(word)));
-      const category = categories.find(([, pattern]) => pattern.test(q))?.[0];
-      const all = /nearby|neighbo|around|γειτον|κοντα|mahall|yakin/.test(q);
-      const places = exact.length ? exact : category ? nearbyPlaces.filter(p => p.category === category) : all ? nearbyPlaces : [];
-      if (places.length) {
-        reply = places.slice().sort((a, b) => a.distanceMeters - b.distanceMeters).map(p => `- ${p.mapsUrl ? `[${p.name}](${p.mapsUrl})` : p.name} — ≈ ${p.distanceMeters} m`).join('\n') + `\n\n${c.end}`;
-        sources = places.map(p => `owner-neighbourhood:${p.id}`);
-      } else if (/guest|bedroom|bathroom|home|suite|space|ατομ|επισκεπ|υπνοδωμ|σπιτι|διαμερισ|misafir|yatak|oda/.test(q)) reply = c.home;
-      else if (/^(hi|hello|hey|γεια|καλημερα|merhaba|selam)$/.test(q)) reply = c.intro;
+  async answer({ locale, messages }: AssistantRequest) {
+    const question = normalize(messages.at(-1)?.content ?? "");
+    const copy = getStayCopy(locale);
+    const values = {
+      area: property.areaM2,
+      guests: property.maxGuests,
+      distance: property.distanceToSeaMeters,
+      maps: property.location.googleMapsUrl,
+      family: copy.family.body,
+      kitchen: copy.kitchen.body,
+    };
+    const say = (topic: Topic | "unknown") => fillCopy(answers[locale][topic], values);
+
+    // Note: \b only knows Latin letters, so Greek words end with a lookahead instead.
+    if (/^(hi|hello|hey|good (morning|evening)|γεια|καλημερα|καλησπερα|merhaba|selam|iyi gunler)(?=\s|$)/.test(question) && question.split(" ").length <= 3) {
+      return { reply: say("greeting"), mode: "guide", sources: [] };
     }
-    return { reply, mode: 'guide', sources };
+    if (asksForHost(question)) return { reply: say("host"), mode: "guide", sources: [], suggestHost: true };
+    const nearby = nearbyAnswer(locale, question);
+    const topic = topics.find(([, pattern]) => pattern.test(question))?.[0];
+    // Neighbourhood questions win over generic words like "coffee" or "car".
+    if (nearby && (!topic || ["kitchen", "parking", "sea", "location"].includes(topic) && categories.some(([, pattern]) => pattern.test(question)))) {
+      return { reply: nearby.reply, mode: "guide", sources: nearby.sources };
+    }
+    if (topic === "booking") {
+      return { reply: `${say("booking")}\n\n[Airbnb](${property.bookingLinks.airbnb}) · [Booking.com](${property.bookingLinks.booking})`, mode: "guide", sources: ["booking-platforms"] };
+    }
+    if (topic) return { reply: say(topic), mode: "guide", sources: [`property:${topic}`], suggestHost: topic === "family" || topic === "times" };
+    return { reply: say("unknown"), mode: "guide", sources: [], suggestHost: true };
   },
 };

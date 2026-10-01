@@ -1,0 +1,16 @@
+.host { background: var(--surface); border-block: 1px solid var(--line); }
+.inner {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 4fr);
+  gap: clamp(40px, 7vw, 120px);
+  align-items: center;
+  padding-block: clamp(64px, 8vw, 110px);
+}
+.copy { max-width: 580px; }
+.actions { display: flex; flex-wrap: wrap; align-items: center; gap: 20px 28px; margin-top: 12px; }
+.photo { aspect-ratio: 3 / 4; border-radius: 10px; }
+
+@media (max-width: 760px) {
+  .inner { grid-template-columns: 1fr; }
+  .photo { max-width: 340px; }
+}

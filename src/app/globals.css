@@ -1,79 +1,37 @@
 @tailwind base;
-@tailwind components;
-@tailwind utilities;
 
-@layer base {
-  :root {
-    /* Legacy font utilities inherit the modern display family. */
-    --font-serif: var(--font-display);
-    --background: #FFFFFF;
-    --foreground: #252729;
-    --surface: #FAFAF9;
-    --surface-elevated: rgba(251, 250, 246, 0.85);
-    --muted: #5B6063;
-    --muted-light: #E7E8E6;
-    --border: rgba(11, 32, 43, 0.08);
-    --border-light: rgba(246, 242, 232, 0.15);
-    --sea: #1A5268;
-    --sea-deep: #0F3240;
-    --mastiha: #73806B;
-    --resin: #DCCB9D;
-    --resin-glow: rgba(220, 203, 157, 0.45);
-    --stone: #B7AA98;
-    --night: #111310;
-  }
-  * { border-color: var(--border); }
-  html {
-    background-color: var(--background);
-    color: var(--foreground);
-    text-rendering: optimizeLegibility;
-    -webkit-font-smoothing: antialiased;
-    -moz-osx-font-smoothing: grayscale;
-    scroll-behavior: auto;
-  }
-  body {
-    background-color: var(--background);
-    color: var(--foreground);
-    overflow-x: hidden;
-    min-height: 100vh;
-    font-feature-settings: "cv02", "cv03", "cv04", "cv11";
-  }
-  ::selection { background-color: #E5E7E6; color: var(--foreground); }
-  .safe-bottom { padding-bottom: max(1rem, env(safe-area-inset-bottom)); }
+/* Page-level defaults. Components style themselves with CSS modules. */
+:root {
+  color-scheme: light;
+  --background: #ffffff;
+  --foreground: #1f2123;
 }
 
-html.lenis, html.lenis body { height: auto; }
+html {
+  background: var(--background);
+  color: var(--foreground);
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  text-rendering: optimizeLegibility;
+}
+
+body {
+  min-height: 100vh;
+  overflow-x: hidden;
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  font-feature-settings: "cv02", "cv03", "cv04", "cv11";
+}
+
+::selection { background: #ebe6dc; color: var(--foreground); }
+
+/* Lenis smooth scrolling */
+html.lenis,
+html.lenis body { height: auto; }
 .lenis.lenis-smooth { scroll-behavior: auto !important; }
 .lenis.lenis-smooth [data-lenis-prevent] { overscroll-behavior: contain; }
 .lenis.lenis-stopped { overflow: hidden; }
 .lenis.lenis-scrolling iframe { pointer-events: none; }
 
-::-webkit-scrollbar { width: 6px; }
-::-webkit-scrollbar-track { background: transparent; }
-::-webkit-scrollbar-thumb { background: rgba(11, 32, 43, 0.15); border-radius: 9999px; }
-::-webkit-scrollbar-thumb:hover { background: rgba(11, 32, 43, 0.3); }
-
-.mastiha-glass-dock {
-  background: rgba(246, 242, 232, 0.72);
-  backdrop-filter: blur(20px) saturate(180%);
-  -webkit-backdrop-filter: blur(20px) saturate(180%);
-  border: 1px solid rgba(220, 203, 157, 0.4);
-  box-shadow: 0 10px 30px -5px rgba(11, 32, 43, 0.08), 0 0 0 1px rgba(255, 255, 255, 0.6) inset, 0 1px 2px 0 rgba(220, 203, 157, 0.3) inset;
-}
-.mastiha-glass-card {
-  background: rgba(251, 250, 246, 0.82);
-  backdrop-filter: blur(16px) saturate(160%);
-  -webkit-backdrop-filter: blur(16px) saturate(160%);
-  border: 1px solid rgba(220, 203, 157, 0.25);
-  box-shadow: 0 12px 32px -4px rgba(11, 32, 43, 0.06), 0 0 0 1px rgba(255, 255, 255, 0.8) inset;
-}
-.mastiha-glass-modal {
-  background: rgba(246, 242, 232, 0.92);
-  backdrop-filter: blur(24px) saturate(200%);
-  -webkit-backdrop-filter: blur(24px) saturate(200%);
-  border: 1px solid rgba(220, 203, 157, 0.5);
-  box-shadow: 0 25px 50px -12px rgba(11, 32, 43, 0.25), 0 0 0 1px rgba(255, 255, 255, 0.7) inset, 0 2px 8px rgba(220, 203, 157, 0.2) inset;
-}
-.resin-glow { box-shadow: 0 0 24px -4px var(--resin-glow); }
-#neighbourhood-title + p { color: var(--muted, #5b6063); }
-.yarl__root { font-family:var(--font-sans),sans-serif; }
+.yarl__root { font-family: var(--font-sans), sans-serif; }

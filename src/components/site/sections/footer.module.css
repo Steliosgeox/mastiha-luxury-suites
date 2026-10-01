@@ -1,0 +1,150 @@
+.footer { position: relative; overflow: hidden; background: var(--paper); }
+.inner { padding-top: clamp(64px, 8vw, 112px); }
+
+.top {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: center;
+  gap: 12px 32px;
+  padding-bottom: 28px;
+  border-bottom: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+}
+.top p { margin: 0; }
+.clock { display: inline-flex; align-items: center; gap: 10px; font-variant-numeric: tabular-nums; }
+.clock time { color: var(--ink); }
+.pulse { position: relative; width: 8px; height: 8px; border-radius: 50%; background: #3f9a6b; }
+.pulse::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: inherit;
+  animation: pulse 2.4s ease-out infinite;
+}
+
+.columns {
+  display: grid;
+  grid-template-columns: 1.3fr 1fr 1fr .9fr;
+  gap: 48px clamp(28px, 4vw, 72px);
+  padding-block: clamp(48px, 6vw, 80px);
+}
+.columns h2 {
+  margin: 0 0 22px;
+  font-size: 11px;
+  font-weight: 500;
+  letter-spacing: .14em;
+  text-transform: uppercase;
+  color: var(--muted);
+}
+.chat {
+  display: inline-flex;
+  align-items: center;
+  gap: 14px;
+  min-height: 54px;
+  padding: 0 26px;
+  border: 0;
+  border-radius: 999px;
+  background: var(--ink);
+  color: #fff;
+  font-size: 15px;
+  cursor: pointer;
+  transition: background-color 200ms ease, gap 250ms var(--ease-out);
+}
+.note { margin: 14px 0 0; max-width: 30ch; font-size: 13px; line-height: 1.6; color: var(--muted); }
+.links,
+.platforms,
+.sections { margin: 0; padding: 0; list-style: none; }
+.links { margin-top: 20px; display: grid; gap: 4px; }
+.links a { display: inline-flex; align-items: center; gap: 10px; min-height: 36px; font-size: 14px; }
+.links svg { width: 20px; height: 20px; color: var(--accent); }
+
+.platforms { display: grid; gap: 10px; }
+.platforms a {
+  display: grid;
+  grid-template-columns: 22px 1fr auto;
+  align-items: center;
+  gap: 12px;
+  min-height: 58px;
+  padding: 0 16px;
+  border: 1px solid var(--line);
+  border-radius: 12px;
+  font-size: 15px;
+  transition: border-color 200ms ease, transform 250ms var(--ease-out);
+}
+.brand { width: 20px; height: 20px; }
+.score { display: inline-flex; align-items: center; gap: 5px; font-size: 14px; font-variant-numeric: tabular-nums; }
+.star { width: 13px; height: 13px; color: var(--accent); }
+
+.address { margin-bottom: 18px; font-style: normal; font-size: 15px; line-height: 1.7; }
+.sections { display: grid; gap: 2px; }
+.sections a {
+  display: inline-block;
+  padding: 6px 0;
+  font-size: 15px;
+  background: linear-gradient(currentColor, currentColor) 0 100% / 0 1px no-repeat;
+  transition: background-size 300ms var(--ease-out);
+}
+
+.bar {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 12px 28px;
+  padding-block: 22px;
+  border-top: 1px solid var(--line);
+  font-size: 13px;
+  color: var(--muted);
+}
+.bar > span:first-child { margin-right: auto; }
+.locales { display: flex; gap: 12px; }
+.locales a[aria-current="page"] { color: var(--ink); text-decoration: underline; text-underline-offset: 5px; }
+.toTop {
+  display: grid;
+  place-items: center;
+  width: 46px;
+  height: 46px;
+  border: 1px solid var(--line);
+  border-radius: 50%;
+  color: var(--ink);
+  transition: border-color 200ms ease, transform 250ms var(--ease-out);
+}
+.toTop svg { width: 18px; height: 18px; }
+
+/* Oversized wordmark, cropped by the bottom edge of the page. */
+.wordmark {
+  margin: 0 0 -.19em;
+  padding-bottom: 76px;
+  font-family: var(--font-display), var(--font-sans), sans-serif;
+  font-size: clamp(96px, 24.5vw, 470px);
+  font-weight: 280;
+  line-height: .9;
+  letter-spacing: -.065em;
+  text-align: center;
+  white-space: nowrap;
+  color: var(--ink);
+  user-select: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
+  .chat:hover { background: #3a3d40; gap: 20px; }
+  .platforms a:hover { border-color: var(--ink); transform: translateY(-2px); }
+  .links a:hover,
+  .bar a:hover { color: var(--ink); }
+  .sections a:hover { background-size: 100% 1px; }
+  .toTop:hover { border-color: var(--ink); transform: translateY(-3px); }
+}
+
+@media (max-width: 1000px) {
+  .columns { grid-template-columns: 1fr 1fr; }
+}
+@media (max-width: 560px) {
+  .columns { grid-template-columns: 1fr; gap: 40px; }
+  .bar > span:first-child { flex-basis: 100%; }
+  .wordmark { padding-bottom: 90px; }
+}
+
+@keyframes pulse { from { transform: scale(1); opacity: .6; } to { transform: scale(3); opacity: 0; } }
+@media (prefers-reduced-motion: reduce) { .pulse::after { animation: none; } }

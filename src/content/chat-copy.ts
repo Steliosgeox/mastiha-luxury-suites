@@ -1,0 +1,148 @@
+import type { StayLocale } from "./stay-copy";
+
+// The guest chat (the Elite Memoriz floating assistant). Greek first; English and Turkish follow it.
+
+const el = {
+  open: "Άνοιγμα συνομιλίας",
+  close: "Κλείσιμο",
+  title: "Mastiha Luxury Suites",
+  status: {
+    bot: "Αυτόματος βοηθός · απαντά αμέσως",
+    hostOnline: "Η Αθηνά είναι συνδεδεμένη",
+    hostAway: "Η Αθηνά θα λάβει ειδοποίηση",
+    typing: "Η Αθηνά γράφει…",
+    closed: "Η συζήτηση έκλεισε",
+  },
+  quick: { book: "Κράτηση", directions: "Πώς θα έρθετε", host: "Μιλήστε με την Αθηνά", hostDone: "Η Αθηνά ειδοποιήθηκε" },
+  welcome: {
+    title: "Πώς μπορούμε να βοηθήσουμε;",
+    suggestions: ["Τι υπάρχει κοντά;", "Έχετε κούνια για μωρό;", "Υπάρχει πάρκινγκ;"],
+  },
+  tags: ["Τιμές και διαθεσιμότητα", "Για παιδιά", "Πού είστε;"],
+  inputLabel: "Η ερώτησή σας",
+  messageLabel: "Μήνυμα",
+  placeholder: { bot: "Ρωτήστε μας ό,τι χρειάζεστε…", live: "Γράψτε στην Αθηνά…", closed: "Γράψτε για να ανοίξει ξανά η συζήτηση…" },
+  send: "Αποστολή",
+  names: { bot: "Αυτόματος βοηθός", host: "Αθηνά" },
+  talkToHost: "Μιλήστε με την Αθηνά",
+  error: "Κάτι πήγε στραβά. Δοκιμάστε ξανά σε λίγο.",
+  failed: "Δεν στάλθηκε. Πατήστε για να ξαναδοκιμάσετε.",
+  details: {
+    title: "Να σας απαντήσει και με email;",
+    body: "Αν φύγετε από τη σελίδα, η Αθηνά μπορεί να σας γράψει στο email σας. Προαιρετικό.",
+    name: "Όνομα",
+    email: "Email",
+    save: "Αποθήκευση",
+    saved: "Ευχαριστούμε. Η Αθηνά θα το δει.",
+    skip: "Όχι, ευχαριστώ",
+  },
+  system: {
+    handoff: "Ειδοποιήσαμε την Αθηνά. Θα σας απαντήσει εδώ.",
+    takeover: "Η Αθηνά μπήκε στη συζήτηση",
+    returned: "Συνεχίζει ο αυτόματος βοηθός",
+    closed: "Η Αθηνά έκλεισε τη συζήτηση",
+    reopened: "Η συζήτηση άνοιξε ξανά",
+  },
+  notice: "Κρατάμε τις συζητήσεις 30 ημέρες.",
+  privacy: "Απόρρητο",
+  newChat: "Νέα συζήτηση",
+  unavailable: "Η Αθηνά δεν είναι διαθέσιμη εδώ αυτή τη στιγμή. Στείλτε της μήνυμα από την κράτησή σας στο Airbnb ή στο Booking.com.",
+};
+
+export type ChatCopy = typeof el;
+
+const en: ChatCopy = {
+  open: "Open chat",
+  close: "Close",
+  title: "Mastiha Luxury Suites",
+  status: {
+    bot: "Automated assistant · replies instantly",
+    hostOnline: "Athina is online",
+    hostAway: "Athina will be notified",
+    typing: "Athina is typing…",
+    closed: "Conversation closed",
+  },
+  quick: { book: "Book", directions: "Getting here", host: "Talk to Athina", hostDone: "Athina has been notified" },
+  welcome: {
+    title: "How can we help?",
+    suggestions: ["What’s nearby?", "Do you have a baby cot?", "Is there parking?"],
+  },
+  tags: ["Prices and availability", "For children", "Where are you?"],
+  inputLabel: "Your question",
+  messageLabel: "Message",
+  placeholder: { bot: "Ask us anything you need…", live: "Write to Athina…", closed: "Write to reopen the conversation…" },
+  send: "Send",
+  names: { bot: "Automated assistant", host: "Athina" },
+  talkToHost: "Talk to Athina",
+  error: "Something went wrong. Please try again in a moment.",
+  failed: "Not sent. Tap to try again.",
+  details: {
+    title: "Would you like a reply by email too?",
+    body: "If you leave the page, Athina can write to your email. Optional.",
+    name: "Name",
+    email: "Email",
+    save: "Save",
+    saved: "Thank you. Athina will see it.",
+    skip: "No, thanks",
+  },
+  system: {
+    handoff: "We’ve let Athina know. She’ll reply here.",
+    takeover: "Athina joined the conversation",
+    returned: "The automated assistant continues",
+    closed: "Athina closed the conversation",
+    reopened: "Conversation reopened",
+  },
+  notice: "We keep conversations for 30 days.",
+  privacy: "Privacy",
+  newChat: "New conversation",
+  unavailable: "Athina isn’t available here right now. Message her from your Airbnb or Booking.com booking.",
+};
+
+const tr: ChatCopy = {
+  open: "Sohbeti aç",
+  close: "Kapat",
+  title: "Mastiha Luxury Suites",
+  status: {
+    bot: "Otomatik asistan · hemen yanıtlar",
+    hostOnline: "Athina çevrimiçi",
+    hostAway: "Athina’ya bildirim gidecek",
+    typing: "Athina yazıyor…",
+    closed: "Sohbet kapandı",
+  },
+  quick: { book: "Rezervasyon", directions: "Nasıl gelinir", host: "Athina ile konuşun", hostDone: "Athina’ya haber verildi" },
+  welcome: {
+    title: "Nasıl yardımcı olabiliriz?",
+    suggestions: ["Yakında neler var?", "Bebek yatağınız var mı?", "Otopark var mı?"],
+  },
+  tags: ["Fiyatlar ve müsaitlik", "Çocuklar için", "Neredesiniz?"],
+  inputLabel: "Sorunuz",
+  messageLabel: "Mesaj",
+  placeholder: { bot: "İhtiyacınız olan her şeyi sorun…", live: "Athina’ya yazın…", closed: "Sohbeti yeniden açmak için yazın…" },
+  send: "Gönder",
+  names: { bot: "Otomatik asistan", host: "Athina" },
+  talkToHost: "Athina ile konuşun",
+  error: "Bir sorun oluştu. Lütfen biraz sonra tekrar deneyin.",
+  failed: "Gönderilemedi. Tekrar denemek için dokunun.",
+  details: {
+    title: "E-postayla da yanıt ister misiniz?",
+    body: "Sayfadan ayrılırsanız Athina size e-postayla yazabilir. İsteğe bağlı.",
+    name: "Ad",
+    email: "E-posta",
+    save: "Kaydet",
+    saved: "Teşekkürler. Athina görecek.",
+    skip: "Hayır, teşekkürler",
+  },
+  system: {
+    handoff: "Athina’ya haber verdik. Size buradan yanıt verecek.",
+    takeover: "Athina sohbete katıldı",
+    returned: "Otomatik asistan devam ediyor",
+    closed: "Athina sohbeti kapattı",
+    reopened: "Sohbet yeniden açıldı",
+  },
+  notice: "Sohbetleri 30 gün saklıyoruz.",
+  privacy: "Gizlilik",
+  newChat: "Yeni sohbet",
+  unavailable: "Athina şu anda burada değil. Airbnb veya Booking.com rezervasyonunuz üzerinden ona yazın.",
+};
+
+export const CHAT_COPY: Record<StayLocale, ChatCopy> = { el, en, tr };

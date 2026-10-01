@@ -5,19 +5,8 @@ const withNextIntl = createNextIntlPlugin("./src/i18n/request.ts");
 
 const nextConfig: NextConfig = {
   reactStrictMode: true,
-  images: {
-    formats: ["image/avif", "image/webp"],
-    remotePatterns: [
-      {
-        protocol: "https",
-        hostname: "cf.bstatic.com",
-      },
-      {
-        protocol: "https",
-        hostname: "a0.muscache.com",
-      },
-    ],
-  },
+  // Photos ship pre-encoded in three widths; the loader picks one (no runtime re-encoding).
+  images: { loader: "custom", loaderFile: "./src/lib/image-loader.ts" },
 };
 
 export default withNextIntl(nextConfig);

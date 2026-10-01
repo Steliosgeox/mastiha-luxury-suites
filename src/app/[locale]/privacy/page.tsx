@@ -1,20 +1,28 @@
-import Link from 'next/link';
-import { setRequestLocale } from 'next-intl/server';
-import { normalizeStayLocale, getStayCopy } from '@/content/stay-copy';
-import { propertyData } from '@/content/property';
-import { localeMetadata } from '@/lib/site';
-export async function generateMetadata({params}:{params:Promise<{locale:string}>}) {return localeMetadata((await params).locale,true);}
-const texts={
- en:['This website presents Mastiha Luxury Suites. It has no booking payment form, guest account or newsletter form.','The hosting provider processes technical request information such as IP addresses for delivery and security. This website’s interaction events stay in the browser; no analytics collection service is currently connected in the application.','Photographs are served by this website. Google Maps is contacted only after you choose to load the map. You can instead use the external directions link. Google and the reservation platforms apply their own privacy terms when you visit them.','Reservations and their personal data are handled on Airbnb or Booking.com, not by a payment system on this website. For questions about your data or a reservation, contact the host through the Airbnb listing.'],
- el:['Αυτός ο ιστότοπος παρουσιάζει το Mastiha Luxury Suites. Δεν διαθέτει φόρμα πληρωμής κράτησης, λογαριασμό επισκέπτη ή φόρμα newsletter.','Ο πάροχος φιλοξενίας επεξεργάζεται τεχνικά στοιχεία αιτημάτων, όπως διευθύνσεις IP, για την παροχή και την ασφάλεια της υπηρεσίας. Τα συμβάντα αλληλεπίδρασης παραμένουν στον browser· στην εφαρμογή δεν έχει συνδεθεί υπηρεσία συλλογής analytics.','Οι φωτογραφίες σερβίρονται από τον ιστότοπό μας. Η Google Maps φορτώνεται μόνο όταν επιλέξετε την προβολή του χάρτη. Εναλλακτικά, υπάρχει εξωτερικός σύνδεσμος οδηγιών. Η Google και οι πλατφόρμες κρατήσεων εφαρμόζουν τους δικούς τους όρους απορρήτου όταν τις επισκέπτεστε.','Οι κρατήσεις και τα προσωπικά δεδομένα τους διαχειρίζονται στο Airbnb ή στο Booking.com, όχι σε σύστημα πληρωμών αυτού του ιστοτόπου. Για ερωτήσεις σχετικά με δεδομένα ή κράτηση, επικοινωνήστε με την οικοδέσποινα μέσω της καταχώρισης του Airbnb.'],
- tr:['Bu site Mastiha Luxury Suites’i tanıtır. Rezervasyon ödeme formu, misafir hesabı veya bülten formu içermez.','Barındırma sağlayıcısı, hizmet sunumu ve güvenlik için IP adresleri gibi teknik istek bilgilerini işler. Etkileşim olayları tarayıcıda kalır; uygulamaya şu anda bir analitik toplama hizmeti bağlı değildir.','Fotoğraflar bu siteden sunulur. Google Maps yalnızca haritayı yüklemeyi seçtiğinizde açılır. Bunun yerine dış yol tarifi bağlantısını kullanabilirsiniz. Google ve rezervasyon platformlarında kendi gizlilik koşulları geçerlidir.','Rezervasyonlar ve ilgili kişisel veriler bu sitenin ödeme sistemi üzerinden değil, Airbnb veya Booking.com üzerinde işlenir. Verileriniz veya rezervasyonunuzla ilgili sorular için Airbnb ilanı üzerinden ev sahibiyle iletişime geçin.'],
-};
-const assistantPrivacy = {
- en: 'Questions entered in the property guide are sent to this website’s server to select answers from the property and neighbourhood information. No external AI model or training service is connected. The application does not persist chat transcripts or put them in analytics. The conversation remains in browser memory until the page is left or reloaded. A short-lived, hashed request identifier is used for per-instance abuse limits. Direct messaging is unavailable until a representative delivery service is configured. When enabled, the contact form asks for consent before sharing your name, reply email and message with the configured host service; it does not attach your chat history. External social and booking links follow their providers’ privacy terms.',
- el: 'Οι ερωτήσεις στον οδηγό καταλύματος αποστέλλονται στον διακομιστή αυτού του ιστοτόπου για επιλογή απαντήσεων από τα στοιχεία του καταλύματος και της γειτονιάς. Δεν έχει συνδεθεί εξωτερικό μοντέλο AI ή υπηρεσία εκπαίδευσης. Η εφαρμογή δεν αποθηκεύει ιστορικό συνομιλίας ούτε το στέλνει σε analytics. Η συνομιλία παραμένει στη μνήμη του browser έως την αποχώρηση ή ανανέωση της σελίδας. Χρησιμοποιείται προσωρινό κατακερματισμένο αναγνωριστικό αιτήματος για όρια κατάχρησης ανά διακομιστή. Η απευθείας αποστολή μηνύματος δεν είναι διαθέσιμη μέχρι να συνδεθεί υπηρεσία παραλαβής εκπροσώπου. Όταν ενεργοποιηθεί, ζητείται συγκατάθεση πριν κοινοποιηθούν όνομα, email απάντησης και μήνυμα στην υπηρεσία της οικοδέσποινας· το ιστορικό συνομιλίας δεν επισυνάπτεται. Οι εξωτερικοί σύνδεσμοι social και κρατήσεων διέπονται από τους όρους απορρήτου των παρόχων τους.',
- tr: 'Tesis rehberine yazılan sorular, tesis ve mahalle bilgilerinden yanıt seçmek için bu sitenin sunucusuna gönderilir. Harici bir yapay zekâ modeli veya eğitim hizmeti bağlı değildir. Uygulama sohbet geçmişini kalıcı olarak kaydetmez veya analitiğe göndermez. Sohbet, sayfadan ayrılana ya da sayfayı yenileyene kadar tarayıcı belleğinde kalır. Sunucu başına kötüye kullanım sınırları için kısa ömürlü, özetlenmiş bir istek tanımlayıcısı kullanılır. Temsilci teslimat hizmeti yapılandırılana kadar doğrudan mesaj gönderimi kullanılamaz. Etkinleştirildiğinde iletişim formu adınızı, yanıt e-postanızı ve mesajınızı ev sahibinin hizmetiyle paylaşmadan önce onay ister; sohbet geçmişini eklemez. Harici sosyal ve rezervasyon bağlantılarında ilgili sağlayıcıların gizlilik koşulları geçerlidir.',
-};
-export default async function PrivacyPage({params}:{params:Promise<{locale:string}>}) {
- const {locale}=await params, lang=normalizeStayLocale(locale);setRequestLocale(lang);const c=getStayCopy(lang);
- return <main style={{minHeight:'100svh',background:'#fff',color:'#252729',padding:'80px max(24px,7vw)'}}><div style={{maxWidth:760,margin:'auto'}}><Link href={`/${lang}`}>← Mastiha Luxury Suites</Link><h1 style={{fontFamily:'var(--font-display), var(--font-sans), sans-serif',fontWeight:450,letterSpacing:'-.035em',fontSize:'clamp(38px,6vw,64px)',margin:'40px 0 24px'}}>{c.privacy}</h1>{[...texts[lang], assistantPrivacy[lang]].map(text=><p key={text} style={{lineHeight:1.85,marginBottom:24}}>{text}</p>)}<a href={propertyData.bookingLinks.airbnb} target="_blank" rel="noopener noreferrer">Airbnb ↗</a><p style={{fontSize:12,marginTop:40}}>2026-09-28 · {c.registration} {propertyData.licenseNumber}</p></div></main>;
+import Link from "next/link";
+import { setRequestLocale } from "next-intl/server";
+import { propertyData as property } from "@/content/property";
+import { PRIVACY_COPY, PRIVACY_UPDATED } from "@/content/privacy-copy";
+import { fillCopy, formatDate, normalizeStayLocale } from "@/content/stay-copy";
+import { localeMetadata } from "@/lib/site";
+import s from "./privacy.module.css";
+
+type Props = { params: Promise<{ locale: string }> };
+
+export async function generateMetadata({ params }: Props) {
+  return localeMetadata((await params).locale, true);
+}
+
+export default async function PrivacyPage({ params }: Props) {
+  const locale = normalizeStayLocale((await params).locale);
+  setRequestLocale(locale);
+  const c = PRIVACY_COPY[locale];
+  return <main className={s.page}>
+    <Link href={`/${locale}`} className={s.back}>← {c.back}</Link>
+    <h1>{c.title}</h1>
+    <p className={s.updated}>{fillCopy(c.updated, { date: formatDate(PRIVACY_UPDATED, locale) })}</p>
+    {c.sections.map(section => <section key={section.heading}>
+      <h2>{section.heading}</h2>
+      <p>{fillCopy(section.body, { license: property.licenseNumber })}</p>
+    </section>)}
+  </main>;
 }

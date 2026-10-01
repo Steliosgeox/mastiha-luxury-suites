@@ -1,0 +1,17 @@
+.kitchen {
+  display: grid;
+  grid-template-columns: minmax(0, 7fr) minmax(0, 5fr);
+  gap: clamp(40px, 7vw, 120px);
+  align-items: center;
+  padding-block: var(--section-y);
+}
+.main { min-width: 0; }
+.mainPhoto { aspect-ratio: 1.25; border-radius: var(--radius); }
+.copy { max-width: 520px; }
+.details { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-top: 40px; }
+.detailPhoto { aspect-ratio: 1; border-radius: var(--radius); }
+
+@media (max-width: 900px) {
+  .kitchen { grid-template-columns: 1fr; }
+  .mainPhoto { aspect-ratio: 4 / 3; }
+}
