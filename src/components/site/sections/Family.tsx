@@ -32,10 +32,12 @@ export function Family({ locale }: { locale: StayLocale }) {
         </ul>
       </div>
       <div className={s.track} data-track role="list" aria-label={c.eyebrow}>
-        {photos.map(({ id, position }, index) => <figure key={id} className={s.card} role="listitem">
-          <OpenablePhoto id={id} locale={locale} className={s.cardPhoto} position={position} sizes="(max-width: 900px) 76vw, 26vw" reveal={false} />
-          <figcaption><span>{String(index + 1).padStart(2, "0")}</span>{photoCaption(id, locale)}</figcaption>
-        </figure>)}
+        {photos.map(({ id, position }, index) => <div key={id} className={s.card} role="listitem">
+          <figure>
+            <OpenablePhoto id={id} locale={locale} className={s.cardPhoto} position={position} sizes="(max-width: 900px) 76vw, 26vw" reveal={false} />
+            <figcaption><span>{String(index + 1).padStart(2, "0")}</span>{photoCaption(id, locale)}</figcaption>
+          </figure>
+        </div>)}
       </div>
       <p className={s.hint} aria-hidden="true">{c.drag} →</p>
     </div>

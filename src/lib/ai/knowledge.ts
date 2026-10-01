@@ -1,4 +1,5 @@
 import { createHash } from "node:crypto";
+import { faqItems } from "@/content/faq";
 import { nearbyPlaces } from "@/content/neighbourhood";
 import { propertyData as property } from "@/content/property";
 import { reviewStats as reviewData } from "@/content/reviews";
@@ -40,10 +41,10 @@ function build(): string {
 
   const family = section("Children and babies", [en.family.body, `Items: ${en.family.items.join("; ")}.`]);
 
-  const faq = section("Answers the host has written (English)", en.faq.items.map(item => `${item.q} ${say(item.a)}`));
+  const faq = section("Answers the host has written (English)", faqItems("en").map(item => `${item.q} ${item.a}`));
   // The host's own Greek: the model borrows this phrasing instead of translating from English.
   const greek = section("Οι απαντήσεις της οικοδέσποινας στα ελληνικά (ύφος και λεξιλόγιο για ελληνικές απαντήσεις)", [
-    ...el.faq.items.map(item => `${item.q} ${say(item.a)}`),
+    ...faqItems("el").map(item => `${item.q} ${item.a}`),
     say(el.intro.body),
     el.family.body,
     el.kitchen.body,

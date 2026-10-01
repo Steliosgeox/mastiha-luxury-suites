@@ -109,6 +109,25 @@ test.describe("page", () => {
     await context.close();
   });
 
+  test("the family photographs pin and slide sideways on a wide screen", async ({ page }) => {
+    // The photo tour above grows once its script runs; the pin below must be measured after that,
+    // or it starts thousands of pixels early and the section never pins.
+    await page.setViewportSize({ width: 1440, height: 900 });
+    await page.goto("/en");
+    await expect(page.getByTestId("scroll-film")).toHaveAttribute("data-static", "false");
+    await page.waitForLoadState("networkidle");
+    const section = page.locator("#family");
+    const firstCard = section.locator("[role=listitem]").first();
+    await expect(section.locator("xpath=..")).toHaveClass(/pin-spacer/);
+    const startLeft = (await firstCard.boundingBox())!.x;
+    await page.evaluate(() => {
+      const spacer = document.getElementById("family")!.parentElement!;
+      window.scrollTo(0, spacer.getBoundingClientRect().top + window.scrollY + 500);
+    });
+    await expect.poll(() => section.evaluate(element => getComputedStyle(element).position)).toBe("fixed");
+    await expect.poll(async () => (await firstCard.boundingBox())!.x).toBeLessThan(startLeft - 200);
+  });
+
   test("privacy page and 404 are localised", async ({ page }) => {
     await page.goto("/el/privacy");
     await expect(page.getByRole("heading", { level: 1, name: "Απόρρητο" })).toBeVisible();
