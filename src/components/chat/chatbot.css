@@ -1435,3 +1435,16 @@
         opacity: 1;
     }
 }
+
+/* The toggle while the assistant's code is on its way. */
+.chatbot-toggle--loading {
+    cursor: progress;
+}
+
+.chatbot-toggle--loading svg {
+    animation: chatbot-toggle-wait 1s ease-in-out infinite;
+}
+
+@keyframes chatbot-toggle-wait {
+    50% { opacity: 0.45; transform: scale(0.9); }
+}

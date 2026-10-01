@@ -2,7 +2,7 @@
 
 import "./chatbot.css";
 import { Fragment, memo, useCallback, useEffect, useId, useLayoutEffect, useMemo, useRef, useState, type FormEvent, type KeyboardEvent } from "react";
-import { ArrowRight, CalendarDays, Check, Headset, MapPin, MessageCircle, Sparkles, X } from "lucide-react";
+import { ArrowRight, CalendarDays, Check, Headset, MapPin, Sparkles, X } from "lucide-react";
 import { useSmoothScroll } from "@/components/layout/SmoothScrollProvider";
 import { CHAT_COPY } from "@/content/chat-copy";
 import { propertyData as property } from "@/content/property";
@@ -43,18 +43,21 @@ const Loader = () => (
   </svg>
 );
 
-type Props = { locale: StayLocale; initiallyOpen?: boolean; initialHandoff?: boolean };
+/**
+ * The panel. Its toggle belongs to ChatMount, which draws it before this code has loaded
+ * and keeps the same button afterwards, so no click is lost when the code arrives.
+ * `hostSignal` counts requests to hand the chat straight to Athina (page buttons).
+ */
+export type AssistantProps = { locale: StayLocale; open: boolean; onClose: () => void; hostSignal: number; onUnread: (count: number) => void };
 
-export default function FloatingAssistant({ locale, initiallyOpen = false, initialHandoff = false }: Props) {
+export default function FloatingAssistant({ locale, open: isOpen, onClose, hostSignal, onUnread }: AssistantProps) {
   const copy = CHAT_COPY[locale];
-  const [isOpen, setIsOpen] = useState(initiallyOpen);
   const [input, setInput] = useState("");
   const [detailsState, setDetailsState] = useState<"ask" | "saved" | "dismissed">("ask");
   const chat = useConcierge({ locale, open: isOpen });
   const { lenis } = useSmoothScroll();
 
   const chatScrollerRef = useRef<HTMLDivElement>(null);
-  const toggleRef = useRef<HTMLButtonElement>(null);
   const panelRef = useRef<HTMLDivElement>(null);
   const inputId = useId();
   const titleId = useId();
@@ -102,34 +105,21 @@ export default function FloatingAssistant({ locale, initiallyOpen = false, initi
     return () => cancelAnimationFrame(frame);
   }, [isConversationMode, isOpen]);
 
-  const open = useCallback(() => setIsOpen(true), []);
-  const close = useCallback(() => {
-    setIsOpen(false);
-    requestAnimationFrame(() => toggleRef.current?.focus({ preventScroll: true }));
-  }, []);
+  const close = onClose;
+  useEffect(() => onUnread(chat.unread), [chat.unread, onUnread]);
 
   const handoff = useCallback(async () => {
     forceScrollRef.current = true;
     await chat.handoff();
   }, [chat]);
 
-  // Page buttons ("Talk to Athina", the dock) open the assistant, or hand straight to Athina.
+  // Page buttons ("Talk to Athina") hand the chat straight to her.
+  const handledHost = useRef(0);
   useEffect(() => {
-    const onOpen = (event: Event) => {
-      setIsOpen(true);
-      if ((event as CustomEvent<{ mode?: string }>).detail?.mode === "host") void handoff();
-    };
-    window.addEventListener("mastiha:assistant-open", onOpen);
-    return () => window.removeEventListener("mastiha:assistant-open", onOpen);
-  }, [handoff]);
-
-  // A "Talk to Athina" click that arrived while this code was still loading.
-  const handedOff = useRef(false);
-  useEffect(() => {
-    if (!initialHandoff || handedOff.current) return;
-    handedOff.current = true;
+    if (hostSignal <= handledHost.current) return;
+    handledHost.current = hostSignal;
     void handoff();
-  }, [initialHandoff, handoff]);
+  }, [hostSignal, handoff]);
 
   // Focus the field on open; Escape closes.
   useEffect(() => {
@@ -225,13 +215,6 @@ export default function FloatingAssistant({ locale, initiallyOpen = false, initi
   };
 
   return <>
-    {!isOpen && (
-      <button ref={toggleRef} type="button" onClick={open} className="chatbot-toggle" aria-label={copy.open} data-testid="assistant-toggle">
-        <MessageCircle />
-        {chat.unread > 0 && <span className="chatbot-toggle__badge">{chat.unread}</span>}
-      </button>
-    )}
-
     {isOpen && (
       <div
         ref={panelRef}

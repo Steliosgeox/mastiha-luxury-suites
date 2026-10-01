@@ -69,7 +69,8 @@ test.describe("conversations", () => {
     await guest.goto("/el");
     await guest.getByTestId("assistant-toggle").click();
     const panel = guest.getByTestId("assistant-dialog");
-    await expect(panel.getByRole("heading", { name: "Πώς μπορούμε να βοηθήσουμε;" })).toBeVisible();
+    // The assistant's code loads on first use; give a busy CI machine time to fetch it.
+    await expect(panel.getByRole("heading", { name: "Πώς μπορούμε να βοηθήσουμε;" })).toBeVisible({ timeout: 15_000 });
 
     // The assistant answers, and the conversation is stored from the first message.
     const suffix = `${Date.now().toString().slice(-5)}${Math.floor(Math.random() * 90 + 10)}`;
