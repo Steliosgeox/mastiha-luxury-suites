@@ -33,13 +33,15 @@ test.describe("concierge", () => {
   });
 
   test("a rate-limited model hands over to the next one", async ({ request }) => {
-    const response = await request.post("/api/assistant/chat", { headers: json, data: { locale: "el", messages: [{ role: "user", content: "Δοκιμή: rate limit" }] } });
+    // Digits keep the question out of the answer cache, so each browser's run reaches the models.
+    const question = `Δοκιμή ${Date.now()}${Math.floor(Math.random() * 1000)}: rate limit`;
+    const response = await request.post("/api/assistant/chat", { headers: json, data: { locale: "el", messages: [{ role: "user", content: question }] } });
     const body = await response.json() as { reply: string; source: string };
     expect(body.source).toBe("ai");
     expect(body.reply).toBe("Απάντηση από το δεύτερο μοντέλο.");
     // Every call asked for zero-retention endpoints (the mock refuses anything else).
     const { calls } = await (await request.get(`${MOCK_OPENROUTER}/__calls`)).json() as { calls: { model: string; question: string }[] };
-    expect(calls.filter(call => call.question === "Δοκιμή: rate limit").map(call => call.model)).toEqual(["test/primary:free", "test/secondary:free"]);
+    expect(calls.filter(call => call.question === question).map(call => call.model)).toEqual(["test/primary:free", "test/secondary:free"]);
   });
 
   test("rejects malformed and cross-site requests", async ({ request }) => {
