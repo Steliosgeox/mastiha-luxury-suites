@@ -1,8 +1,10 @@
 import { faqItems } from "@/content/faq";
+import { guideIds } from "@/content/guides";
 import { nearbyPlaces, neighbourhoodCopy, nearbyCategories } from "@/content/neighbourhood";
 import { propertyData as property } from "@/content/property";
 import { reviewStats } from "@/content/reviews";
 import { fillCopy, getStayCopy } from "@/content/stay-copy";
+import { guide } from "./guides";
 import { SITE_URL } from "./site";
 
 /*
@@ -33,6 +35,10 @@ The website is in Greek, English and Turkish. Prices, available dates and cancel
 - [${property.name} στα ελληνικά](${SITE_URL}/el): the same page in Greek
 - [${property.name} Türkçe](${SITE_URL}/tr): the same page in Turkish
 - [Privacy](${SITE_URL}/en/privacy): how the website's chat handles messages
+
+## Guides by the host
+
+${guideIds.map(id => `- [${guide(id, "en").title}](${SITE_URL}/en/${id}): ${guide(id, "en").description} (also in [Greek](${SITE_URL}/el/${id}) and [Turkish](${SITE_URL}/tr/${id}))`).join("\n")}
 
 ## Booking
 

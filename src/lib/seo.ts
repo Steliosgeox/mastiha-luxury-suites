@@ -1,8 +1,10 @@
 import { faqItems } from "@/content/faq";
+import { GUIDES_UPDATED, guideChrome, guideMedia, guideMentions, guideSubject, type GuideId } from "@/content/guides";
 import { propertyData as property } from "@/content/property";
 import { getStayCopy, normalizeStayLocale, type StayLocale } from "@/content/stay-copy";
 import { stayPhotos } from "@/content/stay-media";
 import { getContactChannels } from "./contact";
+import { guide } from "./guides";
 import { SITE_URL, descriptions } from "./site";
 
 const place: Record<StayLocale, { locality: string; region: string; vrontados: string; chios: string; greece: string }> = {
@@ -122,6 +124,48 @@ export function getStructuredData(locale = "en") {
           name: item.q,
           acceptedAnswer: { "@type": "Answer", text: item.a },
         })),
+      },
+    ],
+  };
+}
+
+/** Schema.org data for a guide: the article, what it is about, and where it sits on the site. */
+export function getGuideStructuredData(id: GuideId, locale: string) {
+  const lang = normalizeStayLocale(locale);
+  const g = guide(id, lang);
+  const url = `${SITE_URL}/${lang}/${id}`;
+  const photo = guideMedia[id].photo;
+  const subject = guideSubject[id];
+  const publisher = { "@type": "Organization", "@id": `${SITE_URL}/#publisher`, name: property.name, url: SITE_URL };
+  return {
+    "@context": "https://schema.org",
+    "@graph": [
+      {
+        "@type": "Article",
+        "@id": `${url}#article`,
+        headline: g.title,
+        name: g.metaTitle,
+        description: g.description,
+        inLanguage: lang,
+        url,
+        mainEntityOfPage: url,
+        datePublished: GUIDES_UPDATED,
+        dateModified: GUIDES_UPDATED,
+        author: publisher,
+        publisher,
+        image: photo ? SITE_URL + stayPhotos.find(item => item.id === photo)!.src : `${SITE_URL}/og/mastiha-luxury-suites.jpg`,
+        about: { "@type": subject.type, name: subject.name, sameAs: subject.sameAs },
+        mentions: guideMentions[id].map(item => ({ "@type": "Place", name: item.name, sameAs: item.sameAs })),
+        isPartOf: { "@id": `${SITE_URL}/#website` },
+        articleSection: g.sections.map(section => section.heading),
+      },
+      {
+        "@type": "BreadcrumbList",
+        "@id": `${url}#breadcrumb`,
+        itemListElement: [
+          { "@type": "ListItem", position: 1, name: guideChrome[lang].home, item: `${SITE_URL}/${lang}` },
+          { "@type": "ListItem", position: 2, name: g.label, item: url },
+        ],
       },
     ],
   };

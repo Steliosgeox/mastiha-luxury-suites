@@ -27,3 +27,5 @@
   .wide { grid-column: 1 / -1 !important; }
   .beach { margin-top: 28px !important; }
 }
+
+.more { display: flex; flex-wrap: wrap; gap: 14px 24px; margin-top: 26px; }

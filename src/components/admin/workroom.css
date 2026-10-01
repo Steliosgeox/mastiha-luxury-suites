@@ -2223,3 +2223,29 @@
 
 /* The settings button speaks in sentence case on the light theme. */
 .admin-settings .host-settings__actions button { text-transform: none; letter-spacing: 0; }
+
+/* Google review link and ready-made thank-you messages. */
+.admin-settings__link { overflow-wrap: anywhere; }
+.host-settings__actions a {
+  display: inline-flex;
+  min-height: 46px;
+  align-items: center;
+  gap: 9px;
+  padding: 0 4px;
+  color: var(--workroom-ink, inherit);
+  font: 600 11px/1 var(--font-admin), Commissioner, "Segoe UI", sans-serif;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  text-decoration: underline;
+  text-underline-offset: 5px;
+}
+.admin-settings__message {
+  margin-top: 18px;
+  padding: 16px 18px;
+  border: 1px solid var(--workroom-line, rgb(66 94 123 / 0.16));
+  border-radius: 10px;
+  background: rgb(255 255 255 / 0.55);
+}
+.admin-settings__message p { margin: 0 0 12px; font-size: 14px; line-height: 1.6; }
+.admin-settings__message .admin-settings__message-label { margin-bottom: 6px; color: var(--workroom-muted); font-size: 11px; letter-spacing: .12em; text-transform: uppercase; }
+.admin-settings__note { margin: 16px 0 0; color: var(--workroom-muted); font-size: 13px; line-height: 1.6; }

@@ -17,6 +17,7 @@ Lenis smooth scrolling, next-intl for `/el`, `/en` and `/tr` routing.
 | Scroll animations | `src/components/site/motion.ts` (enabled per element with data attributes) |
 | The dock | `src/components/site/dock` (approved design; the tests check its hash) |
 | Chat, assistant and admin portal | `docs/CHAT.md` |
+| Search, AI assistants and guides | `docs/SEO.md` |
 
 ## Writing copy
 

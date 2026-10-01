@@ -1,5 +1,7 @@
+import Link from "next/link";
 import { getStayCopy, type StayLocale } from "@/content/stay-copy";
 import { photoCaption, type PhotoId } from "@/content/stay-media";
+import { guide } from "@/lib/guides";
 import { OpenablePhoto } from "../Photo";
 import ui from "../ui.module.css";
 import s from "./vrontados.module.css";
@@ -21,6 +23,10 @@ export function Vrontados({ locale }: { locale: StayLocale }) {
       <p className={ui.eyebrow} data-rule>{c.eyebrow}</p>
       <h2 id="vrontados-title" className={ui.heading} data-split>{c.title}</h2>
       <p className={ui.body} data-reveal>{c.body}</p>
+      <p className={s.more} data-reveal>
+        <Link className={ui.textLink} href={`/${locale}/vrontados`}>{guide("vrontados", locale).title} <span aria-hidden="true">→</span></Link>
+        <Link className={ui.textLink} href={`/${locale}/chios`}>{guide("chios", locale).title} <span aria-hidden="true">→</span></Link>
+      </p>
     </header>
     <div className={s.collage}>
       {collage.map(({ id, className, speed }) => <figure key={id} className={className} data-speed={speed}>

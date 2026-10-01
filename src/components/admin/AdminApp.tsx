@@ -4,6 +4,7 @@ import Link from "next/link";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { ArrowCounterClockwise, ArrowLeft, ArrowRight, ArrowUpRight, Bell, CalendarBlank, CheckCircle, EnvelopeSimple, List, MagnifyingGlass, Robot, SidebarSimple, SignOut, Trash, UserCircle, X } from "@phosphor-icons/react";
 import { ADMIN_COPY, type AdminCopy, type AdminLocale } from "@/content/admin-copy";
+import { propertyData as property } from "@/content/property";
 import type { Conversation } from "@/lib/chat/types";
 import { AdminThread } from "./AdminThread";
 import { chime, disablePush, enablePush, pushState, type PushState } from "./notify";
@@ -342,6 +343,18 @@ function Desk({ c, locale, inbox, counts, open, go }: { c: AdminCopy; locale: Ad
   </div>;
 }
 
+/** Copies text to the clipboard and says so for a moment. */
+function CopyButton({ c, text }: { c: AdminCopy; text: string }) {
+  const [copied, setCopied] = useState(false);
+  useEffect(() => {
+    if (!copied) return;
+    const timer = setTimeout(() => setCopied(false), 1800);
+    return () => clearTimeout(timer);
+  }, [copied]);
+  const copy = () => { void navigator.clipboard?.writeText(text).then(() => setCopied(true)).catch(() => undefined); };
+  return <button type="button" onClick={copy} aria-live="polite">{copied ? <CheckCircle size={16} aria-hidden="true" /> : null}{copied ? c.settings.copied : c.settings.copy}</button>;
+}
+
 function Settings({ c, locale, push, sound, onPush, onSound, onLocale, onLogout, ai }: {
   c: AdminCopy; locale: AdminLocale; push: PushState | null; sound: boolean;
   onPush: () => void; onSound: () => void; onLocale: (locale: AdminLocale) => void; onLogout: () => void; ai: Inbox["ai"];
@@ -381,6 +394,26 @@ function Settings({ c, locale, push, sound, onPush, onSound, onLocale, onLogout,
         {ai?.models.map((model, index) => <div key={model}><dt>{c.desk.model} {index + 1}</dt><dd className="host-settings-page__mono">{model}</dd></div>)}
         {typeof ai?.freeRemaining === "number" && <div><dt>{c.desk.free}</dt><dd className="host-settings-page__mono">{ai.freeRemaining}</dd></div>}
       </dl>
+    </section>
+
+    <section className="host-settings-page__block" data-testid="admin-reviews">
+      <div className="host-settings-page__block-head"><h2>{c.settings.reviews}</h2><p>{c.settings.reviewsBody}</p></div>
+      <dl className="host-settings-page__facts">
+        <div><dt>{c.settings.reviewLink}</dt><dd className="host-settings-page__mono admin-settings__link">{property.location.googleReviewUrl}</dd></div>
+      </dl>
+      <div className="host-settings__actions">
+        <CopyButton c={c} text={property.location.googleReviewUrl} />
+        <a href={property.location.googleReviewUrl} target="_blank" rel="noopener noreferrer"><ArrowUpRight size={16} aria-hidden="true" />{c.settings.open}</a>
+      </div>
+      {c.settings.reviewMessages.map(message => {
+        const text = message.text.replace("{link}", property.location.googleReviewUrl);
+        return <div key={message.label} className="admin-settings__message">
+          <p className="admin-settings__message-label">{message.label}</p>
+          <p>{text}</p>
+          <div className="host-settings__actions"><CopyButton c={c} text={text} /></div>
+        </div>;
+      })}
+      <p className="admin-settings__note">{c.settings.reviewsRule}</p>
     </section>
 
     <section className="host-settings-page__block">
