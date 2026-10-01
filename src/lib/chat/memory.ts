@@ -66,6 +66,7 @@ export function createMemoryStore(): ChatStore {
       hostUnread: conversation.hostUnread + (entry.author === "guest" ? 1 : 0),
       guestUnread: conversation.guestUnread + (entry.author === "host" ? 1 : 0),
     });
+    if (entry.author === "host") state.expiring.delete(`typing:${id}`);
     state.version++;
     return { ...stored };
   };

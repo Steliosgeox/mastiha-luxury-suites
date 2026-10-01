@@ -94,6 +94,14 @@ export function useAdminInbox({ onIncoming }: { onIncoming: (conversation: Conve
     setCurrent(id ? conversations.find(item => item.id === id) ?? null : null);
   }, [conversations]);
 
+  const lastTyping = useRef(0);
+  const typingSent = useRef<Promise<unknown>>(Promise.resolve());
+  const typing = useCallback(() => {
+    if (!selected || Date.now() - lastTyping.current < 3000) return;
+    lastTyping.current = Date.now();
+    typingSent.current = fetch(`/api/admin/conversations/${selected}/typing`, { method: "POST" }).catch(() => undefined);
+  }, [selected]);
+
   const send = useCallback(async (text: string, retryOf?: string) => {
     const id = selected;
     if (!id) return;
@@ -105,6 +113,9 @@ export function useAdminInbox({ onIncoming }: { onIncoming: (conversation: Conve
         : [...thread.items, { id: temp, seq: -1, author: "host" as const, text, at: Date.now(), state: "sending" as const }];
       return { ...all, [id]: { ...thread, items } };
     });
+    // Sending clears "typing…" for the guest, so a typing signal still in flight must land first.
+    await typingSent.current;
+    lastTyping.current = 0;
     try {
       const response = await fetch(`/api/admin/conversations/${id}/messages`, { method: "POST", headers: { "Content-Type": "application/json" }, body: JSON.stringify({ text }) });
       if (!response.ok) throw new Error("Not sent");
@@ -116,13 +127,6 @@ export function useAdminInbox({ onIncoming }: { onIncoming: (conversation: Conve
       setThreads(all => ({ ...all, [id]: { ...all[id], items: all[id].items.map(item => item.id === temp ? { ...item, state: "failed" as const } : item) } }));
     }
   }, [selected, mergeEntries]);
-
-  const lastTyping = useRef(0);
-  const typing = useCallback(() => {
-    if (!selected || Date.now() - lastTyping.current < 3000) return;
-    lastTyping.current = Date.now();
-    void fetch(`/api/admin/conversations/${selected}/typing`, { method: "POST" }).catch(() => undefined);
-  }, [selected]);
 
   const update = useCallback(async (id: string, patch: { status?: "open" | "closed"; handler?: "bot" | "host" }) => {
     await fetch(`/api/admin/conversations/${id}`, { method: "PATCH", headers: { "Content-Type": "application/json" }, body: JSON.stringify(patch) });

@@ -109,6 +109,8 @@ test.describe("conversations", () => {
     await reply.press("Enter");
 
     await expect(panel.locator('[data-speaker="host"]')).toContainText("Φυσικά, θα σας περιμένω.", { timeout: 15_000 });
+    // Her reply ends "typing…" at once, not when the signal times out.
+    await expect(panel.getByText("Η Αθηνά γράφει…")).toHaveCount(0, { timeout: 1_000 });
 
     // The conversation continues after a reload.
     await guest.reload();

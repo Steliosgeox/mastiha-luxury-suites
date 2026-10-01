@@ -107,6 +107,8 @@ export function createRedisStore(url: string, token: string): ChatStore {
     ["INCR", key.version],
     ["EXPIRE", key.conv(id), RETENTION_SECONDS],
     ["EXPIRE", key.log(id), RETENTION_SECONDS],
+    // Her message is what she was typing: the guest stops seeing "typing…" as it arrives.
+    ...(entry.author === "host" ? [["DEL", key.typing(id)] as Command] : []),
   ];
 
   return {
