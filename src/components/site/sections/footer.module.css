@@ -148,3 +148,8 @@
 
 @keyframes pulse { from { transform: scale(1); opacity: .6; } to { transform: scale(3); opacity: 0; } }
 @media (prefers-reduced-motion: reduce) { .pulse::after { animation: none; } }
+
+/* The host's guides, under the address. */
+.guides { display: grid; gap: 10px; margin: 22px 0 0; padding: 0; list-style: none; font-size: 14px; }
+.guides a { text-decoration: underline; text-decoration-color: var(--line); text-underline-offset: 5px; }
+@media (hover: hover) and (pointer: fine) { .guides a:hover { text-decoration-color: var(--ink); } }

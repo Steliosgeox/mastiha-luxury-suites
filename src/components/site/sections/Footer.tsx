@@ -1,9 +1,11 @@
 import Link from "next/link";
 import { ArrowUp, EnvelopeSimple, FacebookLogo, InstagramLogo, WhatsappLogo } from "@phosphor-icons/react/dist/ssr";
+import { guideIds } from "@/content/guides";
 import { propertyData as property } from "@/content/property";
 import { reviewStats } from "@/content/reviews";
 import { fillCopy, formatScore, getStayCopy, type StayLocale } from "@/content/stay-copy";
 import type { ContactChannels } from "@/lib/contact";
+import { guide } from "@/lib/guides";
 import { AirbnbMark, BookingMark, StarMark } from "../icons";
 import { ChatButton } from "../SiteShell";
 import { LocalTime } from "./LocalTime";
@@ -69,6 +71,9 @@ export function Footer({ locale, contact }: { locale: StayLocale; contact: Conta
             {fillCopy(c.toSea, { distance: property.distanceToSeaMeters })}
           </address>
           <a className={ui.textLink} href={property.location.googleMapsUrl} target="_blank" rel="noopener noreferrer">{c.maps} <span aria-hidden="true">↗</span></a>
+          <ul className={s.guides}>
+            {guideIds.map(id => <li key={id}><Link href={`/${locale}/${id}`}>{guide(id, locale).label}</Link></li>)}
+          </ul>
         </section>
 
         <nav aria-labelledby="footer-explore">

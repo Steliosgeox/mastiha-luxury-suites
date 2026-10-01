@@ -18,7 +18,8 @@ const key = keyFile.slice(0, -4);
 const live = await fetch(`${site}/${keyFile}`).then(response => response.ok ? response.text() : "").catch(() => "");
 if (live.trim() !== key) throw new Error(`${site}/${keyFile} does not serve the key yet`);
 
-const urlList = ["/el", "/en", "/tr", "/llms.txt"].map(path => site + path);
+const guides = ["chios", "vrontados", "mastiha"].flatMap(guide => ["el", "en", "tr"].map(locale => `/${locale}/${guide}`));
+const urlList = ["/el", "/en", "/tr", ...guides, "/llms.txt"].map(path => site + path);
 const response = await fetch("https://api.indexnow.org/indexnow", {
   method: "POST",
   headers: { "Content-Type": "application/json; charset=utf-8" },

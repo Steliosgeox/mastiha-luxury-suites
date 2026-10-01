@@ -1,8 +1,10 @@
 import type { Metadata } from "next";
+import { guideMedia, type GuideId } from "@/content/guides";
 import { propertyData as property } from "@/content/property";
 import { reviewStats } from "@/content/reviews";
 import { formatScore, normalizeStayLocale, type StayLocale } from "@/content/stay-copy";
 import { photoCaption } from "@/content/stay-media";
+import { guide } from "./guides";
 
 export const SITE_URL = (process.env.NEXT_PUBLIC_SITE_URL || "https://mastiha-luxury-suites.vercel.app").replace(/\/$/, "");
 
@@ -70,6 +72,41 @@ export function localeMetadata(locale: string, privacy = false): Metadata {
       images: [image],
     },
     twitter: { card: "summary_large_image", title, description, images: [image] },
+    icons: { icon: "/icon.svg", apple: "/apple-icon.png" },
+    category: "travel",
+    verification: verification(),
+  };
+}
+
+/** Metadata for a guide: its own title and description, and the same guide in the other languages. */
+export function guideMetadata(id: GuideId, locale: string): Metadata {
+  const lang = normalizeStayLocale(locale);
+  const g = guide(id, lang);
+  const path = `/${id}`;
+  const media = guideMedia[id];
+  const image = media.share && media.photo
+    ? { url: media.share, width: 1200, height: 630, type: "image/jpeg", alt: photoCaption(media.photo, lang) }
+    : { ...shareImage, alt: photoCaption("living", lang) };
+  return {
+    metadataBase: new URL(SITE_URL),
+    title: g.metaTitle,
+    description: g.description,
+    alternates: {
+      canonical: `${SITE_URL}/${lang}${path}`,
+      languages: { el: `${SITE_URL}/el${path}`, en: `${SITE_URL}/en${path}`, tr: `${SITE_URL}/tr${path}`, "x-default": `${SITE_URL}/en${path}` },
+    },
+    robots: process.env.VERCEL_ENV === "preview" ? { index: false, follow: false } : { index: true, follow: true },
+    openGraph: {
+      type: "article",
+      title: g.metaTitle,
+      description: g.description,
+      url: `${SITE_URL}/${lang}${path}`,
+      siteName: "Mastiha Luxury Suites",
+      locale: ogLocales[lang],
+      alternateLocale: Object.entries(ogLocales).filter(([code]) => code !== lang).map(([, value]) => value),
+      images: [image],
+    },
+    twitter: { card: "summary_large_image", title: g.metaTitle, description: g.description, images: [image] },
     icons: { icon: "/icon.svg", apple: "/apple-icon.png" },
     category: "travel",
     verification: verification(),
