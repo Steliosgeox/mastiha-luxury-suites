@@ -47,7 +47,7 @@
   font-size: 13px;
   line-height: 1.45;
 }
-.card figcaption > span { color: var(--accent); font-variant-numeric: tabular-nums; }
+.card figcaption > span { color: var(--accent-text); font-variant-numeric: tabular-nums; }
 
 .hint { display: none; }
 
